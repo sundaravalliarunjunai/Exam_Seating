@@ -62,7 +62,6 @@ const handleInputChange = event => {
                     let studentId=response.data.studentId;
                     setUserSession(userName,userId,userType,staffId,studentId);
         
-                    console.log("response >>>",response);                    
                     if(response.data.length !== 0 && response.status === 200 ){
                       if(userType === 'admin'){
                         history.push("/admin/dashboard");
