@@ -24,8 +24,8 @@ const Login = (props) => {
         userName: "",
         userType:"",
         password:"",
-        // staffId:"",
-        // studentId:"",
+        staffId:"",
+        studentId:"",
 };
 const history = useHistory();
 const [uservalue,setUser]=useState(userState);
@@ -61,8 +61,7 @@ const handleInputChange = event => {
                     let staffId=response.data.staffId;
                     let studentId=response.data.studentId;
                     setUserSession(userName,userId,userType,staffId,studentId);
-        
-                    console.log("response >>>",response);                    
+                    
                     if(response.data.length !== 0 && response.status === 200 ){
                       if(userType === 'admin'){
                         history.push("/admin/dashboard");
