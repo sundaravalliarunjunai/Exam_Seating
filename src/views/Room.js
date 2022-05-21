@@ -1,7 +1,7 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, Modal, ModalFooter, ModalHeader, ModalBody } from "reactstrap";
-import Addroom from "./Building/Addroom";
+import Addroom from "./Room/Addroom";
 
 export default function Room() {
 

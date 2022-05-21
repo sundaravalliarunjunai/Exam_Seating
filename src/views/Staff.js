@@ -3,7 +3,7 @@ import {
   Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Input, Modal, ModalFooter, ModalHeader, ModalBody,
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Addstaff from './Building/Addstaff';
+import Addstaff from './Staff/Addstaff';
 
 export default function Staff() {
 

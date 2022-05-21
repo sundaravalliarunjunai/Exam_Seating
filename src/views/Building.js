@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Add from './Building/Add';
 import BuildingService from "./Building/Buildingservice";
 import UserService from "./Login/Userservice";
+import Edit_building from "./Building/Edit_building";
 
 export default function Building() {
 
@@ -44,9 +45,10 @@ export default function Building() {
   const saveBuilding = (e) => {
     e.preventDefault();
     var data= {
+        buildingId:buildingvalue.buildingId,
         buildingName: buildingvalue.buildingName,     
     };
-    alert(data);
+    // alert(data);
       BuildingService.create(data).then(response => {
         alert("Success");
         setBuilding({
@@ -79,9 +81,10 @@ export default function Building() {
   const updateBuilding = (e) => {
       e.preventDefault();
       var data= {
+          buildingId: currentbuilding.currentbuildingId,
           buildingName: currentbuilding.currentbuildingName,
       };
-          alert(data);
+          // alert(data);
           BuildingService.update(currentbuilding.currentbuildingId,data).
           then(response => {
           console.log(response.data);
@@ -98,7 +101,7 @@ export default function Building() {
           currentbuildingId:response.data.buildingId,
           currentbuildingName:response.data.buildingName,
       });
-      console.log(response.data);
+      // console.log(response.data);
       })
       .catch(e => {
           console.log(e);
@@ -156,11 +159,10 @@ export default function Building() {
                         <ModalBody>
                             <Add />
                         </ModalBody>
-                        <ModalFooter>
-                          <Button color="primary" value="submit">Submit</Button>
+                        {/* <ModalFooter>
                           <Button color="primary" onClick={newBuilding}>Reset</Button>
                           <Button color="primary" onClick={toggle}>Cancel</Button>
-                        </ModalFooter>
+                        </ModalFooter> */}
                     </Modal>
                   </td></tr></Table>
                 </Col>
@@ -185,48 +187,28 @@ export default function Building() {
                         <td>{result.buildingName}</td>
                         {/* <td>{result.emailId}</td> */}
                         <td>                                            
-                          <button class="btn btn-primary" onClick={( () => getBuilding(result.buildingId) )}>Edit</button>
+                          {/* <button class="btn btn-primary" onClick={( () => getBuilding(result.buildingId) )}>Edit</button> */}
+                          <Button color="primary"
+                          onClick={toggle}>{getBuilding(result.buildingId)}Edit</Button>
+                          <Modal isOpen={modal}
+                              toggle={toggle}
+                              modalTransition={{ timeout: 2000 }}>
+                              <ModalHeader
+                              toggle={toggle}>Edit Building</ModalHeader>
+                              <ModalBody>
+                                  <Edit_building/>
+                              </ModalBody>
+                          </Modal>
                         </td><td>
-                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure you wish to delete this building?')) deleteBuilding(result.buildingId) } }>Delete</button>
+                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this building?')) deleteBuilding(result.buildingId) } }>Delete</button>
                         </td>
                       </tr>
                       )
                     )
                   }
-
-                    {/* <tr>
-                      <td>1</td>
-                      <td>Block1</td>
-                      <td>20</td>
-                        <td className="text-center" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
-                        </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Block2</td>
-                      <td>25</td>
-                      <td className="text-center" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
-                        </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr> */}
                   </tbody>
                 </Table>
-                <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModal" aria-hidden="true">
+                {/* <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModal" aria-hidden="true">
                   <div className="modal-dialog">
                     <div className="modal-content">
                       <Form className="forms-sample">
@@ -246,7 +228,7 @@ export default function Building() {
                       </Form>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </CardBody>
             </Card>
           </Col>

@@ -4,7 +4,7 @@ import {
   ModalHeader, ModalBody
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Addstudent from './Building/Addstudent';
+import Addstudent from './Student/Addstudent';
 
 
 export default function Student() {

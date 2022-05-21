@@ -1,7 +1,7 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, ModalBody, ModalHeader, ModalFooter, Modal } from "reactstrap";
-import Addsubject from "./Building/Addsubject";
+import Addsubject from "./Subject/Addsubject";
 
 
 export default function Subject() {

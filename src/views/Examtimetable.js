@@ -3,7 +3,7 @@ import {
   Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Input, ModalBody, ModalHeader, ModalFooter, Modal
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Addexam from './Building/Addexam';
+import Addexam from './Examtimetable/Addexam';
 
 export default function Examtimetable() {
 
