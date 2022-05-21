@@ -1,18 +1,18 @@
 import http from "../Login/http-common";
 const getAll = () => {
-  return http.get("/Building");
+  return http.get("/Buildings");
 };
 const get = id => {
-  return http.get(`/Building/${id}`);
+  return http.get(`/Buildings/${id}`);
 };
 const create = data => {
-  return http.post("/Building", data);
+  return http.post("/Buildings", data);
 };
 const update = (id, data) => {
-  return http.put(`/Building/${id}`, data);
+  return http.put(`/Buildings/${id}`, data);
 };
 const remove = id => {
-  return http.delete(`/Building/${id}`);
+  return http.delete(`/Buildings/${id}`);
 };
 
 const BuildingService = {
