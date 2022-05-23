@@ -68,7 +68,7 @@ export default function Edit_building() {
     const retrieveBuilding =() => {
         BuildingService.getAll().then(response => {
         setBuildinglist(response.data);
-        console.log(response.data);
+        // console.log(response.data);
     })
         .catch(e => {
         console.log(e);
@@ -135,8 +135,8 @@ export default function Edit_building() {
     return (
         <>
             <div className="content">
-                <title>Add Building</title>
-                <Form onSubmit={saveBuilding}>
+                <title>Edit Building</title>
+                <Form >
                     <Row>
                         <Col>
                             <FormGroup>

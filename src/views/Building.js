@@ -133,11 +133,17 @@ export default function Building() {
 
   let i=1;
 
-  // Modal open state
+    // Modal open state
   const [modal, setModal] = React.useState(false);
   
+    // Toggle for Modal
+   const toggle = () => setModal(!modal);
+
+  // Modal open state
+  const [modal1, setModal1] = React.useState(false);
+  
   // Toggle for Modal
-  const toggle = () => setModal(!modal);
+  const toggle1 = () => setModal1(!modal1);
   return (
     <>
       <div className="content">
@@ -174,9 +180,7 @@ export default function Building() {
                       <th>#</th>
                       <th>Building Name</th>
                       <th>No of Rooms</th>
-                      <th 
-                      // className="text-right"
-                      >Action</th>
+                      <th className="text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -185,16 +189,18 @@ export default function Building() {
                       <tr>
                         <td>{i++}</td>
                         <td>{result.buildingName}</td>
+                        <td>
+                        </td>
                         {/* <td>{result.emailId}</td> */}
                         <td>                                            
                           {/* <button class="btn btn-primary" onClick={( () => getBuilding(result.buildingId) )}>Edit</button> */}
                           <Button color="primary"
-                          onClick={toggle}>{getBuilding(result.buildingId)}Edit</Button>
-                          <Modal isOpen={modal}
-                              toggle={toggle}
+                          onClick={toggle1}>{getBuilding(result.buildingId)}Edit</Button>
+                          <Modal isOpen={modal1}
+                              toggle={toggle1}
                               modalTransition={{ timeout: 2000 }}>
                               <ModalHeader
-                              toggle={toggle}>Edit Building</ModalHeader>
+                              toggle={toggle1}>Edit Building</ModalHeader>
                               <ModalBody>
                                   <Edit_building/>
                               </ModalBody>
