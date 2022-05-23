@@ -1,19 +1,175 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import {
   Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Input,Modal, ModalFooter,
   ModalHeader, ModalBody
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Addstudent from './Student/Addstudent';
-
+import StudentService from "./Student/Studentservice";
+import Edit_student from "./Student/Edit_student";
+import UserService from "./Login/Userservice";
 
 export default function Student() {
 
-  // Modal open state
+  const studentState = {
+    studentId:null,
+    studentName: "",
+    regNo:"",
+    dob:"",
+    courseType:"",
+    department:"",
+    semester:"",
+  };
+
+  const currentstudentState = {
+    currentstudentId:null,
+    currentstudentName: "",
+    currentregNo:"",
+    currentdob:"",
+    currentcourseType:"",
+    currentdepartment:"",
+    currentsemester:"",
+  };
+
+  const [studentvalue,setStudent]=useState(studentState);
+  const[submitted,setSubmitted]=useState(false);
+  const [studentlist,setStudentlist]=useState([]);
+  const [currentstudent,setcurrentStudent]=useState(currentstudentState);
+
+  useEffect(() => {
+    retrieveStudent();
+  }, []);
+
+  const handleInputChange=event => {
+    const{name,value}=event.target;
+    setStudent({...studentvalue,[name]:value});
+  };
+  const currenthandleInputChange=event => {
+    const{name,value}=event.target;
+    setcurrentStudent({...currentstudent,[name]:value});
+  };
+  const saveStudent = (e) => {
+    e.preventDefault();
+    var data= {
+        studentId:studentvalue.studentId,
+        studentName: studentvalue.studentName,     
+        regNo:studentvalue.regNo,
+        dob:studentvalue.dob,
+        courseType:studentvalue.courseType,
+        department:studentvalue.department,
+        semester:studentvalue.semester,
+    };
+    // alert(data);
+      StudentService.create(data).then(response => {
+        alert("Success");
+        setStudent({
+          studentId: response.data.studentId,
+          studentName: response.data.studentName,
+          regNo:response.data.regNo,
+          dob:response.data.dob,
+          courseType:response.data.courseType,
+          department:response.data.department,
+          semester:response.data.semester,
+        });
+        setSubmitted(true);
+                console.log(response.data);
+                retrieveStudent();
+                newStudent();
+      })
+      .catch(e=>{
+        alert(e);
+        console.log(e);
+      });
+  };
+  const newStudent = () => {
+    setStudent(studentState);
+    setSubmitted(false);
+  };
+  const retrieveStudent =() => {
+      StudentService.getAll().then(response => {
+      setStudentlist(response.data);
+      // console.log(response.data);
+  })
+      .catch(e => {
+      console.log(e);
+  });
+  };
+  const updateStudent = (e) => {
+      e.preventDefault();
+      var data= {
+          studentId: currentstudent.currentstudentId,
+          studentName: currentstudent.currentstudentName,
+          regNo:currentstudent.currentregNo,
+          dob:currentstudent.currentdob,
+          courseType:currentstudent.currentcourseType,
+          department:currentstudent.currentdepartment,
+          semester:currentstudent.currentsemester,
+      };
+          // alert(data);
+          StudentService.update(currentstudent.currentstudentId,data).
+          then(response => {
+          console.log(response.data);
+          alert("Success");
+          retrieveStudent();            
+      })
+          .catch(e => {
+          console.log(e);
+      });
+  };
+  const getStudent = (id) => {
+          StudentService.get(id).then(response => {
+          setcurrentStudent({
+          currentstudentId:response.data.studentId,
+          currentstudentName:response.data.studentName,
+          currentregNo:response.data.regNo,
+          currentdob:response.data.dob,
+          currentcourseType:response.data.courseType,
+          currentdepartment:response.data.department,
+          currentsemester:response.data.semester,
+      });
+      // console.log(response.data);
+      })
+      .catch(e => {
+          console.log(e);
+  });
+
+  };
+  const deleteStudent = (id) => {
+      StudentService.remove(id). then (
+      response => {
+          alert('Deleted Successfully...');           
+      retrieveStudent();           
+  })
+  UserService.getAll().then((response)=>{
+      response.data.filter(obj=>obj.studentId === id).map((val)=>
+      UserService.remove(val.userId) .then (
+          response => {}
+      )
+      )
+  })   
+      .catch(e => {
+      console.log(e);
+  });
+  };
+
+  
+  const handlebuttonChange = () => {
+    setStudent(!getStudent);
+  }
+
+  let i=1;
+
+    // Modal open state
   const [modal, setModal] = React.useState(false);
   
+    // Toggle for Modal
+   const toggle = () => setModal(!modal);
+
+  // Modal open state
+  const [modal1, setModal1] = React.useState(false);
+  
   // Toggle for Modal
-  const toggle = () => setModal(!modal);
+  const toggle1 = () => setModal1(!modal1);
   
   return (
     <>
@@ -36,9 +192,9 @@ export default function Student() {
                         <ModalBody>
                             <Addstudent />
                         </ModalBody>
-                        <ModalFooter>
+                        {/* <ModalFooter>
                             <Button color="primary" onClick={toggle}>Save</Button>
-                        </ModalFooter>
+                        </ModalFooter> */}
                     </Modal>
                   </td></tr></Table>
                 </Col>
@@ -47,14 +203,12 @@ export default function Student() {
                 <Table responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th>S.No</th>
+                      <th>#</th>
                       <th>Name</th>
                       <th>Reg No</th>
                       <th>D.O.B</th>
-                      <th>Class</th>
-                      <th>Department</th>
-                      <th>Course</th>
                       <th>Course Type</th>
+                      <th>Department</th>
                       <th>Semester</th>
                       <th className="text-right">Action</th>
                     </tr>

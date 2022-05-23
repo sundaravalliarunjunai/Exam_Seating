@@ -10,11 +10,6 @@ import Edit_building from "./Building/Edit_building";
 
 export default function Building() {
 
-  const [getName, setName] = useState(false);
-  const handleNameChange = () => {
-    setName(!getName);
-  }
-
   const buildingState = {
     buildingId:null,
     buildingName: "",
@@ -156,7 +151,7 @@ export default function Building() {
                   {/* <i class='nc-icon nc-zoom-split'></i> */}
                   </td><td>
                     <Button color="success"
-                        onClick={toggle}>{getName?'Close':''}<i class="nc-icon nc-simple-add"></i> Add</Button>
+                        onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add</Button>
                     <Modal isOpen={modal}
                         toggle={toggle}
                         modalTransition={{ timeout: 2000 }}>

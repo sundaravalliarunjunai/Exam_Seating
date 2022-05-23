@@ -160,11 +160,11 @@ export default function Addroom() {
                         <Col>
                             <FormGroup>
                             <Label>Building Name</Label>
-                            <select className="mt-4 col-md-8 col-offset-4">
+                            {/* <select className="mt-4 col-md-8 col-offset-4">
                                 {buildinglist.map(result=>(
                                     <option value={result.buildingId}>{result.buildingName}</option>
                                 ))}
-                            </select>
+                            </select> */}
                             </FormGroup>
                         </Col>
                     </Row>

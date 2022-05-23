@@ -8,11 +8,6 @@ import RoomService from "./Room/Roomservice";
 
 export default function Room() {
 
-  const [getName, setName] = useState(false);
-  const handleNameChange = () => {
-    setName(!getName);
-  }
-
   const roomState = {
     roomId:null,
     roomName: "",
@@ -161,7 +156,7 @@ export default function Room() {
                   {/* <i class='nc-icon nc-zoom-split'></i> */}
                   </td><td>
                   <Button color="success"
-                        onClick={toggle}>{getName?'Close':''}<i class="nc-icon nc-simple-add"></i> Add
+                        onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add
                   </Button>
                   <Modal isOpen={modal}
                         toggle={toggle}
