@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from "react";
 import {
-  Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Modal, ModalBody, ModalHeader, ModalFooter, Input, Label, Form
+  FormGroup,Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Modal, ModalBody, ModalHeader, ModalFooter, Input, Label, Form
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Add from './Building/Add';
 import BuildingService from "./Building/Buildingservice";
 import UserService from "./Login/Userservice";
 import Edit_building from "./Building/Edit_building";
+import RoomService from "./Room/Roomservice";
 
 export default function Building() {
 
@@ -50,9 +51,10 @@ export default function Building() {
           buildingId: response.data.buildingId,
           buildingName: response.data.buildingName,
         });
+        retrieveBuilding();
         setSubmitted(true);
                 console.log(response.data);
-                retrieveBuilding();
+              
                 newBuilding();
       })
       .catch(e=>{
@@ -65,6 +67,7 @@ export default function Building() {
     setSubmitted(false);
   };
   const retrieveBuilding =() => {
+   //alert("Retrive building List...")
       BuildingService.getAll().then(response => {
       setBuildinglist(response.data);
       // console.log(response.data);
@@ -125,6 +128,13 @@ export default function Building() {
   const handlebuttonChange = () => {
     setBuilding(!getBuilding);
   }
+  function getNumberofRooms (id){
+    var length=0;
+    RoomService.getAll().then(response=>{
+      length =response.data.filter(ob=>Number(ob.buildingId) === Number(id)).length
+    })
+    return length
+   }
 
   let i=1;
 
@@ -158,7 +168,23 @@ export default function Building() {
                         <ModalHeader
                         toggle={toggle}>Add Building</ModalHeader>
                         <ModalBody>
-                            <Add />
+                        <Form onSubmit={saveBuilding}>
+                    <Row>
+                        <Col>
+                            <FormGroup>
+                            <Label>Building Name</Label>
+                            <Input
+                                name="buildingName"
+                                onChange={handleInputChange}
+                                value={buildingvalue.buildingName}
+                                placeholder="Building Name"
+                                type="text" required
+                            />
+                            </FormGroup>
+                            <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
+                        </Col>
+                    </Row>
+                </Form>
                         </ModalBody>
                         {/* <ModalFooter>
                           <Button color="primary" onClick={newBuilding}>Reset</Button>
@@ -185,12 +211,13 @@ export default function Building() {
                         <td>{i++}</td>
                         <td>{result.buildingName}</td>
                         <td>
+                          {getNumberofRooms(result.buildingId)}
                         </td>
                         {/* <td>{result.emailId}</td> */}
                         <td>                                            
                           {/* <button class="btn btn-primary" onClick={( () => getBuilding(result.buildingId) )}>Edit</button> */}
                           <Button color="primary"
-                          onClick={toggle1}>{getBuilding(result.buildingId)}Edit</Button>
+                        onClick={() => { toggle1(); getBuilding(result.buildingId);}}>Edit</Button>
                           <Modal isOpen={modal1}
                               toggle={toggle1}
                               modalTransition={{ timeout: 2000 }}>
