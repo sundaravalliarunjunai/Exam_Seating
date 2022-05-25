@@ -5,6 +5,7 @@ import Addroom from "./Room/Addroom";
 import Edit_room from "./Room/Edit_room";
 import UserService from "./Login/Userservice";
 import RoomService from "./Room/Roomservice";
+import BuildingService from "./Building/Buildingservice";
 
 export default function Room() {
 
@@ -24,6 +25,7 @@ export default function Room() {
   const[submitted,setSubmitted]=useState(false);
   const [roomlist,setRoomlist]=useState([]);
   const [currentroom,setcurrentRoom]=useState(currentroomState);
+  const [buildinglist,setBuildinglist]=useState([]);
 
   useEffect(() => {
     retrieveRoom();
@@ -125,6 +127,15 @@ export default function Room() {
   });
   };
 
+  const retrieveBuilding =() => {
+    BuildingService.getAll().then(response => {
+    setBuildinglist(response.data);
+    // console.log(response.data);
+  })
+    .catch(e => {
+    console.log(e);
+  });
+  };
   
   const handlebuttonChange = () => {
     setRoom(!getRoom);
@@ -193,7 +204,9 @@ export default function Room() {
                       <tr>
                         <td>{i++}</td>
                         <td>{result.roomName}</td>
-                        <td></td>
+                        <td>
+                          {/* {buildinglist.map(result1=>(result1.buildingName))} */}
+                        </td>
                         <td>{result.seatCapacity}</td>
                         {/* <td>{result.emailId}</td> */}
                         <td>                                            
@@ -216,38 +229,6 @@ export default function Room() {
                       )
                     )
                   }
-                    {/* <tr>
-                      <td>1</td>
-                      <td>Room_1</td>
-                      <td>Block1</td>
-                      <td>20</td>
-                        <td className="text-center" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
-                        </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Room_2</td>
-                      <td>Block1</td>
-                      <td>25</td>
-                      <td className="text-center" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
-                        </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr> */}
                   </tbody>
                 </Table>
               </CardBody>

@@ -214,7 +214,37 @@ export default function Student() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                  {
+                    studentlist.map(result=>(   
+                      <tr>
+                        <td>{i++}</td>
+                        <td>{result.studentName}</td>
+                        <td>{result.regNo}</td>
+                        <td>{result.dob}</td>
+                        <td>{result.courseType}</td>
+                        <td></td>
+                        <td>{result.semester}</td>
+                        <td>                                            
+                          {/* <button class="btn btn-primary" onClick={( () => getStudent(result.studentId) )}>Edit</button> */}
+                          <Button color="primary"
+                          onClick={toggle1}>{getStudent(result.studentId)}Edit</Button>
+                          <Modal isOpen={modal1}
+                              toggle={toggle1}
+                              modalTransition={{ timeout: 2000 }}>
+                              <ModalHeader
+                              toggle={toggle1}>Edit Student</ModalHeader>
+                              <ModalBody>
+                                  <Edit_student/>
+                              </ModalBody>
+                          </Modal>
+                        </td><td>
+                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this student?')) deleteStudent(result.studentId) } }>Delete</button>
+                        </td>
+                      </tr>
+                      )
+                    )
+                  }
+                    {/* <tr>
                       <td className="text-center" >1</td>
                       <td>S.Varshini</td>
                       <td>20801917</td>
@@ -255,7 +285,7 @@ export default function Student() {
                           //</td>onclick="DeleteUser('.$purchaseid.')"
                           >Delete
                         </button></td>
-                    </tr>
+                    </tr> */}
                   </tbody>
                 </Table>
               </CardBody>

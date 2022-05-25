@@ -171,10 +171,10 @@ export default function Addroom() {
                     <Row>
                         <Col>
                             <FormGroup>
-                            <Label>Room Number</Label>
+                            <Label>Room Name</Label>
                             <Input
-                                name="r_no"
-                                placeholder="Room Number"
+                                name="roomName"
+                                placeholder="Room Name"
                                 type="text" required
                             />
                             </FormGroup>
