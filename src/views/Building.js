@@ -3,10 +3,10 @@ import {
   FormGroup,Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Modal, ModalBody, ModalHeader, ModalFooter, Input, Label, Form
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Add from './Building/Add';
+// import Add from './Building/Add';
 import BuildingService from "./Building/Buildingservice";
 import UserService from "./Login/Userservice";
-import Edit_building from "./Building/Edit_building";
+// import Edit_building from "./Building/Edit_building";
 import RoomService from "./Room/Roomservice";
 
 export default function Building() {
@@ -53,9 +53,8 @@ export default function Building() {
         });
         retrieveBuilding();
         setSubmitted(true);
-                console.log(response.data);
-              
-                newBuilding();
+        console.log(response.data);
+        newBuilding();
       })
       .catch(e=>{
         alert(e);
@@ -210,9 +209,7 @@ export default function Building() {
                       <tr>
                         <td>{i++}</td>
                         <td>{result.buildingName}</td>
-                        <td>
-                          {getNumberofRooms(result.buildingId)}
-                        </td>
+                        <td>{getNumberofRooms(result.buildingId)}</td>
                         {/* <td>{result.emailId}</td> */}
                         <td>                                            
                           {/* <button class="btn btn-primary" onClick={( () => getBuilding(result.buildingId) )}>Edit</button> */}
@@ -224,7 +221,22 @@ export default function Building() {
                               <ModalHeader
                               toggle={toggle1}>Edit Building</ModalHeader>
                               <ModalBody>
-                                  <Edit_building/>
+                                <Form >
+                                  <Row>
+                                      <Col>
+                                          <FormGroup>
+                                          <Label>Building Name</Label>
+                                          <Input
+                                              name="currentbuildingName"
+                                              onChange={currenthandleInputChange}
+                                              value={currentbuilding.currentbuildingName}
+                                              type="text" required
+                                          />
+                                          </FormGroup>
+                                          <Button color="primary" onClick={updateBuilding}>Update</Button>
+                                      </Col>
+                                  </Row>
+                                </Form>
                               </ModalBody>
                           </Modal>
                         </td><td>

@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, Modal, ModalFooter, ModalHeader, ModalBody } from "reactstrap";
-import Addroom from "./Room/Addroom";
+import { Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, Modal, Label, Form, FormGroup, ModalHeader, ModalBody } from "reactstrap";
 import Edit_room from "./Room/Edit_room";
 import UserService from "./Login/Userservice";
 import RoomService from "./Room/Roomservice";
@@ -54,10 +53,10 @@ export default function Room() {
           roomName: response.data.roomName,
           seatCapacity:response.data.seatCapacity,
         });
+        retrieveRoom();
         setSubmitted(true);
-                console.log(response.data);
-                retrieveRoom();
-                newRoom();
+        console.log(response.data);
+        newRoom();
       })
       .catch(e=>{
         alert(e);
@@ -175,7 +174,45 @@ export default function Room() {
                         <ModalHeader
                         toggle={toggle}>Add Room</ModalHeader>
                         <ModalBody>
-                            <Addroom />
+                          <Form>
+                              <Row>
+                                  <Col>
+                                      <FormGroup>
+                                      <Label>Building Name</Label>
+                                      {/* <select className="mt-4 col-md-8 col-offset-4">
+                                          {buildinglist.map(result=>(
+                                              <option value={result.buildingId}>{result.buildingName}</option>
+                                          ))}
+                                      </select> */}
+                                      </FormGroup>
+                                  </Col>
+                              </Row>
+                              <Row>
+                                  <Col>
+                                      <FormGroup>
+                                      <Label>Room Name</Label>
+                                      <Input
+                                          name="roomName"
+                                          placeholder="Room Name"
+                                          type="text" required
+                                      />
+                                      </FormGroup>
+                                  </Col>
+                              </Row>
+                              <Row>
+                                  <Col>
+                                      <FormGroup>
+                                      <Label>Number of Seats</Label>
+                                      <Input
+                                          name="no_seats"
+                                          placeholder="No of Seats"
+                                          type="text" required
+                                      />
+                                      </FormGroup>
+                                      <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
+                                  </Col>
+                              </Row>
+                          </Form>
                         </ModalBody>
                         {/* <ModalFooter>
                             <Button color="primary" onClick={toggle}>Save</Button>
@@ -212,7 +249,7 @@ export default function Room() {
                         <td>                                            
                           {/* <button class="btn btn-primary" onClick={( () => getRoom(result.roomId) )}>Edit</button> */}
                           <Button color="primary"
-                          onClick={toggle1}>{getRoom(result.roomId)}Edit</Button>
+                          onClick={()=>{toggle1();getRoom(result.roomId);}}>Edit</Button>
                           <Modal isOpen={modal1}
                               toggle={toggle1}
                               modalTransition={{ timeout: 2000 }}>
