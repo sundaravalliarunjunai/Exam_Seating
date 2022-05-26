@@ -19,12 +19,16 @@ export default function Room() {
     currentroomName: "",
     currentseatCapacity:null,
   };
+  const currentbuildingState = {
+    buildingId:null,
+    buildingName: "",
+  };
 
   const [roomvalue,setRoom]=useState(roomState);
   const[submitted,setSubmitted]=useState(false);
   const [roomlist,setRoomlist]=useState([]);
   const [currentroom,setcurrentRoom]=useState(currentroomState);
-  const [buildinglist,setBuildinglist]=useState([]);
+  const [buildinglist,setcurrentBuilding]=useState(currentbuildingState);
 
   useEffect(() => {
     retrieveRoom();
@@ -126,15 +130,19 @@ export default function Room() {
   });
   };
 
-  const retrieveBuilding =() => {
-    BuildingService.getAll().then(response => {
-    setBuildinglist(response.data);
-    // console.log(response.data);
-  })
-    .catch(e => {
+  const getBuilding = (id) => {
+    BuildingService.get(id).then(response => {
+    setcurrentBuilding({
+    buildingId:response.data.buildingId,
+    buildingName:response.data.buildingName,
+});
+// console.log(response.data);
+})
+.catch(e => {
     console.log(e);
-  });
-  };
+});
+
+};
   
   const handlebuttonChange = () => {
     setRoom(!getRoom);
@@ -153,6 +161,7 @@ export default function Room() {
   
   // Toggle for Modal
   const toggle1 = () => setModal1(!modal1);
+  let j=1;
 
   return (
     <>
@@ -179,11 +188,13 @@ export default function Room() {
                                   <Col>
                                       <FormGroup>
                                       <Label>Building Name</Label>
-                                      {/* <select className="mt-4 col-md-8 col-offset-4">
-                                          {buildinglist.map(result=>(
-                                              <option value={result.buildingId}>{result.buildingName}</option>
-                                          ))}
-                                      </select> */}
+                                      <select className="mt-4 col-md-8 col-offset-4">
+                                        {
+                                          //   buildinglist.map(result=>(
+                                          //     <option value={getBuilding(result.buildingId)}>{getBuilding(result.buildingName)}</option>
+                                          // ))
+                                        }
+                                      </select>
                                       </FormGroup>
                                   </Col>
                               </Row>

@@ -128,9 +128,9 @@ export default function Building() {
     setBuilding(!getBuilding);
   }
   function getNumberofRooms (id){
-    var length=0;
+    let length=0;
     RoomService.getAll().then(response=>{
-      length =response.data.filter(ob=>Number(ob.buildingId) === Number(id)).length
+      length =response.data.filter(ob=>Number(ob.buildingId) === Number(id)).length;
     })
     return length
    }
@@ -205,7 +205,7 @@ export default function Building() {
                   </thead>
                   <tbody>
                   {
-                    buildinglist.map(result=>(   
+                    buildinglist.map(result=>(  
                       <tr>
                         <td>{i++}</td>
                         <td>{result.buildingName}</td>

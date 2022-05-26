@@ -208,7 +208,7 @@ export default function Staff() {
                         <td>                                            
                           {/* <button class="btn btn-primary" onClick={( () => getStaff(result.staffId) )}>Edit</button> */}
                           <Button color="primary"
-                          onClick={toggle1}>{getStaff(result.staffId)}Edit</Button>
+                          onClick={(()=>{toggle1();getStaff(result.staffId);})}>Edit</Button>
                           <Modal isOpen={modal1}
                               toggle={toggle1}
                               modalTransition={{ timeout: 2000 }}>
