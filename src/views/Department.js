@@ -3,116 +3,108 @@ import {
   FormGroup,Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Modal, ModalBody, ModalHeader, ModalFooter, Input, Label, Form
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import Add from './Building/Add';
-import BuildingService from "./Building/Buildingservice";
+// import Add from './Department/Add';
+import DepartmentService from "./Department/DepartmentService";
 import UserService from "./Login/Userservice";
-// import Edit_building from "./Building/Edit_building";
-import RoomService from "./Room/Roomservice";
 
-export default function Building() {
+export default function Department() {
 
-  const buildingState = {
-    buildingId:null,
-    buildingName: "",
+  const departmentState = {
+    departmentId:null,
+    departmentName: "",
   };
 
-  const currentbuildingState = {
-    currentbuildingId:null,
-    currentbuildingName: "",
+  const currentdepartmentState = {
+    currentdepartmentId:null,
+    currentdepartmentName: "",
   };
 
-  const [buildingvalue,setBuilding]=useState(buildingState);
+  const [departmentvalue,setDepartment]=useState(departmentState);
   const[submitted,setSubmitted]=useState(false);
-  const [buildinglist,setBuildinglist]=useState([]);
-  const [currentbuilding,setcurrentBuilding]=useState(currentbuildingState);
-  const [roomlist,setRoomlist]=useState([]);
+  const [departmentlist,setDepartmentlist]=useState([]);
+  const [currentdepartment,setcurrentDepartment]=useState(currentdepartmentState);
+
 
   useEffect(() => {
-    retrieveBuilding();
-    retrieveRoom();
+    retrieveDepartment();
   }, []);
 
   const handleInputChange=event => {
     const{name,value}=event.target;
-    setBuilding({...buildingvalue,[name]:value});
+    setDepartment({...departmentvalue,[name]:value});
   };
   const currenthandleInputChange=event => {
     const{name,value}=event.target;
-    setcurrentBuilding({...currentbuilding,[name]:value});
+    setcurrentDepartment({...currentdepartment,[name]:value});
   };
-  const saveBuilding = (e) => {
+  const saveDepartment = (e) => {
     e.preventDefault();
+    var check=departmentlist.filter(obj =>obj.departmentName === departmentvalue.departmentName).length;
     var data= {
-        buildingId:buildingvalue.buildingId,
-        buildingName: buildingvalue.buildingName,     
+        departmentId:departmentvalue.departmentId,
+        departmentName: departmentvalue.departmentName,     
     };
-    // alert(data);
-      BuildingService.create(data).then(response => {
+    if(check === 0){
+      DepartmentService.create(data).then(response => {
         alert("Success");
-        setBuilding({
-          buildingId: response.data.buildingId,
-          buildingName: response.data.buildingName,
+        setDepartment({
+          departmentId: response.data.departmentId,
+          departmentName: response.data.departmentName,
         });
-        retrieveBuilding();
+        retrieveDepartment();
         setSubmitted(true);
         console.log(response.data);
-        newBuilding();
+        newDepartment();
       })
       .catch(e=>{
         alert(e);
         console.log(e);
       });
+    }
+    else{
+        alert("Already Department Name Exist in the list");
+    }
   };
-  const newBuilding = () => {
-    setBuilding(buildingState);
+
+  const newDepartment = () => {
+    setDepartment(departmentState);
     setSubmitted(false);
   };
-  const retrieveBuilding =() => {
-   //alert("Retrive building List...")
-      BuildingService.getAll().then(response => {
-      setBuildinglist(response.data);
+  const retrieveDepartment =() => {
+   //alert("Retrive Department List...")
+      DepartmentService.getAll().then(response => {
+      setDepartmentlist(response.data);
       // console.log(response.data);
   })
       .catch(e => {
       console.log(e);
   });
   };
-
-  const retrieveRoom =() => {
-    //alert("Retrive building List...")
-       RoomService.getAll().then(response => {
-       setRoomlist(response.data);
-       // console.log(response.data);
-   })
-       .catch(e => {
-       console.log(e);
-   });
-   };
   
-  const updateBuilding = (e) => {
+  const updateDepartment = (e) => {
       e.preventDefault();
       var data= {
-          buildingId: currentbuilding.currentbuildingId,
-          buildingName: currentbuilding.currentbuildingName,
+          departmentId: currentdepartment.currentdepartmentId,
+          departmentName: currentdepartment.currentdepartmentName,
       };
           // alert(data);
-          BuildingService.update(currentbuilding.currentbuildingId,data).
+          DepartmentService.update(currentdepartment.currentdepartmentId,data).
           then(response => {
           console.log(response.data);
           toggle1();
           alert("Success");
-          retrieveBuilding(); 
-          retrieveRoom();           
+          retrieveDepartment(); 
+                     
       })
           .catch(e => {
           console.log(e);
       });
   };
-  const getBuilding = (id) => {
-          BuildingService.get(id).then(response => {
-          setcurrentBuilding({
-          currentbuildingId:response.data.buildingId,
-          currentbuildingName:response.data.buildingName,
+  const getDepartment = (id) => {
+          DepartmentService.get(id).then(response => {
+          setcurrentDepartment({
+          currentdepartmentId:response.data.departmentId,
+          currentdepartmentName:response.data.departmentName,
       });
       // console.log(response.data);
       })
@@ -121,15 +113,15 @@ export default function Building() {
   });
 
   };
-  const deleteBuilding = (id) => {
-      BuildingService.remove(id). then (
+  const deleteDepartment = (id) => {
+      DepartmentService.remove(id). then (
       response => {
           alert('Deleted Successfully...');           
-          retrieveBuilding();           
-          retrieveRoom();
+          retrieveDepartment();           
+          
       })
       UserService.getAll().then((response)=>{
-          response.data.filter(obj=>obj.buildingId === id).map((val)=>
+          response.data.filter(obj=>obj.departmentId === id).map((val)=>
           UserService.remove(val.userId) .then (
               response => {}
           )
@@ -139,15 +131,6 @@ export default function Building() {
           console.log(e);
       });
   };
-
-  
-  const handlebuttonChange = () => {
-    setBuilding(!getBuilding);
-  }
-
-  function getNumberofRooms (id){
-    return roomlist.filter(obj=>obj.buildingId === id).length
-   }
 
   let i=1;
 
@@ -169,7 +152,7 @@ export default function Building() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Building Details</CardTitle>
+                <CardTitle tag="h4">Department Details</CardTitle>
                 <Col md="5" ><Table><tr><td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
                   {/* <i class='nc-icon nc-zoom-split'></i> */}
                   </td><td>
@@ -179,18 +162,18 @@ export default function Building() {
                         toggle={toggle}
                         modalTransition={{ timeout: 2000 }}>
                         <ModalHeader
-                        toggle={toggle}>Add Building</ModalHeader>
+                        toggle={toggle}>Add Department</ModalHeader>
                         <ModalBody>
-                        <Form onSubmit={saveBuilding}>
+                        <Form onSubmit={saveDepartment}>
                           <Row>
                               <Col>
                                   <FormGroup>
-                                  <Label>Building Name</Label>
+                                  <Label>Department Name</Label>
                                   <Input
-                                      name="buildingName"
+                                      name="departmentName"
                                       onChange={handleInputChange}
-                                      value={buildingvalue.buildingName}
-                                      placeholder="Building Name"
+                                      value={departmentvalue.departmentName}
+                                      placeholder="Department Name"
                                       type="text" required
                                   />
                                   </FormGroup>
@@ -200,7 +183,7 @@ export default function Building() {
                       </Form>
                         </ModalBody>
                         {/* <ModalFooter>
-                          <Button color="primary" onClick={newBuilding}>Reset</Button>
+                          <Button color="primary" onClick={newDepartment}>Reset</Button>
                           <Button color="primary" onClick={toggle}>Cancel</Button>
                         </ModalFooter> */}
                     </Modal>
@@ -212,49 +195,47 @@ export default function Building() {
                   <thead className="text-primary">
                     <tr>
                       <th>#</th>
-                      <th>Building Name</th>
-                      <th>No of Rooms</th>
+                      <th>Department Name</th>
+                      {/* <th>No of Rooms</th> */}
                       <th className="text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                   {
-                    buildinglist.map(result=>(  
+                    departmentlist.map(result=>(  
                       <tr>
                         <td>{i++}</td>
-                        <td>{result.buildingName}</td>
-                        <td>{getNumberofRooms(result.buildingId)}</td>
-                        {/* <td>{result.emailId}</td> */}
+                        <td>{result.departmentName}</td>
                         <td>                                            
-                          {/* <button class="btn btn-primary" onClick={( () => getBuilding(result.buildingId) )}>Edit</button> */}
+                          {/* <button class="btn btn-primary" onClick={( () => getDepartment(result.DepartmentId) )}>Edit</button> */}
                           <Button color="primary"
-                        onClick={() => { toggle1(); getBuilding(result.buildingId);}}>Edit</Button>
+                        onClick={() => { toggle1(); getDepartment(result.departmentId);}}>Edit</Button>
                           <Modal isOpen={modal1}
                               toggle={toggle1}
                               modalTransition={{ timeout: 2000 }}>
                               <ModalHeader
-                              toggle={toggle1}>Edit Building</ModalHeader>
+                              toggle={toggle1}>Edit Department</ModalHeader>
                               <ModalBody>
                                 <Form >
                                   <Row>
                                       <Col>
                                           <FormGroup>
-                                          <Label>Building Name</Label>
+                                          <Label>Department Name</Label>
                                           <Input
-                                              name="currentbuildingName"
+                                              name="currentdepartmentName"
                                               onChange={currenthandleInputChange}
-                                              value={currentbuilding.currentbuildingName}
+                                              value={currentdepartment.currentdepartmentName}
                                               type="text" required
                                           />
                                           </FormGroup>
-                                          <Button color="primary" onClick={updateBuilding}>Update</Button>
+                                          <Button color="primary" onClick={updateDepartment}>Update</Button>
                                       </Col>
                                   </Row>
                                 </Form>
                               </ModalBody>
                           </Modal>
                         </td><td>
-                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this building?')) deleteBuilding(result.buildingId) } }>Delete</button>
+                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this department?')) deleteDepartment(result.departmentId) } }>Delete</button>
                         </td>
                       </tr>
                       )

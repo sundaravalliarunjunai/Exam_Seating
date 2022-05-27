@@ -12,26 +12,24 @@ export default function Room() {
     roomId:null,
     roomName: "",
     seatCapacity:null,
+    buildingId:null,
   };
 
   const currentroomState = {
     currentroomId:null,
     currentroomName: "",
     currentseatCapacity:null,
+    currentbuildingId:null,
   };
-  const currentbuildingState = {
-    buildingId:null,
-    buildingName: "",
-  };
-
   const [roomvalue,setRoom]=useState(roomState);
   const[submitted,setSubmitted]=useState(false);
   const [roomlist,setRoomlist]=useState([]);
   const [currentroom,setcurrentRoom]=useState(currentroomState);
-  const [buildinglist,setcurrentBuilding]=useState(currentbuildingState);
+  const [buildinglist,setBuildinglist]=useState([]);
 
   useEffect(() => {
     retrieveRoom();
+    retrieveBuilding();
   }, []);
 
   const handleInputChange=event => {
@@ -48,6 +46,7 @@ export default function Room() {
         roomId:roomvalue.roomId,
         roomName: roomvalue.roomName, 
         seatCapacity: roomvalue.seatCapacity,    
+        buildingId:roomvalue.buildingId,
     };
     // alert(data);
       RoomService.create(data).then(response => {
@@ -56,6 +55,7 @@ export default function Room() {
           roomId: response.data.roomId,
           roomName: response.data.roomName,
           seatCapacity:response.data.seatCapacity,
+          buildingId:response.data.buildingId,
         });
         retrieveRoom();
         setSubmitted(true);
@@ -80,19 +80,29 @@ export default function Room() {
       console.log(e);
   });
   };
+  const retrieveBuilding =() => {
+    BuildingService.getAll().then(response => {
+    setBuildinglist(response.data);
+    // console.log(response.data);
+})
+    .catch(e => {
+    console.log(e);
+});
+};
   const updateRoom = (e) => {
       e.preventDefault();
       var data= {
           roomId: currentroom.currentroomId,
           roomName: currentroom.currentroomName,
           seatCapacity: currentroom.currentseatCapacity,
+          buildingId:currentroom.currentbuildingId,
       };
           // alert(data);
           RoomService.update(currentroom.currentroomId,data).
           then(response => {
           console.log(response.data);
-          alert("Success");
           toggle1();
+          alert("Success");
           retrieveRoom();            
       })
           .catch(e => {
@@ -105,6 +115,7 @@ export default function Room() {
           currentroomId:response.data.roomId,
           currentroomName:response.data.roomName,
           currentseatCapacity:response.data.seatCapacity,
+          currentbuildingId:response.data.buildingId,
       });
       // console.log(response.data);
       })
@@ -131,19 +142,11 @@ export default function Room() {
   });
   };
 
-  const getBuilding = (id) => {
-    BuildingService.get(id).then(response => {
-    setcurrentBuilding({
-    value:response.data.buildingId,
-    label:response.data.buildingName,
-});
-// console.log(response.data);
-})
-.catch(e => {
-    console.log(e);
-});
-
-};
+function getbuildingName(id){
+  return buildinglist.filter(obj=> Number(obj.buildingId) === Number(id)).map(result=>{
+    return result.buildingName;
+  })
+}
   
   const handlebuttonChange = () => {
     setRoom(!getRoom);
@@ -184,16 +187,28 @@ export default function Room() {
                         <ModalHeader
                         toggle={toggle}>Add Room</ModalHeader>
                         <ModalBody>
-                          <Form>
+                          <Form onSubmit={saveRoom}>
                               <Row>
                                   <Col>
                                       <FormGroup>
                                       <Label>Building Name</Label>
-                                      {/* <Form.select>
+                                      <Input
+                                        type={"select"}
+                                        name="buildingId"
+                                        // size="2"
+                                        onChange={handleInputChange}
+                                        value={roomvalue.buildingId}
+                                      >
                                         {buildinglist.map(result =>(
-                                          <option value={result.value}><Label>{result.label}</Label></option>
+                                          <option value={result.buildingId}>{result.buildingName}</option>
                                         ))}
-                                      </Form.select> */}
+                                      </Input>
+                                      
+                                      {/* <Formselect>
+                                        {buildinglist.map(result =>(
+                                          <option value={result.buildingId}><Label>{result.buildingName}</Label></option>
+                                        ))}
+                                      </Formselect> */}
                                       {/* <select className="mt-4 col-md-8 col-offset-4">
                                         {
                                           //   buildinglist.map(result=>(
@@ -210,6 +225,8 @@ export default function Room() {
                                       <Label>Room Name</Label>
                                       <Input
                                           name="roomName"
+                                          onChange={handleInputChange}
+                                          value={roomvalue.roomName}
                                           placeholder="Room Name"
                                           type="text" required
                                       />
@@ -221,7 +238,9 @@ export default function Room() {
                                       <FormGroup>
                                       <Label>Number of Seats</Label>
                                       <Input
-                                          name="no_seats"
+                                          name="seatCapacity"
+                                          onChange={handleInputChange}
+                                          value={roomvalue.seatCapacity}
                                           placeholder="No of Seats"
                                           type="text" required
                                       />
@@ -259,7 +278,7 @@ export default function Room() {
                         <td>{i++}</td>
                         <td>{result.roomName}</td>
                         <td>
-                          {/* {buildinglist.map(result1=>(result1.buildingName))} */}
+                          {getbuildingName(result.buildingId)}
                         </td>
                         <td>{result.seatCapacity}</td>
                         {/* <td>{result.emailId}</td> */}
@@ -273,22 +292,22 @@ export default function Room() {
                               <ModalHeader
                               toggle={toggle1}>Edit Room</ModalHeader>
                               <ModalBody>
-                              <Form >
-                                <Row>
-                                    <Col>
-                                        <FormGroup>
-                                        <Label>Room Name</Label>
-                                        <Input
-                                            name="currentroomName"
-                                            onChange={currenthandleInputChange}
-                                            value={currentroom.currentroomName}
-                                            type="text" required
-                                        />
-                                        </FormGroup>
-                                        <Button color="primary" onClick={updateRoom}>Update</Button>
-                                    </Col>
-                                </Row>
-                            </Form>
+                                <Form >
+                                  <Row>
+                                      <Col>
+                                          <FormGroup>
+                                          <Label>Room Name</Label>
+                                          <Input
+                                              name="currentroomName"
+                                              onChange={currenthandleInputChange}
+                                              value={currentroom.currentroomName}
+                                              type="text" required
+                                          />
+                                          </FormGroup>
+                                          <Button color="primary" onClick={updateRoom}>Update</Button>
+                                      </Col>
+                                  </Row>
+                                </Form>
                               </ModalBody>
                           </Modal>
                         </td><td>

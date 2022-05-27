@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Label, Form, FormGroup, Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, ModalBody, ModalHeader, ModalFooter, Modal } from "reactstrap";
-import Addsubject from "./Subject/Addsubject";
+import DepartmentService from "./Department/DepartmentService";
 import UserService from "./Login/Userservice";
 import SubjectService from "./Subject/Subjectservice";
 
@@ -28,9 +28,11 @@ export default function Subject() {
   const[submitted,setSubmitted]=useState(false);
   const [subjectlist,setSubjectlist]=useState([]);
   const [currentsubject,setcurrentSubject]=useState(currentsubjectState);
+  const [departmentlist,setDepartmentlist]=useState([]);
 
   useEffect(() => {
     retrieveSubject();
+    retrieveDepartment();
   }, []);
 
   const handleInputChange=event => {
@@ -83,6 +85,15 @@ export default function Subject() {
       console.log(e);
   });
   };
+  const retrieveDepartment =() => {
+    DepartmentService.getAll().then(response => {
+    setDepartmentlist(response.data);
+    // console.log(response.data);
+  })
+    .catch(e => {
+    console.log(e);
+    });
+  };
   const updateSubject = (e) => {
       e.preventDefault();
       var data= {
@@ -96,8 +107,8 @@ export default function Subject() {
           SubjectService.update(currentsubject.currentsubjectId,data).
           then(response => {
           console.log(response.data);
-          alert("Success");
           toggle1();
+          alert("Success");
           retrieveSubject();            
       })
           .catch(e => {
@@ -139,9 +150,6 @@ export default function Subject() {
   };
 
   
-  const handlebuttonChange = () => {
-    setSubject(!getSubject);
-  }
 
   let i=1;
 
@@ -183,12 +191,23 @@ export default function Subject() {
                                 <FormGroup>
                                   <Label>Course Type</Label>
                                   <Input
+                                    type={"select"}
+                                    name="courseType"
+                                    // size="2"
+                                    onChange={handleInputChange}
+                                    value={subjectvalue.courseType}>
+                                      <option value="">-----</option>
+                                      <option value="UG">UG</option> 
+                                      <option value="PG">PG</option> 
+                                  </Input>
+                                  
+                                  {/* <Input
                                     name="courseType"
                                     onChange={handleInputChange}
                                     value={subjectvalue.courseType}
                                     placeholder="Course Type"
                                     type="text" required
-                                  />
+                                  /> */}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -197,12 +216,19 @@ export default function Subject() {
                                 <FormGroup>
                                   <Label>Semester</Label>
                                   <Input
+                                    type={"select"}
                                     name="semester"
+                                    // size="2"
                                     onChange={handleInputChange}
-                                    value={subjectvalue.semester}
-                                    placeholder="Semester"
-                                    type="text" required
-                                  />
+                                    value={subjectvalue.semester}>
+                                      <option value="">-----</option>
+                                      <option value="I">I</option> 
+                                      <option value="II">II</option> 
+                                      <option value="III">III</option> 
+                                      <option value="IV">IV</option> 
+                                      <option value="V">V</option>
+                                      <option value="VI">VI</option>  
+                                  </Input>
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -210,13 +236,17 @@ export default function Subject() {
                               <Col>
                                 <FormGroup>
                                   <Label>Department</Label>
-                                  <Input
-                                    name="department"
-                                    onChange={handleInputChange}
-                                    value={subjectvalue.department}
-                                    placeholder="Department"
-                                    type="text" required
-                                  />
+                                    <Input
+                                        type={"select"}
+                                        name="department"
+                                        // size="2"
+                                        onChange={handleInputChange}
+                                        value={subjectvalue.department}
+                                      >
+                                        {departmentlist.map(result =>(
+                                          <option value={result.departmentName}>{result.departmentName}</option>
+                                        ))}
+                                      </Input>
                                 </FormGroup>
                               </Col>
                             </Row>

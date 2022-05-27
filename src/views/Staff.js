@@ -1,18 +1,18 @@
 import React,{useState,useEffect} from "react";
 import {
-  Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Input, Modal, ModalFooter, ModalHeader, ModalBody,
+  Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Input, Modal, Label, FormGroup, ModalHeader, ModalBody, Form,
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Addstaff from './Staff/Addstaff';
+import DepartmentService from "./Department/DepartmentService";
 import UserService from "./Login/Userservice";
 import StaffService from "./Staff/Staffservice";
-import Edit_staff from "./Staff/Edit_staff";
 
 export default function Staff() {
 
   const staffState = {
     staffId:null,
     staffName: "",
+    departmentId:"",
     departmentName:"",
     dob:"",
   };
@@ -20,7 +20,8 @@ export default function Staff() {
   const currentstaffState = {
     currentstaffId:null,
     currentstaffName: "",
-    currentdepartmentName: "",
+    currentdepartmentId: "",
+    currentdepartmentName:"",
     currentdob: "",
   };
 
@@ -28,9 +29,11 @@ export default function Staff() {
   const[submitted,setSubmitted]=useState(false);
   const [stafflist,setStafflist]=useState([]);
   const [currentstaff,setcurrentStaff]=useState(currentstaffState);
+  const [departmentlist,setDepartmentlist]=useState([]);
 
   useEffect(() => {
     retrieveStaff();
+    retrieveDepartment();
   }, []);
 
   const handleInputChange=event => {
@@ -46,8 +49,9 @@ export default function Staff() {
     var data= {
         staffId:staffvalue.staffId,
         staffName: staffvalue.staffName,     
-        departmentName:staffvalue.departmentName,
+        departmentId:staffvalue.departmentId,
         dob:staffvalue.dob,
+        departmentName:staffvalue.departmentName,
     };
     // alert(data);
       StaffService.create(data).then(response => {
@@ -55,8 +59,9 @@ export default function Staff() {
         setStaff({
           staffId: response.data.staffId,
           staffName: response.data.staffName,
-          departmentName:staffvalue.departmentName,
+          departmentId:staffvalue.departmentId,
           dob:staffvalue.dob,
+          departmentName:staffvalue.departmentName,
         });
         setSubmitted(true);
                 console.log(response.data);
@@ -81,18 +86,31 @@ export default function Staff() {
       console.log(e);
   });
   };
+
+  const retrieveDepartment =() => {
+    DepartmentService.getAll().then(response => {
+    setDepartmentlist(response.data);
+    // console.log(response.data);
+    })
+        .catch(e => {
+        console.log(e);
+    });
+  };
+
   const updateStaff = (e) => {
       e.preventDefault();
       var data= {
           staffId: currentstaff.currentstaffId,
           staffName: currentstaff.currentstaffName,
-          departmentName:currentstaff.currentdepartmentName,
+          departmentId:currentstaff.currentdepartmentId,
           dob:currentstaff.currentdob,
+          departmentName:currentstaff.currentdepartmentName,
       };
           // alert(data);
           StaffService.update(currentstaff.currentstaffId,data).
           then(response => {
           console.log(response.data);
+          toggle1();
           alert("Success");
           retrieveStaff();            
       })
@@ -102,11 +120,12 @@ export default function Staff() {
   };
   const getStaff = (id) => {
           StaffService.get(id).then(response => {
-          setcurrentStaff({
-          currentstaffId:response.data.staffId,
-          currentstaffName:response.data.staffName,
-          currentdepartmentName:response.data.departmentName,
-          currentdob:response.data.dob,
+            setcurrentStaff({
+            currentstaffId:response.data.staffId,
+            currentstaffName:response.data.staffName,
+            currentdepartmentId:response.data.departmentId,
+            // currentdepartmentName:departmentlist.map(result =>{result.departmentName}),
+            currentdob:response.data.dob,
       });
       // console.log(response.data);
       })
@@ -133,9 +152,10 @@ export default function Staff() {
   });
   };
 
-  
-  const handlebuttonChange = () => {
-    setStaff(!getStaff);
+  function getDepartmentName(id){
+    return departmentlist.filter(obj=> Number(obj.departmentId) === Number(id)).map(result=>{
+      return result.departmentName;
+    })
   }
 
   let i=1;
@@ -172,11 +192,55 @@ export default function Staff() {
                         <ModalHeader
                         toggle={toggle}>Add Staff</ModalHeader>
                         <ModalBody>
-                            <Addstaff />
+                            <Form onSubmit={saveStaff}>
+                              <Row>
+                                  <Col>
+                                      <FormGroup>
+                                      <Label>Staff Name</Label>
+                                      <Input
+                                          name="staffName"
+                                          onChange={handleInputChange}
+                                          value={staffvalue.staffName}
+                                          placeholder="Staff Name"
+                                          type="text" required
+                                      />
+                                      </FormGroup>
+                                  </Col>
+                              </Row>
+                              <Row>
+                                  <Col>
+                                      <FormGroup>
+                                      <Label>Date of Birth</Label>
+                                      <Input
+                                          name="dob"
+                                          onChange={handleInputChange}
+                                          value={staffvalue.dob}
+                                          placeholder="DD-MM-YYYY"
+                                          type="text" required
+                                      />
+                                      </FormGroup>
+                                  </Col>
+                              </Row>
+                              <Row>
+                                  <Col>
+                                      <FormGroup>
+                                      <Label>Department</Label>
+                                      <Input
+                                        type={"select"}
+                                        name="departmentId"
+                                        onChange={handleInputChange}
+                                        value={staffvalue.departmentId}
+                                      >
+                                        {departmentlist.map(result =>(
+                                          <option value={result.departmentId}>{result.departmentName}</option>
+                                        ))}
+                                      </Input>                                      
+                                      </FormGroup>
+                                      <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
+                                  </Col>
+                              </Row>
+                          </Form>
                         </ModalBody>
-                        {/* <ModalFooter>
-                            <Button color="primary" onClick={toggle}>Save</Button>
-                        </ModalFooter> */}
                     </Modal></td></tr></Table>
                 </Col>
               </CardHeader>
@@ -201,10 +265,7 @@ export default function Staff() {
                         <td>{i++}</td>
                         <td>{result.staffName}</td>
                         <td>{result.dob}</td>
-                        <td>
-                          {/* {result.departmentName} */}
-                        </td>
-                        {/* <td>{result.emailId}</td> */}
+                        <td>{getDepartmentName(result.departmentId)}</td>
                         <td>                                            
                           {/* <button class="btn btn-primary" onClick={( () => getStaff(result.staffId) )}>Edit</button> */}
                           <Button color="primary"
@@ -215,7 +276,52 @@ export default function Staff() {
                               <ModalHeader
                               toggle={toggle1}>Edit Staff</ModalHeader>
                               <ModalBody>
-                                  <Edit_staff/>
+                                <Form >
+                                    <Row>
+                                        <Col>
+                                          <FormGroup>
+                                            <Label>Staff Name</Label>
+                                            <Input
+                                                name="currentstaffName"
+                                                onChange={currenthandleInputChange}
+                                                value={currentstaff.currentstaffName}
+                                                type="text" required
+                                            />
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <Col>
+                                          <FormGroup>
+                                            <Label>Date of Birth</Label>
+                                            <Input
+                                                name="currentdob"
+                                                onChange={currenthandleInputChange}
+                                                value={currentstaff.currentdob}
+                                                type="text" required
+                                            />
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <Col>
+                                          <FormGroup>
+                                            <Label>Department</Label>
+                                            <Input
+                                              type={"select"}
+                                              name="currentdepartmentId"
+                                              onChange={currenthandleInputChange}
+                                              value={currentstaff.departmentId}
+                                            >
+                                              {departmentlist.map(result =>(
+                                                <option value={result.departmentId}>{result.departmentName}</option>
+                                              ))}
+                                            </Input>
+                                          </FormGroup>
+                                          <Button color="primary" onClick={updateStaff}>Update</Button>
+                                        </Col>
+                                      </Row>
+                                  </Form>
                               </ModalBody>
                           </Modal>
                         </td><td>
@@ -225,38 +331,6 @@ export default function Staff() {
                       )
                     )
                   }
-                    {/* <tr>
-                      <td>1</td>
-                      <td>S.Varshini</td>
-                      <td>10-07-1999</td>
-                      <td>SV</td>
-                        <td className="text-center" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
-                        </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>P.Pavithra</td>
-                      <td>02-09-1998</td>
-                      <td>PP</td>
-                      <td className="text-center" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
-                        </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr> */}
                   </tbody>
                 </Table>
               </CardBody>

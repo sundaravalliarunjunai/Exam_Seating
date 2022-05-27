@@ -7,6 +7,7 @@ import Student from "views/Student.js";
 import Examtimetable from "views/Examtimetable";
 import Building from "views/Building";
 import Generate from "views/Generate";
+import Department from "views/Department";
 
   var admin_routes = [
     {
@@ -28,6 +29,13 @@ import Generate from "views/Generate";
       name: "Room",
       icon: "nc-icon nc-shop",
       component: Room,
+      layout: "/admin",
+    },
+    {
+      path: "/department",
+      name: "Department",
+      icon: "nc-icon nc-shop",
+      component: Department,
       layout: "/admin",
     },
     {

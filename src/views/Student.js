@@ -1,13 +1,12 @@
 import React,{useState,useEffect} from "react";
 import {
-  Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Input,Modal, ModalFooter,
-  ModalHeader, ModalBody
+  Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Input,Modal, Label,
+  ModalHeader, ModalBody, FormGroup, Form
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Addstudent from './Student/Addstudent';
 import StudentService from "./Student/Studentservice";
-import Edit_student from "./Student/Edit_student";
 import UserService from "./Login/Userservice";
+import DepartmentService from "./Department/DepartmentService";
 
 export default function Student() {
 
@@ -17,7 +16,7 @@ export default function Student() {
     regNo:"",
     dob:"",
     courseType:"",
-    department:"",
+    departmentId:"",
     semester:"",
   };
 
@@ -27,7 +26,7 @@ export default function Student() {
     currentregNo:"",
     currentdob:"",
     currentcourseType:"",
-    currentdepartment:"",
+    currentdepartmentId:"",
     currentsemester:"",
   };
 
@@ -35,9 +34,11 @@ export default function Student() {
   const[submitted,setSubmitted]=useState(false);
   const [studentlist,setStudentlist]=useState([]);
   const [currentstudent,setcurrentStudent]=useState(currentstudentState);
+  const [departmentlist,setDepartmentlist]=useState([]);
 
   useEffect(() => {
     retrieveStudent();
+    retrieveDepartment();
   }, []);
 
   const handleInputChange=event => {
@@ -56,7 +57,7 @@ export default function Student() {
         regNo:studentvalue.regNo,
         dob:studentvalue.dob,
         courseType:studentvalue.courseType,
-        department:studentvalue.department,
+        departmentId:studentvalue.departmentId,
         semester:studentvalue.semester,
     };
     // alert(data);
@@ -68,7 +69,7 @@ export default function Student() {
           regNo:response.data.regNo,
           dob:response.data.dob,
           courseType:response.data.courseType,
-          department:response.data.department,
+          departmentId:response.data.departmentId,
           semester:response.data.semester,
         });
         setSubmitted(true);
@@ -94,6 +95,17 @@ export default function Student() {
       console.log(e);
   });
   };
+
+  const retrieveDepartment =() => {
+    DepartmentService.getAll().then(response => {
+    setDepartmentlist(response.data);
+    // console.log(response.data);
+  })
+    .catch(e => {
+    console.log(e);
+    });
+  };
+
   const updateStudent = (e) => {
       e.preventDefault();
       var data= {
@@ -102,13 +114,14 @@ export default function Student() {
           regNo:currentstudent.currentregNo,
           dob:currentstudent.currentdob,
           courseType:currentstudent.currentcourseType,
-          department:currentstudent.currentdepartment,
+          departmentId:currentstudent.currentdepartmentId,
           semester:currentstudent.currentsemester,
       };
           // alert(data);
           StudentService.update(currentstudent.currentstudentId,data).
           then(response => {
           console.log(response.data);
+          toggle1();
           alert("Success");
           retrieveStudent();            
       })
@@ -124,7 +137,7 @@ export default function Student() {
           currentregNo:response.data.regNo,
           currentdob:response.data.dob,
           currentcourseType:response.data.courseType,
-          currentdepartment:response.data.department,
+          currentdepartmentId:response.data.departmentId,
           currentsemester:response.data.semester,
       });
       // console.log(response.data);
@@ -152,9 +165,10 @@ export default function Student() {
   });
   };
 
-  
-  const handlebuttonChange = () => {
-    setStudent(!getStudent);
+  function getDepartmentName(id){
+    return departmentlist.filter(obj=> Number(obj.departmentId) === Number(id)).map(result=>{
+      return result.departmentName;
+    })
   }
 
   let i=1;
@@ -190,11 +204,108 @@ export default function Student() {
                         <ModalHeader
                         toggle={toggle}>Add Student</ModalHeader>
                         <ModalBody>
-                            <Addstudent />
+                          <Form onSubmit={saveStudent}>
+                            <Row>
+                                <Col>
+                                    <FormGroup>
+                                    <Label>Student Name</Label>
+                                    <Input
+                                        name="studentName"
+                                        onChange={handleInputChange}
+                                        value={studentvalue.studentName}
+                                        placeholder="Student Name"
+                                        type="text" required
+                                    />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <FormGroup>
+                                    <Label>Register No</Label>
+                                    <Input
+                                        name="regNo"
+                                        onChange={handleInputChange}
+                                        value={studentvalue.regNo}
+                                        placeholder="Register number"
+                                        type="text" required
+                                    />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <FormGroup>
+                                    <Label>Date of Birth</Label>
+                                    <Input
+                                        name="dob"
+                                        onChange={handleInputChange}
+                                        value={studentvalue.dob}
+                                        placeholder="DD-MM-YYYY"
+                                        type="text" required
+                                    />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <FormGroup>
+                                    <Label>Course Type</Label>
+                                    <Input
+                                      type={"select"}
+                                      name="courseType"
+                                      // size="2"
+                                      onChange={handleInputChange}
+                                      value={studentvalue.courseType}>
+                                        <option value="">-----</option>
+                                        <option value="UG">UG</option> 
+                                        <option value="PG">PG</option> 
+                                    </Input>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Department</Label>
+                                    <Input
+                                        type={"select"}
+                                        name="departmentId"
+                                        // size="2"
+                                        onChange={handleInputChange}
+                                        value={studentvalue.departmentId}
+                                      >
+                                        {departmentlist.map(result =>(
+                                          <option value={result.departmentId}>{result.departmentName}</option>
+                                        ))}
+                                      </Input>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Semester</Label>
+                                  <Input
+                                    type={"select"}
+                                    name="semester"
+                                    // size="2"
+                                    onChange={handleInputChange}
+                                    value={studentvalue.semester}>
+                                      <option value="">-----</option>
+                                      <option value="I">I</option> 
+                                      <option value="II">II</option> 
+                                      <option value="III">III</option> 
+                                      <option value="IV">IV</option> 
+                                      <option value="V">V</option>
+                                      <option value="VI">VI</option>  
+                                  </Input>
+                                </FormGroup>
+                                <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
+                              </Col>
+                            </Row>
+                          </Form>
                         </ModalBody>
-                        {/* <ModalFooter>
-                            <Button color="primary" onClick={toggle}>Save</Button>
-                        </ModalFooter> */}
                     </Modal>
                   </td></tr></Table>
                 </Col>
@@ -222,7 +333,7 @@ export default function Student() {
                         <td>{result.regNo}</td>
                         <td>{result.dob}</td>
                         <td>{result.courseType}</td>
-                        <td></td>
+                        <td>{getDepartmentName(result.departmentId)}</td>
                         <td>{result.semester}</td>
                         <td>                                            
                           {/* <button class="btn btn-primary" onClick={( () => getStudent(result.studentId) )}>Edit</button> */}
@@ -234,7 +345,87 @@ export default function Student() {
                               <ModalHeader
                               toggle={toggle1}>Edit Student</ModalHeader>
                               <ModalBody>
-                                  <Edit_student/>
+                                <Form >
+                                    <Row>
+                                        <Col>
+                                          <FormGroup>
+                                            <Label>Student Name</Label>
+                                            <Input
+                                                name="currentstudentName"
+                                                onChange={currenthandleInputChange}
+                                                value={currentstudent.currentstudentName}
+                                                type="text" required
+                                            />
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <Col>
+                                          <FormGroup>
+                                            <Label>Register No</Label>
+                                            <Input
+                                                name="currentregNo"
+                                                onChange={currenthandleInputChange}
+                                                value={currentstudent.currentregNo}
+                                                type="text" required
+                                            />
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <Col>
+                                          <FormGroup>
+                                            <Label>Date of Birth</Label>
+                                            <Input
+                                                name="currentdob"
+                                                onChange={currenthandleInputChange}
+                                                value={currentstudent.currentdob}
+                                                type="text" required
+                                            />
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <Col>
+                                          <FormGroup>
+                                            <Label>Course Type</Label>
+                                            <Input
+                                                name="currentcourseType"
+                                                onChange={currenthandleInputChange}
+                                                value={currentstudent.currentcourseType}
+                                                type="text" required
+                                            />
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <Col>
+                                          <FormGroup>
+                                            <Label>Department</Label>
+                                            <Input
+                                                name="currentdepartmentId"
+                                                onChange={currenthandleInputChange}
+                                                value={currentstudent.currentdepartmentId}
+                                                type="text" required
+                                            />
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <Col>
+                                          <FormGroup>
+                                            <Label>Semester</Label>
+                                            <Input
+                                                name="currentsemester"
+                                                onChange={currenthandleInputChange}
+                                                value={currentstudent.currentsemester}
+                                                type="text" required
+                                            />
+                                          </FormGroup>
+                                          <Button color="primary" onClick={updateStudent}>Update</Button>
+                                        </Col>
+                                      </Row>
+                                    </Form>
                               </ModalBody>
                           </Modal>
                         </td><td>
