@@ -1,9 +1,8 @@
 import React,{useState,useEffect} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, ModalBody, ModalHeader, ModalFooter, Modal } from "reactstrap";
+import { Label, Form, FormGroup, Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, ModalBody, ModalHeader, ModalFooter, Modal } from "reactstrap";
 import Addsubject from "./Subject/Addsubject";
 import UserService from "./Login/Userservice";
-import Edit_subject from "./Subject/Edit_subject";
 import SubjectService from "./Subject/Subjectservice";
 
 
@@ -98,6 +97,7 @@ export default function Subject() {
           then(response => {
           console.log(response.data);
           alert("Success");
+          toggle1();
           retrieveSubject();            
       })
           .catch(e => {
@@ -177,11 +177,66 @@ export default function Subject() {
                         <ModalHeader
                         toggle={toggle}>Add Subject</ModalHeader>
                         <ModalBody>
-                            <Addsubject />
+                          <Form onSubmit={saveSubject}>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Course Type</Label>
+                                  <Input
+                                    name="courseType"
+                                    onChange={handleInputChange}
+                                    value={subjectvalue.courseType}
+                                    placeholder="Course Type"
+                                    type="text" required
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Semester</Label>
+                                  <Input
+                                    name="semester"
+                                    onChange={handleInputChange}
+                                    value={subjectvalue.semester}
+                                    placeholder="Semester"
+                                    type="text" required
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Department</Label>
+                                  <Input
+                                    name="department"
+                                    onChange={handleInputChange}
+                                    value={subjectvalue.department}
+                                    placeholder="Department"
+                                    type="text" required
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Subject Name</Label>
+                                  <Input
+                                    name="subjectName"
+                                    onChange={handleInputChange}
+                                    value={subjectvalue.subjectName}
+                                    placeholder="Subject Name"
+                                    type="text" required
+                                  />
+                                </FormGroup>
+                                <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
+                              </Col>
+                            </Row>
+                          </Form>
                         </ModalBody>
-                        {/* <ModalFooter>
-                            <Button color="primary" onClick={toggle}>Save</Button>
-                        </ModalFooter> */}
                     </Modal>
                   </td></tr></Table>
                 </Col>
@@ -220,7 +275,61 @@ export default function Subject() {
                               <ModalHeader
                               toggle={toggle1}>Edit Subject</ModalHeader>
                               <ModalBody>
-                                  <Edit_subject/>
+                              <Form >
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Course Type</Label>
+                                        <Input
+                                            name="currentcourseType"
+                                            onChange={currenthandleInputChange}
+                                            value={currentsubject.currentcourseType}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Semester</Label>
+                                        <Input
+                                            name="currentsemester"
+                                            onChange={currenthandleInputChange}
+                                            value={currentsubject.currentsemester}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Department</Label>
+                                        <Input
+                                            name="currentdepartment"
+                                            onChange={currenthandleInputChange}
+                                            value={currentsubject.currentdepartment}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Subject Name</Label>
+                                        <Input
+                                            name="currentsubjectName"
+                                            onChange={currenthandleInputChange}
+                                            value={currentsubject.currentsubjectName}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                        <Button color="primary" onClick={updateSubject}>Update</Button>
+                                    </Col>
+                                </Row>
+                              </Form>
                               </ModalBody>
                           </Modal>
                         </td><td>

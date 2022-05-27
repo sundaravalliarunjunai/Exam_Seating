@@ -86,6 +86,7 @@ export default function Building() {
           then(response => {
           console.log(response.data);
           alert("Success");
+          toggle1();
           retrieveBuilding();            
       })
           .catch(e => {
@@ -168,22 +169,22 @@ export default function Building() {
                         toggle={toggle}>Add Building</ModalHeader>
                         <ModalBody>
                         <Form onSubmit={saveBuilding}>
-                    <Row>
-                        <Col>
-                            <FormGroup>
-                            <Label>Building Name</Label>
-                            <Input
-                                name="buildingName"
-                                onChange={handleInputChange}
-                                value={buildingvalue.buildingName}
-                                placeholder="Building Name"
-                                type="text" required
-                            />
-                            </FormGroup>
-                            <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
-                        </Col>
-                    </Row>
-                </Form>
+                          <Row>
+                              <Col>
+                                  <FormGroup>
+                                  <Label>Building Name</Label>
+                                  <Input
+                                      name="buildingName"
+                                      onChange={handleInputChange}
+                                      value={buildingvalue.buildingName}
+                                      placeholder="Building Name"
+                                      type="text" required
+                                  />
+                                  </FormGroup>
+                                  <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
+                              </Col>
+                          </Row>
+                      </Form>
                         </ModalBody>
                         {/* <ModalFooter>
                           <Button color="primary" onClick={newBuilding}>Reset</Button>
@@ -248,27 +249,6 @@ export default function Building() {
                   }
                   </tbody>
                 </Table>
-                {/* <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModal" aria-hidden="true">
-                  <div className="modal-dialog">
-                    <div className="modal-content">
-                      <Form className="forms-sample">
-                        <div className="modal-header">
-                          <h5 className="modal-title" id="exampleModal"> Edit Building</h5>
-                          <Button  type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></Button>
-                        </div>
-                        <div className="modal-body">                                                    
-                          <div className="form-group"> 
-                            <Label class="lbl">Building Name</Label>                        
-                            <Input class="form-control" type="text" placeholder='Enter here' onChange={currenthandleInputChange} value={currentbuilding.currentbuildingName} name="currentbuildingName" required/>
-                          </div>                                                                                                                                                                                     
-                        </div>
-                        <div className="modal-footer">                                                    
-                          <Button  className="btn btn-blue me-2 btn-rounded btn-fw"   onClick={updateBuilding}>Update</Button>
-                        </div>
-                      </Form>
-                    </div>
-                  </div>
-                </div> */}
               </CardBody>
             </Card>
           </Col>

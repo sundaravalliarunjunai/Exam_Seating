@@ -92,6 +92,7 @@ export default function Room() {
           then(response => {
           console.log(response.data);
           alert("Success");
+          toggle1();
           retrieveRoom();            
       })
           .catch(e => {
@@ -133,8 +134,8 @@ export default function Room() {
   const getBuilding = (id) => {
     BuildingService.get(id).then(response => {
     setcurrentBuilding({
-    buildingId:response.data.buildingId,
-    buildingName:response.data.buildingName,
+    value:response.data.buildingId,
+    label:response.data.buildingName,
 });
 // console.log(response.data);
 })
@@ -188,13 +189,18 @@ export default function Room() {
                                   <Col>
                                       <FormGroup>
                                       <Label>Building Name</Label>
-                                      <select className="mt-4 col-md-8 col-offset-4">
+                                      {/* <Form.select>
+                                        {buildinglist.map(result =>(
+                                          <option value={result.value}><Label>{result.label}</Label></option>
+                                        ))}
+                                      </Form.select> */}
+                                      {/* <select className="mt-4 col-md-8 col-offset-4">
                                         {
                                           //   buildinglist.map(result=>(
                                           //     <option value={getBuilding(result.buildingId)}>{getBuilding(result.buildingName)}</option>
                                           // ))
                                         }
-                                      </select>
+                                      </select> */}
                                       </FormGroup>
                                   </Col>
                               </Row>
@@ -267,7 +273,22 @@ export default function Room() {
                               <ModalHeader
                               toggle={toggle1}>Edit Room</ModalHeader>
                               <ModalBody>
-                                  <Edit_room/>
+                              <Form >
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Room Name</Label>
+                                        <Input
+                                            name="currentroomName"
+                                            onChange={currenthandleInputChange}
+                                            value={currentroom.currentroomName}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                        <Button color="primary" onClick={updateRoom}>Update</Button>
+                                    </Col>
+                                </Row>
+                            </Form>
                               </ModalBody>
                           </Modal>
                         </td><td>
