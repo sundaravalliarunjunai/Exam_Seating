@@ -336,9 +336,9 @@ export default function Student() {
                         <td>{getDepartmentName(result.departmentId)}</td>
                         <td>{result.semester}</td>
                         <td>                                            
-                          {/* <button class="btn btn-primary" onClick={( () => getStudent(result.studentId) )}>Edit</button> */}
-                          <Button color="primary"
-                          onClick={(()=>{toggle1();getStudent(result.studentId);})}>Edit</Button>
+                          <i class="fa-solid fa-pen fa-lg" onClick={() => { toggle1(); getStudent(result.studentId);}} ></i>
+                          {/* <Button color="primary"
+                          onClick={(()=>{toggle1();getStudent(result.studentId);})}>Edit</Button> */}
                           <Modal isOpen={modal1}
                               toggle={toggle1}
                               modalTransition={{ timeout: 2000 }}>

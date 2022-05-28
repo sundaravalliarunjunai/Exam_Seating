@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, Modal, Label, Form, FormGroup, ModalHeader, ModalBody } from "reactstrap";
-import Edit_room from "./Room/Edit_room";
 import UserService from "./Login/Userservice";
 import RoomService from "./Room/Roomservice";
 import BuildingService from "./Building/Buildingservice";
@@ -20,6 +19,7 @@ export default function Room() {
     currentroomName: "",
     currentseatCapacity:null,
     currentbuildingId:null,
+    currentbuildingName:"",
   };
   const [roomvalue,setRoom]=useState(roomState);
   const[submitted,setSubmitted]=useState(false);
@@ -96,6 +96,7 @@ export default function Room() {
           roomName: currentroom.currentroomName,
           seatCapacity: currentroom.currentseatCapacity,
           buildingId:currentroom.currentbuildingId,
+          buildingName:currentroom.currentbuildingName,
       };
           // alert(data);
           RoomService.update(currentroom.currentroomId,data).
@@ -116,6 +117,7 @@ export default function Room() {
           currentroomName:response.data.roomName,
           currentseatCapacity:response.data.seatCapacity,
           currentbuildingId:response.data.buildingId,
+          currentbuildingName:getbuildingName(id),
       });
       // console.log(response.data);
       })
@@ -283,9 +285,9 @@ function getbuildingName(id){
                         <td>{result.seatCapacity}</td>
                         {/* <td>{result.emailId}</td> */}
                         <td>                                            
-                          {/* <button class="btn btn-primary" onClick={( () => getRoom(result.roomId) )}>Edit</button> */}
-                          <Button color="primary"
-                          onClick={()=>{toggle1();getRoom(result.roomId);}}>Edit</Button>
+                          <i class="fa-solid fa-pen fa-lg" onClick={() => { toggle1(); getRoom(result.roomId);}} ></i>
+                          {/* <Button color="primary"
+                          onClick={()=>{toggle1();getRoom(result.roomId);}}>Edit</Button> */}
                           <Modal isOpen={modal1}
                               toggle={toggle1}
                               modalTransition={{ timeout: 2000 }}>
@@ -296,11 +298,37 @@ function getbuildingName(id){
                                   <Row>
                                       <Col>
                                           <FormGroup>
+                                          <Label>Building Name</Label>
+                                          <Input
+                                              name="currentbuildingName"
+                                              onChange={currenthandleInputChange}
+                                              value={getbuildingName(currentroom.currentbuildingId)}
+                                              type="text" required
+                                          />
+                                          </FormGroup>
+                                      </Col>
+                                  </Row>
+                                  <Row>
+                                      <Col>
+                                          <FormGroup>
                                           <Label>Room Name</Label>
                                           <Input
                                               name="currentroomName"
                                               onChange={currenthandleInputChange}
                                               value={currentroom.currentroomName}
+                                              type="text" required
+                                          />
+                                          </FormGroup>
+                                      </Col>
+                                  </Row>
+                                  <Row>
+                                      <Col>
+                                          <FormGroup>
+                                          <Label>No of Seats</Label>
+                                          <Input
+                                              name="currentseatCapacity"
+                                              onChange={currenthandleInputChange}
+                                              value={currentroom.currentseatCapacity}
                                               type="text" required
                                           />
                                           </FormGroup>

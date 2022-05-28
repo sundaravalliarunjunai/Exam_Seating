@@ -212,7 +212,7 @@ export default function Building() {
                       <th>#</th>
                       <th>Building Name</th>
                       <th>No of Rooms</th>
-                      <th className="text-right">Action</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -224,9 +224,9 @@ export default function Building() {
                         <td>{getNumberofRooms(result.buildingId)}</td>
                         {/* <td>{result.emailId}</td> */}
                         <td>                                            
-                          {/* <button class="btn btn-primary" onClick={( () => getBuilding(result.buildingId) )}>Edit</button> */}
-                          <Button color="primary"
-                        onClick={() => { toggle1(); getBuilding(result.buildingId);}}>Edit</Button>
+                          <i class="fa-solid fa-pen fa-lg" onClick={() => { toggle1(); getBuilding(result.buildingId);}} ></i>
+                          {/* <Button color="primary"
+                        onClick={() => { toggle1(); getBuilding(result.buildingId);}}>Edit</Button> */}
                           <Modal isOpen={modal1} 
                             toggle={toggle1} fade={false} >
                                {/* modalTransition={{ timeout: 2000 }} */}
@@ -251,8 +251,9 @@ export default function Building() {
                                 </Form>
                               </ModalBody>
                           </Modal>
-                        </td><td>
-                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this building?')) deleteBuilding(result.buildingId) } }>Delete</button>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this building?')) deleteBuilding(result.buildingId) } } ></i>
+                          {/* <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this building?')) deleteBuilding(result.buildingId) } }>Delete</button> */}
                         </td>
                       </tr>
                       )

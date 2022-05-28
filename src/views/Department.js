@@ -207,9 +207,9 @@ export default function Department() {
                         <td>{i++}</td>
                         <td>{result.departmentName}</td>
                         <td>                                            
-                          {/* <button class="btn btn-primary" onClick={( () => getDepartment(result.DepartmentId) )}>Edit</button> */}
-                          <Button color="primary"
-                        onClick={() => { toggle1(); getDepartment(result.departmentId);}}>Edit</Button>
+                          <i class="fa-solid fa-pen fa-lg" onClick={() => { toggle1(); getDepartment(result.departmentId);}} ></i>
+                          {/* <Button color="primary"
+                        onClick={() => { toggle1(); getDepartment(result.departmentId);}}>Edit</Button> */}
                           <Modal isOpen={modal1}
                               toggle={toggle1}
                               modalTransition={{ timeout: 2000 }}>

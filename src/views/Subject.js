@@ -296,9 +296,9 @@ export default function Subject() {
                         <td>{result.department}</td>
                         <td>{result.subjectName}</td>                        
                         <td>                                            
-                          {/* <button class="btn btn-primary" onClick={( () => getSubject(result.subjectId) )}>Edit</button> */}
-                          <Button color="primary"
-                          onClick={(()=>{toggle1();getSubject(result.subjectId);})}>Edit</Button>
+                          <i class="fa-solid fa-pen fa-lg" onClick={() => { toggle1(); getSubject(result.subjectId);}} ></i>
+                          {/* <Button color="primary"
+                          onClick={(()=>{toggle1();getSubject(result.subjectId);})}>Edit</Button> */}
                           <Modal isOpen={modal1}
                               toggle={toggle1}
                               modalTransition={{ timeout: 2000 }}>
