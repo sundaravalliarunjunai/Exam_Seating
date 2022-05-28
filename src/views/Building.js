@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {
-  FormGroup,Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Modal, ModalBody, ModalHeader, ModalFooter, Input, Label, Form
+  FormGroup,Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Modal, ModalBody, ModalHeader, Input, Label, Form
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import Add from './Building/Add';
@@ -155,13 +155,15 @@ export default function Building() {
   const [modal, setModal] = React.useState(false);
   
     // Toggle for Modal
-   const toggle = () => setModal(!modal);
+  const toggle = () => setModal(!modal);
 
-  // Modal open state
+       // Modal open state
   const [modal1, setModal1] = React.useState(false);
   
   // Toggle for Modal
-  const toggle1 = () => setModal1(!modal1);
+ const toggle1 = () => setModal1(!modal1);
+ 
+
   return (
     <>
       <div className="content">
@@ -176,8 +178,8 @@ export default function Building() {
                     <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add</Button>
                     <Modal isOpen={modal}
-                        toggle={toggle}
-                        modalTransition={{ timeout: 2000 }}>
+                        toggle={toggle} fade={false} >
+                        {/* modalTransition={{ timeout: 2000 }} */}
                         <ModalHeader
                         toggle={toggle}>Add Building</ModalHeader>
                         <ModalBody>
@@ -199,10 +201,6 @@ export default function Building() {
                           </Row>
                       </Form>
                         </ModalBody>
-                        {/* <ModalFooter>
-                          <Button color="primary" onClick={newBuilding}>Reset</Button>
-                          <Button color="primary" onClick={toggle}>Cancel</Button>
-                        </ModalFooter> */}
                     </Modal>
                   </td></tr></Table>
                 </Col>
@@ -229,9 +227,9 @@ export default function Building() {
                           {/* <button class="btn btn-primary" onClick={( () => getBuilding(result.buildingId) )}>Edit</button> */}
                           <Button color="primary"
                         onClick={() => { toggle1(); getBuilding(result.buildingId);}}>Edit</Button>
-                          <Modal isOpen={modal1}
-                              toggle={toggle1}
-                              modalTransition={{ timeout: 2000 }}>
+                          <Modal isOpen={modal1} 
+                            toggle={toggle1} fade={false} >
+                               {/* modalTransition={{ timeout: 2000 }} */}
                               <ModalHeader
                               toggle={toggle1}>Edit Building</ModalHeader>
                               <ModalBody>
