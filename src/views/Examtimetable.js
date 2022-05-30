@@ -200,8 +200,8 @@ export default function Examtimetable() {
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add
                   </Button>
                   <Modal isOpen={modal}
-                        toggle={toggle}
-                        modalTransition={{ timeout: 2000 }}>
+                        toggle={toggle} fade={false} >
+                        {/* modalTransition={{ timeout: 2000 }} */}
                         <ModalHeader
                         toggle={toggle}>Add Exam Date</ModalHeader>
                         <ModalBody>

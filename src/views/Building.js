@@ -109,16 +109,16 @@ export default function Building() {
       });
   };
   const getBuilding = (id) => {
-          BuildingService.get(id).then(response => {
-          setcurrentBuilding({
-          currentbuildingId:response.data.buildingId,
-          currentbuildingName:response.data.buildingName,
+    BuildingService.get(id).then(response => {
+      setcurrentBuilding({
+        currentbuildingId:response.data.buildingId,
+        currentbuildingName:response.data.buildingName,
       });
       // console.log(response.data);
-      })
-      .catch(e => {
-          console.log(e);
-  });
+    })
+    .catch(e => {
+      console.log(e);
+    });
 
   };
   const deleteBuilding = (id) => {
@@ -223,7 +223,7 @@ export default function Building() {
                           {/* <Button color="primary"
                         onClick={() => { toggle1(); getBuilding(result.buildingId);}}>Edit</Button> */}
                           <Modal isOpen={modal1} 
-                            toggle={toggle1} fade={false} >
+                            toggle={toggle1} backdrop={false} >
                                {/* modalTransition={{ timeout: 2000 }} */}
                               <ModalHeader
                               toggle={toggle1}>Edit Building</ModalHeader>

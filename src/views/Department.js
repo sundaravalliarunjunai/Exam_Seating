@@ -159,8 +159,8 @@ export default function Department() {
                     <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add</Button>
                     <Modal isOpen={modal}
-                        toggle={toggle}
-                        modalTransition={{ timeout: 2000 }}>
+                        toggle={toggle} fade={false} >
+                        {/* modalTransition={{ timeout: 2000 }} */}
                         <ModalHeader
                         toggle={toggle}>Add Department</ModalHeader>
                         <ModalBody>
@@ -211,8 +211,8 @@ export default function Department() {
                           {/* <Button color="primary"
                         onClick={() => { toggle1(); getDepartment(result.departmentId);}}>Edit</Button> */}
                           <Modal isOpen={modal1}
-                              toggle={toggle1}
-                              modalTransition={{ timeout: 2000 }}>
+                              toggle={toggle1} backdrop={false} >
+                              {/* modalTransition={{ timeout: 2000 }} */}
                               <ModalHeader
                               toggle={toggle1}>Edit Department</ModalHeader>
                               <ModalBody>

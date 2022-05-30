@@ -199,8 +199,8 @@ export default function Student() {
                   <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add</Button>
                     <Modal isOpen={modal}
-                        toggle={toggle}
-                        modalTransition={{ timeout: 2000 }}>
+                        toggle={toggle} fade={false} >
+                        {/* modalTransition={{ timeout: 2000 }} */}
                         <ModalHeader
                         toggle={toggle}>Add Student</ModalHeader>
                         <ModalBody>
@@ -340,8 +340,8 @@ export default function Student() {
                           {/* <Button color="primary"
                           onClick={(()=>{toggle1();getStudent(result.studentId);})}>Edit</Button> */}
                           <Modal isOpen={modal1}
-                              toggle={toggle1}
-                              modalTransition={{ timeout: 2000 }}>
+                              toggle={toggle1} backdrop={false} >
+                              {/* modalTransition={{ timeout: 2000 }} */}
                               <ModalHeader
                               toggle={toggle1}>Edit Student</ModalHeader>
                               <ModalBody>
