@@ -302,8 +302,16 @@ export default function Examtimetable() {
                       <tr>
                         <td>{i++}</td>
                         <td>{result.date}</td>
-                        <td></td>
-                        <td></td>
+                        <td>
+                          <tr>
+                            <td><i class="fa-solid fa-plus fa-lg"></i></td><td><i class="fa-solid fa-eye fa-lg"></i></td><td><i class="fa-solid fa-trash fa-lg"></i></td>
+                          </tr>
+                        </td>
+                        <td>
+                          <tr>
+                            <td><i class="fa-solid fa-plus fa-lg"></i></td><td><i class="fa-solid fa-eye fa-lg"></i></td><td><i class="fa-solid fa-trash fa-lg"></i></td>
+                          </tr>
+                        </td>
                         <td>                                            
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this exam detail?')) deleteExamDate(result.examDateId) } } ></i>

@@ -34,7 +34,7 @@ import Department from "views/Department";
     {
       path: "/department",
       name: "Department",
-      icon: "nc-icon nc-shop",
+      icon: "fa-solid fa-hotel",
       component: Department,
       layout: "/admin",
     },
