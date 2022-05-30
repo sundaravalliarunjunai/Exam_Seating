@@ -197,7 +197,7 @@ export default function Department() {
                       <th>#</th>
                       <th>Department Name</th>
                       {/* <th>No of Rooms</th> */}
-                      <th className="text-right">Action</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -234,8 +234,10 @@ export default function Department() {
                                 </Form>
                               </ModalBody>
                           </Modal>
-                        </td><td>
-                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this department?')) deleteDepartment(result.departmentId) } }>Delete</button>
+                        {/* </td><td>
+                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this department?')) deleteDepartment(result.departmentId) } }>Delete</button> */}
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this department detail?')) deleteDepartment(result.departmentId) } } ></i>
                         </td>
                       </tr>
                       )

@@ -13,7 +13,7 @@ export default function Student() {
   const studentState = {
     studentId:null,
     studentName: "",
-    regNo:"",
+    rollNo:"",
     dob:"",
     courseType:"",
     departmentId:"",
@@ -23,7 +23,7 @@ export default function Student() {
   const currentstudentState = {
     currentstudentId:null,
     currentstudentName: "",
-    currentregNo:"",
+    currentrollNo:"",
     currentdob:"",
     currentcourseType:"",
     currentdepartmentId:"",
@@ -54,7 +54,7 @@ export default function Student() {
     var data= {
         studentId:studentvalue.studentId,
         studentName: studentvalue.studentName,     
-        regNo:studentvalue.regNo,
+        rollNo:studentvalue.rollNo,
         dob:studentvalue.dob,
         courseType:studentvalue.courseType,
         departmentId:studentvalue.departmentId,
@@ -66,7 +66,7 @@ export default function Student() {
         setStudent({
           studentId: response.data.studentId,
           studentName: response.data.studentName,
-          regNo:response.data.regNo,
+          rollNo:response.data.rollNo,
           dob:response.data.dob,
           courseType:response.data.courseType,
           departmentId:response.data.departmentId,
@@ -111,7 +111,7 @@ export default function Student() {
       var data= {
           studentId: currentstudent.currentstudentId,
           studentName: currentstudent.currentstudentName,
-          regNo:currentstudent.currentregNo,
+          rollNo:currentstudent.currentrollNo,
           dob:currentstudent.currentdob,
           courseType:currentstudent.currentcourseType,
           departmentId:currentstudent.currentdepartmentId,
@@ -134,7 +134,7 @@ export default function Student() {
           setcurrentStudent({
           currentstudentId:response.data.studentId,
           currentstudentName:response.data.studentName,
-          currentregNo:response.data.regNo,
+          currentrollNo:response.data.rollNo,
           currentdob:response.data.dob,
           currentcourseType:response.data.courseType,
           currentdepartmentId:response.data.departmentId,
@@ -222,12 +222,12 @@ export default function Student() {
                             <Row>
                                 <Col>
                                     <FormGroup>
-                                    <Label>Register No</Label>
+                                    <Label>Roll No</Label>
                                     <Input
-                                        name="regNo"
+                                        name="rollNo"
                                         onChange={handleInputChange}
-                                        value={studentvalue.regNo}
-                                        placeholder="Register number"
+                                        value={studentvalue.rollNo}
+                                        placeholder="Roll number"
                                         type="text" required
                                     />
                                     </FormGroup>
@@ -316,12 +316,12 @@ export default function Student() {
                     <tr>
                       <th>#</th>
                       <th>Name</th>
-                      <th>Reg No</th>
+                      <th>Roll No</th>
                       <th>D.O.B</th>
                       <th>Course Type</th>
                       <th>Department</th>
                       <th>Semester</th>
-                      <th className="text-right">Action</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -330,7 +330,7 @@ export default function Student() {
                       <tr>
                         <td>{i++}</td>
                         <td>{result.studentName}</td>
-                        <td>{result.regNo}</td>
+                        <td>{result.rollNo}</td>
                         <td>{result.dob}</td>
                         <td>{result.courseType}</td>
                         <td>{getDepartmentName(result.departmentId)}</td>
@@ -362,11 +362,11 @@ export default function Student() {
                                       <Row>
                                         <Col>
                                           <FormGroup>
-                                            <Label>Register No</Label>
+                                            <Label>Roll No</Label>
                                             <Input
-                                                name="currentregNo"
+                                                name="currentrollNo"
                                                 onChange={currenthandleInputChange}
-                                                value={currentstudent.currentregNo}
+                                                value={currentstudent.currentrollNo}
                                                 type="text" required
                                             />
                                           </FormGroup>
@@ -428,55 +428,15 @@ export default function Student() {
                                     </Form>
                               </ModalBody>
                           </Modal>
-                        </td><td>
-                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this student?')) deleteStudent(result.studentId) } }>Delete</button>
+                        {/* </td><td>
+                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this student?')) deleteStudent(result.studentId) } }>Delete</button> */}
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this student detail?')) deleteStudent(result.studentId) } } ></i>
                         </td>
                       </tr>
                       )
                     )
                   }
-                    {/* <tr>
-                      <td className="text-center" >1</td>
-                      <td>S.Varshini</td>
-                      <td>20801917</td>
-                      <td>10-07-2000</td>
-                      <td className="text-center">I</td>
-                      <td className="text-center">MCA</td>
-                      <td className="text-center">MCA</td>
-                      <td className="text-center">PG</td>
-                      <td className="text-center">II</td>
-                        <td className="text-center" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
-                        </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr>
-                    <tr>
-                      <td className="text-center">2</td>
-                      <td>P.Pavithra</td>
-                      <td>20203022</td>
-                      <td>02-09-2002</td>
-                      <td className="text-center">II</td>
-                      <td className="text-center">Commerce</td>
-                      <td className="text-center">M.Com</td>
-                      <td className="text-center">PG</td>
-                      <td className="text-center">I</td>
-                      <td className="text-center" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
-                        </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr> */}
                   </tbody>
                 </Table>
               </CardBody>

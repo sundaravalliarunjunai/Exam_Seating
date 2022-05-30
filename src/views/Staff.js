@@ -255,7 +255,7 @@ export default function Staff() {
                       <th>Staff Name</th>
                       <th>D.O.B</th>
                       <th>Department</th>
-                      <th className="text-right">Action</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -324,8 +324,10 @@ export default function Staff() {
                                   </Form>
                               </ModalBody>
                           </Modal>
-                        </td><td>
-                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this staff?')) deleteStaff(result.staffId) } }>Delete</button>
+                        {/* </td><td>
+                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this staff?')) deleteStaff(result.staffId) } }>Delete</button> */}
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this staff detail?')) deleteStaff(result.staffId) } } ></i>
                         </td>
                       </tr>
                       )

@@ -5,11 +5,11 @@ import DepartmentService from "./Department/DepartmentService";
 import UserService from "./Login/Userservice";
 import SubjectService from "./Subject/Subjectservice";
 
-
 export default function Subject() {
 
   const subjectState = {
     subjectId:null,
+    courseCode:"",
     courseType:"",
     semester:"",
     department:"",
@@ -18,6 +18,7 @@ export default function Subject() {
 
   const currentsubjectState = {
     currentsubjectId:null,
+    currentcourseCode:"",
     currentcourseType:"",
     currentsemester:"",
     currentdepartment:"",
@@ -47,6 +48,7 @@ export default function Subject() {
     e.preventDefault();
     var data= {
         subjectId:subjectvalue.subjectId,
+        courseCode:subjectvalue.courseCode,
         courseType:subjectvalue.courseType,
         semester:subjectvalue.semester,
         department:subjectvalue.department,
@@ -57,6 +59,7 @@ export default function Subject() {
         alert("Success");
         setSubject({
           subjectId: response.data.subjectId,
+          courseCode: response.data.courseCode,
           courseType: response.data.courseType,
           semester: response.data.semester,
           department: response.data.department,
@@ -98,6 +101,7 @@ export default function Subject() {
       e.preventDefault();
       var data= {
           subjectId: currentsubject.currentsubjectId,
+          courseCode: currentsubject.currentcourseCode,
           courseType: currentsubject.currentcourseType,
           semester: currentsubject.currentsemester,
           department: currentsubject.currentdepartment,
@@ -119,6 +123,7 @@ export default function Subject() {
           SubjectService.get(id).then(response => {
           setcurrentSubject({
           currentsubjectId:response.data.subjectId,
+          currentcourseCode:response.data.courseCode,
           currentcourseType:response.data.courseType,
           currentsemester:response.data.semester,
           currentdepartment:response.data.department,
@@ -253,6 +258,19 @@ export default function Subject() {
                             <Row>
                               <Col>
                                 <FormGroup>
+                                  <Label>Course Code</Label>
+                                    <Input
+                                        type= "text" required
+                                        name="courseCode"
+                                        onChange={handleInputChange}
+                                        value={subjectvalue.courseCode}
+                                    />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
                                   <Label>Subject Name</Label>
                                   <Input
                                     name="subjectName"
@@ -282,8 +300,9 @@ export default function Subject() {
                       <th>Course Type</th>
                       <th>Semester</th>
                       <th>Department</th>
+                      <th>Course Code</th>
                       <th>Subject Name</th>
-                      <th className="text-right">Action</th>
+                      <th >Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -294,6 +313,7 @@ export default function Subject() {
                         <td>{result.courseType}</td>
                         <td>{result.semester}</td>
                         <td>{result.department}</td>
+                        <td>{result.courseCode}</td>
                         <td>{result.subjectName}</td>                        
                         <td>                                            
                           <i class="fa-solid fa-pen fa-lg" onClick={() => { toggle1(); getSubject(result.subjectId);}} ></i>
@@ -348,6 +368,19 @@ export default function Subject() {
                                 <Row>
                                     <Col>
                                         <FormGroup>
+                                        <Label>Course Code</Label>
+                                        <Input
+                                            name="currentcourseCode"
+                                            onChange={currenthandleInputChange}
+                                            value={currentsubject.currentcourseCode}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
                                         <Label>Subject Name</Label>
                                         <Input
                                             name="currentsubjectName"
@@ -362,8 +395,8 @@ export default function Subject() {
                               </Form>
                               </ModalBody>
                           </Modal>
-                        </td><td>
-                          <button class="btn btn-danger" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this subject?')) deleteSubject(result.subjectId) } }>Delete</button>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this subject details?')) deleteSubject(result.subjectId) } } ></i>
                         </td>
                       </tr>
                       )
