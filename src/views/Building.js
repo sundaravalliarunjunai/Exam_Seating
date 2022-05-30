@@ -140,11 +140,6 @@ export default function Building() {
       });
   };
 
-  
-  const handlebuttonChange = () => {
-    setBuilding(!getBuilding);
-  }
-
   function getNumberofRooms (id){
     return roomlist.filter(obj=>obj.buildingId === id).length
    }
