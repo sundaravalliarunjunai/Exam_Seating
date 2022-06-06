@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Input, Row, Col, FormGroup, Label } from "reactstrap";
 import DepartmentService from "views/Department/DepartmentService";
@@ -34,16 +34,17 @@ export default function Addexamdate_time() {
     const [examDateAndTimelist,setExamDateAndTimelist]=useState([]);
     const [currentexamDateAndTime,setcurrentExamDateAndTime]=useState(currentexamDateAndTimeState);
     const [examDateAndTimevalue,setExamDateAndTime]=useState(examDateAndTimeState);
+    const [departmentId,setDepartmentId]=useState([]);
 
     const handleInputChange=event => {
         const{name,value}=event.target;
         setExamDateAndTime({...examDateAndTimevalue,[name]:value});
-      };
-      const currenthandleInputChange=event => {
+    };
+    const currenthandleInputChange=event => {
         const{name,value}=event.target;
         setcurrentExamDateAndTime({...currentexamDateAndTime,[name]:value});
-      };
-      const saveExamDateAndTime = (e) => {
+    };
+    const saveExamDateAndTime = (e) => {
         e.preventDefault();
         var data= {
             examDateAndTimeId:examDateAndTimevalue.examDateAndTimeId,
@@ -52,54 +53,71 @@ export default function Addexamdate_time() {
             subjectId:examDateAndTimevalue.subjectId,
         };
         // alert(data);
-          ExamDateAndTimeService.create(data).then(response => {
+        ExamDateAndTimeService.create(data).then(response => {
             alert("Success");
             setExamDateAndTime({
-              examDateAndTimeId: response.data.examDateAndTimeId,
-              examDateId:response.data.examDateId,
-              examNoonType:response.data.examNoonType,
-              subjectId:response.data.subjectId,
+                examDateAndTimeId: response.data.examDateAndTimeId,
+                examDateId:response.data.examDateId,
+                examNoonType:response.data.examNoonType,
+                subjectId:response.data.subjectId,
             });
             setSubmitted(true);
-                    console.log(response.data);
-                    retrieveExamDateAndTime();
-                    newExamDateAndTime();
-          })
-          .catch(e=>{
+            console.log(response.data);
+            retrieveExamDateAndTime();
+            newExamDateAndTime();
+        })
+        .catch(e=>{
             alert(e);
             console.log(e);
-          });
-      };
-      const newExamDateAndTime = () => {
+        });
+    };
+      
+    const newExamDateAndTime = () => {
         setExamDateAndTime(examDateAndTimeState);
         setSubmitted(false);
-      };
-      const retrieveExamDateAndTime =() => {
-          ExamDateAndTimeService.getAll().then(response => {
-          setExamDateAndTimelist(response.data);
+    };
+
+    const retrieveExamDateAndTime =() => {
+        ExamDateAndTimeService.getAll().then(response => {
+        setExamDateAndTimelist(response.data);
           // console.log(response.data);
-      })
-          .catch(e => {
-          console.log(e);
-      });
-      };
+        })
+        .catch(e => {
+            console.log(e);
+        });
+    };
     
-      const retrieveDepartment =() => {
+    const retrieveDepartment =() => {
         DepartmentService.getAll().then(response => {
         setDepartmentlist(response.data);
         // console.log(response.data);
-      })
+        })
         .catch(e => {
-        console.log(e);
+            console.log(e);
         });
-      };
+    };
+
+    const retrieveSubject =() => {
+        SubjectService.getAll().then(response => {
+        setSubjectlist(response.data);
+        // console.log(response.data);
+        })
+        .catch(e => {
+            console.log(e);
+        });
+    };
     
+    function getDepartmentName(id){
+        return departmentlist.filter(obj=> Number(obj.departmentId) === Number(id)).map(result=>{
+          return result.departmentName;
+        })
+    }
 
     return (
         <>
             <div className="content">
                 <title>Add Exam Details</title>
-                <Form>
+                <Form onSubmit={saveExamDateAndTime}>
                     <Row>
                         <Col>
                             <FormGroup>
@@ -108,16 +126,24 @@ export default function Addexamdate_time() {
                                     type={"select"}
                                     name="departmentId"
                                     onChange={handleInputChange}
-                                    value={examDateAndTimeAndTimevalue.subjectId}
+                                    value={departmentlist.departmentId}
                                 >
                                     {departmentlist.map(result =>(
                                         <option value={result.departmentId} onClick={()=>setShow(true)} >{result.departmentName}</option>
                                     ))}
-                                    {
-                                        show ? subjectlist.map(result =>(
-                                            <option value={result.subjectId} >{result.subjectName}</option>
-                                        )) : null
-                                    }
+                                </Input>
+                                <Input
+                                    type={"select"}
+                                    name="subjectId"
+                                    onChange={handleInputChange}
+                                    value={examDateAndTimevalue.subjectId}
+                                >
+                                    show ?
+                                    {subjectlist.map(result =>(
+                                        (departmentlist.departmentId == result.departmentId)?
+                                            <option value={result.subjectId}>{result.subjectName}</option>:
+                                            <option ></option>
+                                    ))} : null
                                 </Input>
                             </FormGroup>
                         </Col>

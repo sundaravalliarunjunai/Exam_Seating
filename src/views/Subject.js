@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Label, Form, FormGroup, Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, ModalBody, ModalHeader, ModalFooter, Modal } from "reactstrap";
+import { Label, Form, FormGroup, Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, ModalBody, ModalHeader, Modal } from "reactstrap";
 import DepartmentService from "./Department/DepartmentService";
 import UserService from "./Login/Userservice";
 import SubjectService from "./Subject/Subjectservice";

@@ -7,6 +7,7 @@ import ExamDateService from "./Examtimetable/ExamDateService";
 import UserService from "./Login/Userservice";
 import DepartmentService from "./Department/DepartmentService";
 import SubjectService from "./Subject/Subjectservice";
+import ExamDateAndTimeService from "./Examtimetable/ExamDateAndTimeService";
 
 export default function Examtimetable() {
 
@@ -18,6 +19,21 @@ export default function Examtimetable() {
     afterNoonStartingTime:"",
     departmentId:"",
     afterNoonEndingTime:"",
+  };
+  const examDateAndTimeState = {
+    examDateAndTimeId:null,
+    examDateId:null,
+    departmentId:"",
+    examNoonType:"",
+    subjectId:"",
+  };
+
+  const currentexamDateAndTimeState = {
+    currentexamDateAndTimeId:null,
+    currentexamDateId:null,
+    currentdepartmentId:"",
+    currentexamNoonType:"",
+    currentsubjectId:"",
   };
 
   const currentexamDateState = {
@@ -36,18 +52,34 @@ export default function Examtimetable() {
   const [currentexamDate,setcurrentExamDate]=useState(currentexamDateState);
   const [departmentlist,setDepartmentlist]=useState([]);
 
+  const [examDateAndTimevalue,setExamDateAndTime]=useState(examDateAndTimeState);
+  const[submitted1,setSubmitted1]=useState(false);
+  const [examDateAndTimelist,setExamDateAndTimelist]=useState([]);
+  const [currentexamDateAndTime,setcurrentExamDateAndTime]=useState(currentexamDateAndTimeState);
+  const [subjectlist,setSubjectlist] = useState([]);
+
   useEffect(() => {
     retrieveExamDate();
     retrieveDepartment();
+    retrieveSubject();
+    retrieveExamDateAndTime();
   }, []);
 
   const handleInputChange=event => {
     const{name,value}=event.target;
     setExamDate({...examDatevalue,[name]:value});
   };
+  const handleInputChange1=event => {
+    const{name,value}=event.target;
+    setExamDateAndTime({...examDateAndTimevalue,[name]:value});
+  };
   const currenthandleInputChange=event => {
     const{name,value}=event.target;
     setcurrentExamDate({...currentexamDate,[name]:value});
+  };
+  const currenthandleInputChange1=event => {
+    const{name,value}=event.target;
+    setcurrentExamDateAndTime({...currentexamDateAndTime,[name]:value});
   };
   const saveExamDate = (e) => {
     e.preventDefault();
@@ -82,87 +114,194 @@ export default function Examtimetable() {
         console.log(e);
       });
   };
+
+  const saveExamDateAndTime = (e) => {
+    e.preventDefault();
+    var data= {
+        examDateId:examDateAndTimevalue.examDateId,
+        examDateAndTimeId:examDateAndTimevalue.examDateAndTimeId,
+        departmentId:examDateAndTimevalue.departmentId,
+        examNoonType:examDateAndTimevalue.examNoonType,
+        subjectId:examDateAndTimevalue.subjectId,
+    };
+    // alert(data);
+      ExamDateAndTimeService.create(data).then(response => {
+        alert("Success");
+        setExamDate({
+          examDateAndTimeId: response.data.examDateAndTimeId,
+          departmentId:response.data.departmentId,
+          examNoonType: response.data.examNoonType,
+          subjectId: response.data.subjectId,
+          examDateId:response.data.examDateId
+        });
+        setSubmitted(true);
+          console.log(response.data);
+          retrieveExamDateAndTime();
+          newExamDateAndTime();
+      })
+      .catch(e=>{
+        alert(e);
+        console.log(e);
+      });
+  };
+
   const newExamDate = () => {
     setExamDate(examDateState);
     setSubmitted(false);
   };
+  const newExamDateAndTime = () => {
+    setExamDateAndTime(examDateAndTimeState);
+    setSubmitted(false);
+  }
   const retrieveExamDate =() => {
-      ExamDateService.getAll().then(response => {
-      setExamDatelist(response.data);
+    ExamDateService.getAll().then(response => {
+    setExamDatelist(response.data);
       // console.log(response.data);
-  })
-      .catch(e => {
+    })
+    .catch(e => {
       console.log(e);
-  });
+    });
+  };
+
+  const retrieveExamDateAndTime =() => {
+    ExamDateAndTimeService.getAll().then(response => {
+    setExamDateAndTimelist(response.data);
+      // console.log(response.data);
+    })
+    .catch(e => {
+      console.log(e);
+    });
   };
 
   const retrieveDepartment =() => {
     DepartmentService.getAll().then(response => {
     setDepartmentlist(response.data);
     // console.log(response.data);
-  })
+    })
     .catch(e => {
-    console.log(e);
+      console.log(e);
+    });
+  };
+
+  const retrieveSubject =() => {
+    SubjectService.getAll().then(response => {
+    setSubjectlist(response.data);
+    // console.log(response.data);
+    })
+    .catch(e => {
+      console.log(e);
     });
   };
 
   const updateExamDate = (e) => {
-      e.preventDefault();
-      var data= {
-          examDateId: currentexamDate.currentexamDateId,
-          date: currentexamDate.currentdate,
-          foreNoonStartingTime:currentexamDate.currentforeNoonStartingTime,
-          foreNoonEndingTime:currentexamDate.currentforeNoonEndingTime,
-          afterNoonStartingTime:currentexamDate.currentafterNoonStartingTime,
-          departmentId:currentexamDate.currentdepartmentId,
-          afterNoonEndingTime:currentexamDate.currentafterNoonEndingTime,
-      };
+    e.preventDefault();
+    var data= {
+      examDateId: currentexamDate.currentexamDateId,
+      date: currentexamDate.currentdate,
+      foreNoonStartingTime:currentexamDate.currentforeNoonStartingTime,
+      foreNoonEndingTime:currentexamDate.currentforeNoonEndingTime,
+      afterNoonStartingTime:currentexamDate.currentafterNoonStartingTime,
+      departmentId:currentexamDate.currentdepartmentId,
+      afterNoonEndingTime:currentexamDate.currentafterNoonEndingTime,
+    };
           // alert(data);
-          ExamDateService.update(currentexamDate.currentexamDateId,data).
-          then(response => {
-          console.log(response.data);
-          toggle1();
-          alert("Success");
-          retrieveExamDate();            
-      })
-          .catch(e => {
-          console.log(e);
-      });
+    ExamDateService.update(currentexamDate.currentexamDateId,data).then(response => {
+      console.log(response.data);
+          // toggle1();
+      alert("Success");
+      retrieveExamDate();            
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const updateExamDateAndTime = (e) => {
+    e.preventDefault();
+    var data= {
+      examDateId: currentexamDateAndTime.currentexamDateId,
+      examDateAndTimeId: currentexamDateAndTime.currentexamDateAndTimeId,
+      departmentId:currentexamDateAndTime.currentdepartmentId,
+      subjectId:currentexamDateAndTime.subjectId,
+      examNoonType:currentexamDateAndTime.examNoonType,
+    };
+          // alert(data);
+    ExamDateAndTimeService.update(currentexamDateAndTime.currentexamDateAndTimeId,data).then(response => {
+      console.log(response.data);
+          // toggle1();
+      alert("Success");
+      retrieveExamDateAndTime();            
+    })
+    .catch(e => {
+      console.log(e);
+    });
   };
   const getExamDate = (id) => {
-          ExamDateService.get(id).then(response => {
-          setcurrentExamDate({
-          currentexamDateId:response.data.examDateId,
-          currentdate:response.data.date,
-          currentforeNoonStartingTime:response.data.foreNoonStartingTime,
-          currentforeNoonEndingTime:response.data.foreNoonEndingTime,
-          currentafterNoonStartingTime:response.data.afterNoonStartingTime,
-          currentdepartmentId:response.data.departmentId,
-          currentafterNoonEndingTime:response.data.afterNoonEndingTime,
+    ExamDateService.get(id).then(response => {
+      setcurrentExamDate({
+        currentexamDateId:response.data.examDateId,
+        currentdate:response.data.date,
+        currentforeNoonStartingTime:response.data.foreNoonStartingTime,
+        currentforeNoonEndingTime:response.data.foreNoonEndingTime,
+        currentafterNoonStartingTime:response.data.afterNoonStartingTime,
+        currentdepartmentId:response.data.departmentId,
+        currentafterNoonEndingTime:response.data.afterNoonEndingTime,
       });
       // console.log(response.data);
-      })
-      .catch(e => {
-          console.log(e);
-  });
-
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const getExamDateAndTime = (id) => {
+    ExamDateAndTimeService.get(id).then(response => {
+      setcurrentExamDateAndTime({
+        currentexamDateId:response.data.examDateId,
+        currentdepartmentId:response.data.departmentId,
+        currentexamDateAndTimeId:response.data.examDateAndTimeId,
+        currentexamNoonType:response.data.examNoonType,
+      });
+      // console.log(response.data);
+      return currentexamDateAndTime.currentexamDateAndTimeId;
+    })
+    .catch(e => {
+      console.log(e);
+    });
   };
   const deleteExamDate = (id) => {
-      ExamDateService.remove(id). then (
+    ExamDateService.remove(id). then (
       response => {
-          alert('Deleted Successfully...');           
-      retrieveExamDate();           
-  })
-  UserService.getAll().then((response)=>{
+        alert('Deleted Successfully...');           
+        retrieveExamDate();           
+      })
+    UserService.getAll().then((response)=>{
       response.data.filter(obj=>obj.examDateId === id).map((val)=>
       UserService.remove(val.userId) .then (
           response => {}
       )
       )
-  })   
-      .catch(e => {
+    })   
+    .catch(e => {
       console.log(e);
-  });
+    });
+  };
+
+  const deleteExamDateAndTime = (id) => {
+    // alert(id);
+    ExamDateAndTimeService.remove(id). then (
+      response => {
+        alert('Deleted Successfully...');           
+        retrieveExamDateAndTime();           
+      })
+    UserService.getAll().then((response)=>{
+      response.data.filter(obj=>obj.examDateAndTimeId === id).map((val)=>
+      UserService.remove(val.userId) .then (
+          response => {}
+      )
+      )
+    })   
+    .catch(e => {
+      console.log(e);
+    });
   };
 
   function getDepartmentName(id){
@@ -184,6 +323,12 @@ export default function Examtimetable() {
   
   // Toggle for Modal
   const toggle1 = () => setModal1(!modal1);
+
+  const[show,setShow]= useState(false);
+
+  function getNumberofFNExams (id){
+    return examDateAndTimelist.filter(obj=>obj.examDateId === id).length
+  }
 
   return (
     <>
@@ -219,8 +364,8 @@ export default function Examtimetable() {
                                     />
                                     </FormGroup>
                                 </Col>
-                            </Row>
-                            <Row>
+                              </Row>
+                              <Row>
                                 <Col>
                                     <FormGroup>
                                     <Label>FN Starting Time</Label>
@@ -233,8 +378,8 @@ export default function Examtimetable() {
                                     />
                                     </FormGroup>
                                 </Col>
-                            </Row>
-                            <Row>
+                              </Row>
+                              <Row>
                                 <Col>
                                     <FormGroup>
                                     <Label>FN Ending Time</Label>
@@ -247,8 +392,8 @@ export default function Examtimetable() {
                                     />
                                     </FormGroup>
                                 </Col>
-                            </Row>
-                            <Row>
+                              </Row>
+                              <Row>
                                 <Col>
                                     <FormGroup>
                                     <Label>AN Starting Time</Label>
@@ -261,8 +406,8 @@ export default function Examtimetable() {
                                     />
                                     </FormGroup>
                                 </Col>
-                            </Row>
-                            <Row>
+                              </Row>
+                              <Row>
                                 <Col>
                                     <FormGroup>
                                     <Label>AN Ending Time</Label>
@@ -302,11 +447,85 @@ export default function Examtimetable() {
                       <tr>
                         <td>{i++}</td>
                         <td>{result.date}</td>
-                        <td>
+                        {/* { examDateAndTimelist.map(result =>( */}
+                          <td>{getNumberofFNExams(result.examDateId)}
                           <tr>
-                            <td><i class="fa-solid fa-plus fa-lg"></i></td><td><i class="fa-solid fa-eye fa-lg"></i></td><td><i class="fa-solid fa-trash fa-lg"></i></td>
+                            <td><i class="fa-solid fa-plus fa-lg" onClick={()=>{toggle1();}}></i>
+                              <Modal isOpen={modal1} 
+                                toggle={toggle1} backdrop={false} >
+                                {/* modalTransition={{ timeout: 2000 }} */}
+                                <ModalHeader
+                                toggle={toggle1}>Add ForeNoon Exam</ModalHeader>
+                                <ModalBody>
+                                  <Form onSubmit={saveExamDateAndTime}>
+                                    <Row>
+                                      <Col>
+                                        {/* <FormGroup>
+                                          <Label>Exam Date</Label>
+                                          <Input
+                                            type={"select"}
+                                            name="examDateId"
+                                            onChange={handleInputChange1}
+                                            value={examDateAndTimevalue.examDateId}
+                                          >
+                                            <option value={result.examDateId}>{result.date}</option>
+                                          </Input>
+                                        </FormGroup>
+                                        <FormGroup>
+                                          <Label>Noon Type</Label>
+                                          <Input
+                                            type={"select"}
+                                            name="examNoonType"
+                                            onChange={handleInputChange1}
+                                            value={examDateAndTimevalue.examNoonType}
+                                          >
+                                            <option value={"ForeNoon"}>ForeNoon</option>
+                                          </Input>
+                                        </FormGroup> */}
+                                        <FormGroup>
+                                          <Label>Department</Label>
+                                          <Input
+                                            type={"select"}
+                                            name="departmentId"
+                                            onChange={handleInputChange1}
+                                            value={examDateAndTimevalue.departmentId}
+                                          >
+                                            {departmentlist.map(result =>(
+                                              <option value={result.departmentId}>{result.departmentName}</option>
+                                            ))}
+                                          </Input>
+                                            {/* <Input
+                                                name="departmentId"
+                                                onChange={handleInputChange1}
+                                                value={examDateAndTimevalue.departmentId}
+                                                type="text" required
+                                            /> */}
+                                        </FormGroup>
+                                        <FormGroup>
+                                          <Label>Subject</Label>
+                                          <Input
+                                            type={"select"}
+                                            name="subjectId"
+                                            onChange={handleInputChange1}
+                                            value={examDateAndTimevalue.subjectId}
+                                          >
+                                            {subjectlist.map(result =>(
+                                              // filter(obj =>Number(currentexamDateAndTime.currentdepartmentId) === Number(obj.departmentId))
+                                              <option value={result.subjectId}>{result.subjectName}</option>
+                                            ))}
+                                          </Input>
+                                        </FormGroup>
+                                        <Button color="primary" type="submit" value="submit" onClick={toggle1}>Submit</Button>
+                                      </Col>
+                                    </Row>
+                                  </Form>
+                                </ModalBody>
+                              </Modal>
+                            </td><td><i class="fa-solid fa-eye fa-lg"></i></td>
+                            <td><i class="fa-solid fa-trash fa-lg" onClick={(e) => {if (window.confirm('Are You sure! Do you want to delete this exam time ?')) examDateAndTimelist.map(result =>(deleteExamDateAndTime(result.examDateAndTimeId))) }}></i></td>
                           </tr>
                         </td>
+                        {/* ))} */}
                         <td>
                           <tr>
                             <td><i class="fa-solid fa-plus fa-lg"></i></td><td><i class="fa-solid fa-eye fa-lg"></i></td><td><i class="fa-solid fa-trash fa-lg"></i></td>
@@ -314,7 +533,7 @@ export default function Examtimetable() {
                         </td>
                         <td>                                            
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this exam detail?')) deleteExamDate(result.examDateId) } } ></i>
+                          <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this exam detail ?')) deleteExamDate(result.examDateId) } } ></i>
                         </td>
                       </tr>
                       )
