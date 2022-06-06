@@ -460,7 +460,7 @@ export default function Examtimetable() {
                                   <Form onSubmit={saveExamDateAndTime}>
                                     <Row>
                                       <Col>
-                                        {/* <FormGroup>
+                                        <FormGroup>
                                           <Label>Exam Date</Label>
                                           <Input
                                             type={"select"}
@@ -481,7 +481,7 @@ export default function Examtimetable() {
                                           >
                                             <option value={"ForeNoon"}>ForeNoon</option>
                                           </Input>
-                                        </FormGroup> */}
+                                        </FormGroup>
                                         <FormGroup>
                                           <Label>Department</Label>
                                           <Input
