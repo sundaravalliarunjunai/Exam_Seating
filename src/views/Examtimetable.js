@@ -441,6 +441,7 @@ export default function Examtimetable() {
                       <th>Date</th>
                       <th>ForeNoon Exams</th>
                       <th>AfterNoon Exams</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -469,8 +470,9 @@ export default function Examtimetable() {
                                             name="examDateId"
                                             onChange={handleInputChange1}
                                             value={examDateAndTimevalue.examDateId}
-                                          >{examDatelist.map(ob =>(
-                                            <option value={ob.examDateId}>{ob.date}</option>
+                                          ><option defaultValue="--------"></option>
+                                            {examDatelist.map(ob =>(
+                                              <option value={ob.examDateId}>{ob.date}</option>
                                             ))}
                                           </Input>
                                         </FormGroup>
@@ -481,7 +483,7 @@ export default function Examtimetable() {
                                             name="departmentId"
                                             onChange={handleInputChange1}
                                             value={examDateAndTimevalue.departmentId}
-                                          ><option defaultvalue="--------"></option>
+                                          ><option defaultValue="--------"></option>
                                             {departmentlist.map(result =>(
                                               <option value={result.departmentId}>{result.departmentName}</option>
                                             ))}
@@ -500,7 +502,7 @@ export default function Examtimetable() {
                                             name="subjectId"
                                             onChange={handleInputChange1}
                                             value={examDateAndTimevalue.subjectId}
-                                          ><option defaultvalue="--------"></option>
+                                          ><option defaultValue="--------"></option>
                                             {subjectlist.map(result =>(
                                               // filter(obj =>Number(currentexamDateAndTime.currentdepartmentId) === Number(obj.departmentId))
                                               <option value={result.subjectId}>{result.subjectName}</option>
@@ -528,7 +530,9 @@ export default function Examtimetable() {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {examDateAndTimelist.map( result =>(
+                                    {examDateAndTimelist
+                                    // .filter(ob => ob.examDateId === result.examDateId)
+                                      .map( result =>(
                                       <tr>
                                         <td>{subjectlist.filter(obj=> Number(obj.subjectId) === Number(result.subjectId)).map(res=>{
                                               return res.subjectName;})}

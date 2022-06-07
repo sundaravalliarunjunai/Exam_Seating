@@ -43,115 +43,108 @@ export default function Room() {
   const saveRoom = (e) => {
     e.preventDefault();
     var data= {
-        roomId:roomvalue.roomId,
-        roomName: roomvalue.roomName, 
-        seatCapacity: roomvalue.seatCapacity,    
-        buildingId:roomvalue.buildingId,
+      roomId:roomvalue.roomId,
+      roomName: roomvalue.roomName, 
+      seatCapacity: roomvalue.seatCapacity,    
+      buildingId:roomvalue.buildingId,
     };
     // alert(data);
-      RoomService.create(data).then(response => {
-        alert("Success");
-        setRoom({
-          roomId: response.data.roomId,
-          roomName: response.data.roomName,
-          seatCapacity:response.data.seatCapacity,
-          buildingId:response.data.buildingId,
-        });
-        retrieveRoom();
-        setSubmitted(true);
-        console.log(response.data);
-        newRoom();
-      })
-      .catch(e=>{
-        alert(e);
-        console.log(e);
+    RoomService.create(data).then(response => {
+      alert("Success");
+      setRoom({
+        roomId: response.data.roomId,
+        roomName: response.data.roomName,
+        seatCapacity:response.data.seatCapacity,
+        buildingId:response.data.buildingId,
       });
+      retrieveRoom();
+      setSubmitted(true);
+      console.log(response.data);
+      newRoom();
+    })
+    .catch(e=>{
+      alert(e);
+      console.log(e);
+    });
   };
   const newRoom = () => {
     setRoom(roomState);
     setSubmitted(false);
   };
   const retrieveRoom =() => {
-      RoomService.getAll().then(response => {
+    RoomService.getAll().then(response => {
       setRoomlist(response.data);
       // console.log(response.data);
-  })
-      .catch(e => {
+    })
+    .catch(e => {
       console.log(e);
-  });
+    });
   };
   const retrieveBuilding =() => {
     BuildingService.getAll().then(response => {
-    setBuildinglist(response.data);
+      setBuildinglist(response.data);
     // console.log(response.data);
-})
+    })
     .catch(e => {
-    console.log(e);
-});
-};
+      console.log(e);
+    });
+  };
   const updateRoom = (e) => {
-      e.preventDefault();
-      var data= {
-          roomId: currentroom.currentroomId,
-          roomName: currentroom.currentroomName,
-          seatCapacity: currentroom.currentseatCapacity,
-          buildingId:currentroom.currentbuildingId,
-          buildingName:currentroom.currentbuildingName,
-      };
+    e.preventDefault();
+    var data= {
+      roomId: currentroom.currentroomId,
+      roomName: currentroom.currentroomName,
+      seatCapacity: currentroom.currentseatCapacity,
+      buildingId:currentroom.currentbuildingId,
+      buildingName:currentroom.currentbuildingName,
+    };
           // alert(data);
-          RoomService.update(currentroom.currentroomId,data).
-          then(response => {
-          console.log(response.data);
-          toggle1();
-          alert("Success");
-          retrieveRoom();            
-      })
-          .catch(e => {
-          console.log(e);
-      });
+    RoomService.update(currentroom.currentroomId,data).then(response => {
+      console.log(response.data);
+      toggle1();
+      alert("Success");
+      retrieveRoom();            
+    })
+    .catch(e => {
+      console.log(e);
+    });
   };
   const getRoom = (id) => {
-          RoomService.get(id).then(response => {
-          setcurrentRoom({
-          currentroomId:response.data.roomId,
-          currentroomName:response.data.roomName,
-          currentseatCapacity:response.data.seatCapacity,
-          currentbuildingId:response.data.buildingId,
-          currentbuildingName:getbuildingName(id),
+    RoomService.get(id).then(response => {
+      setcurrentRoom({
+      currentroomId:response.data.roomId,
+      currentroomName:response.data.roomName,
+      currentseatCapacity:response.data.seatCapacity,
+      currentbuildingId:response.data.buildingId,
+      currentbuildingName:getbuildingName(id),
       });
       // console.log(response.data);
-      })
-      .catch(e => {
-          console.log(e);
-  });
-
+    })
+    .catch(e => {
+      console.log(e);
+    });
   };
   const deleteRoom = (id) => {
-      RoomService.remove(id). then (
+    RoomService.remove(id). then (
       response => {
-          alert('Deleted Successfully...');           
-      retrieveRoom();           
-  })
-  UserService.getAll().then((response)=>{
+        alert('Deleted Successfully...');           
+        retrieveRoom();           
+      })
+    UserService.getAll().then((response)=>{
       response.data.filter(obj=>obj.roomId === id).map((val)=>
       UserService.remove(val.userId) .then (
-          response => {}
-      )
-      )
-  })   
-      .catch(e => {
+        response => {}
+      ))
+    })   
+    .catch(e => {
       console.log(e);
-  });
+    });
   };
 
-function getbuildingName(id){
-  return buildinglist.filter(obj=> Number(obj.buildingId) === Number(id)).map(result=>{
-    return result.buildingName;
-  })
-}
-  
-  const handlebuttonChange = () => {
-    setRoom(!getRoom);
+  function getbuildingName(id){
+    return buildinglist.filter(obj=> Number(obj.buildingId) === Number(id)).map(result=>{
+      return result.buildingName;
+    })
   }
 
   let i=1;
@@ -167,7 +160,6 @@ function getbuildingName(id){
   
   // Toggle for Modal
   const toggle1 = () => setModal1(!modal1);
-  let j=1;
 
   return (
     <>
