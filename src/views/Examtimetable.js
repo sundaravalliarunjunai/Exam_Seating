@@ -304,9 +304,9 @@ export default function Examtimetable() {
     });
   };
 
-  function getDepartmentName(id){
-    return departmentlist.filter(obj=> Number(obj.departmentId) === Number(id)).map(result=>{
-      return result.departmentName;
+  function getDate(id){
+    return examDatelist.filter(obj=> Number(obj.examDateId) === Number(id)).map(result=>{
+      return result.examDateId;
     })
   }
 
@@ -324,7 +324,9 @@ export default function Examtimetable() {
   // Toggle for Modal
   const toggle1 = () => setModal1(!modal1);
 
-  const[show,setShow]= useState(false);
+  const [modal2, setModal2] = React.useState(false);
+  
+  const toggle2 = () => setModal2(!modal2);
 
   function getNumberofFNExams (id){
     return examDateAndTimelist.filter(obj=>obj.examDateId === id).length
@@ -521,7 +523,37 @@ export default function Examtimetable() {
                                   </Form>
                                 </ModalBody>
                               </Modal>
-                            </td><td><i class="fa-solid fa-eye fa-lg"></i></td>
+                            </td>
+                            <td><i class="fa-solid fa-eye fa-lg" onClick={()=>{toggle2();}}></i>
+                              <Modal isOpen={modal2} 
+                                toggle={toggle2} backdrop={false} >
+                                <ModalHeader
+                                toggle={toggle2}>Exam List</ModalHeader>
+                                <ModalBody>
+                                <Table responsive>
+                                  <thead className="text-primary">
+                                    <tr>
+                                      <th>Subject</th>
+                                      <th>Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {examDateAndTimelist.map( result =>(
+                                      <tr>
+                                        <td>{subjectlist.filter(obj=> Number(obj.subjectId) === Number(result.subjectId)).map(res=>{
+                                              return res.subjectName;})}
+                                          {/* {subjectlist.map(res =>(res.subjectId === result.subjectId))} */}
+                                        </td>
+                                        <td>
+                                        <i class="fa-solid fa-trash fa-lg" onClick={(e) => {if (window.confirm('Are You sure! Do you want to delete this subject ?')) deleteExamDateAndTime(result.examDateAndTimeId)}}></i>
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </Table>
+                                </ModalBody>
+                              </Modal>                  
+                            </td>
                             <td><i class="fa-solid fa-trash fa-lg" onClick={(e) => {if (window.confirm('Are You sure! Do you want to delete this exam time ?')) examDateAndTimelist.map(result =>(deleteExamDateAndTime(result.examDateAndTimeId))) }}></i></td>
                           </tr>
                         </td>
