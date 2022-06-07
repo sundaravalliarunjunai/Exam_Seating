@@ -450,14 +450,14 @@ export default function Examtimetable() {
                         <td>{i++}</td>
                         <td>{result.date}</td>
                         {/* { examDateAndTimelist.map(result =>( */}
-                          <td>{getNumberofFNExams(result.examDateId)}
+                        <td>{getNumberofFNExams(result.examDateId)}
                           <tr>
                             <td><i class="fa-solid fa-plus fa-lg" onClick={()=>{toggle1();}}></i>
                               <Modal isOpen={modal1} 
                                 toggle={toggle1} backdrop={false} >
                                 {/* modalTransition={{ timeout: 2000 }} */}
                                 <ModalHeader
-                                toggle={toggle1}>Add ForeNoon Exam</ModalHeader>
+                                toggle={toggle1}>Add {examDateAndTimevalue.examNoonType = "ForeNoon"} Exam</ModalHeader>
                                 <ModalBody>
                                   <Form onSubmit={saveExamDateAndTime}>
                                     <Row>
@@ -469,19 +469,9 @@ export default function Examtimetable() {
                                             name="examDateId"
                                             onChange={handleInputChange1}
                                             value={examDateAndTimevalue.examDateId}
-                                          >
-                                            <option value={result.examDateId}>{result.date}</option>
-                                          </Input>
-                                        </FormGroup>
-                                        <FormGroup>
-                                          <Label>Noon Type</Label>
-                                          <Input
-                                            type={"select"}
-                                            name="examNoonType"
-                                            onChange={handleInputChange1}
-                                            value={examDateAndTimevalue.examNoonType}
-                                          >
-                                            <option value={"ForeNoon"}>ForeNoon</option>
+                                          >{examDatelist.map(ob =>(
+                                            <option value={ob.examDateId}>{ob.date}</option>
+                                            ))}
                                           </Input>
                                         </FormGroup>
                                         <FormGroup>
@@ -491,7 +481,7 @@ export default function Examtimetable() {
                                             name="departmentId"
                                             onChange={handleInputChange1}
                                             value={examDateAndTimevalue.departmentId}
-                                          >
+                                          ><option defaultvalue="--------"></option>
                                             {departmentlist.map(result =>(
                                               <option value={result.departmentId}>{result.departmentName}</option>
                                             ))}
@@ -510,7 +500,7 @@ export default function Examtimetable() {
                                             name="subjectId"
                                             onChange={handleInputChange1}
                                             value={examDateAndTimevalue.subjectId}
-                                          >
+                                          ><option defaultvalue="--------"></option>
                                             {subjectlist.map(result =>(
                                               // filter(obj =>Number(currentexamDateAndTime.currentdepartmentId) === Number(obj.departmentId))
                                               <option value={result.subjectId}>{result.subjectName}</option>
