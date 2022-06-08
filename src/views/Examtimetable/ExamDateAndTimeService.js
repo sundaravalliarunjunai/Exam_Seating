@@ -20,6 +20,6 @@ const ExamDateAndTimeService = {
   get,
   create,
   update,
-  remove  
+  remove 
 };
 export default ExamDateAndTimeService;
