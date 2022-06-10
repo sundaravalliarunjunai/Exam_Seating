@@ -68,15 +68,35 @@ export default function Examtimetable() {
   };
   const saveExamDate = (e) => {
     e.preventDefault();
-    var data= {
-        examDateId:examDatevalue.examDateId,
-        date: examDatevalue.date,     
-        foreNoonStartingTime:examDatevalue.foreNoonStartingTime,
-        foreNoonEndingTime:examDatevalue.foreNoonEndingTime,
-        afterNoonStartingTime:examDatevalue.afterNoonStartingTime,
-        // departmentId:examDatevalue.departmentId,
-        afterNoonEndingTime:examDatevalue.afterNoonEndingTime,
-    };
+    for (var i = 1; i <= 2; i++) {
+      let noon='';
+      var data;
+      if(i==1){
+        noon="ForeNoon";
+        data= {
+          examDateId:examDatevalue.examDateId,
+          date: examDatevalue.date,  
+          examNoonType:noon,   
+          foreNoonStartingTime:examDatevalue.foreNoonStartingTime,
+          foreNoonEndingTime:examDatevalue.foreNoonEndingTime,
+          //afterNoonStartingTime:examDatevalue.afterNoonStartingTime,
+          // departmentId:examDatevalue.departmentId,
+          //afterNoonEndingTime:examDatevalue.afterNoonEndingTime,
+      };
+      }else{
+        noon="AfterNoon";
+        data= {
+          examDateId:examDatevalue.examDateId,
+          date: examDatevalue.date,  
+          examNoonType:noon,   
+          //foreNoonStartingTime:examDatevalue.foreNoonStartingTime,
+          //foreNoonEndingTime:examDatevalue.foreNoonEndingTime,
+          afterNoonStartingTime:examDatevalue.afterNoonStartingTime,
+          // departmentId:examDatevalue.departmentId,
+          afterNoonEndingTime:examDatevalue.afterNoonEndingTime,
+      };
+      }
+    
     // alert(data);
       ExamDateService.create(data).then(response => {
         alert("Success");
@@ -98,10 +118,12 @@ export default function Examtimetable() {
         alert(e);
         console.log(e);
       });
+    }
   };
 
   const saveExamDateAndTime = (e) => {
     e.preventDefault();
+    
     var data= {
         examDateId:examDateAndTimevalue.examDateId,
         examDateAndTimeId:examDateAndTimevalue.examDateAndTimeId,
@@ -109,7 +131,8 @@ export default function Examtimetable() {
         examNoonType:examDateAndTimevalue.examNoonType,
         subjectId:examDateAndTimevalue.subjectId,
     };
-    // alert(data);
+    alert(data);
+    console.log("data",data);
       ExamDateAndTimeService.create(data).then(response => {
         alert("Success");
         setExamDateAndTime({
@@ -129,6 +152,7 @@ export default function Examtimetable() {
         console.log(e);
       });
   };
+
   const saveExamDateAndTime1 = (e) => {
     e.preventDefault();
     var data= {
@@ -267,9 +291,17 @@ export default function Examtimetable() {
 
   // Modal open state
   const [modal1, setModal1] = React.useState(false);
-  
+  let [ssexamDateId,setexamDateId] = React.useState(0);
   // Toggle for Modal
-  const toggle1 = () => setModal1(!modal1);
+  const toggle1 = () => {
+    //alert(id)
+    setModal1(!modal1);
+    // setexamDateId(id);
+    //setExamDateAndTime({...examDateAndTimevalue,[examDateAndTimevalue.examDateId]:id});
+    //alert(examDateId);
+    // console.log("examDateId",ssexamDateId);
+    
+  }
 
   const [modal2, setModal2] = React.useState(false);
   
@@ -287,7 +319,7 @@ export default function Examtimetable() {
   function getNumberofANExams (id){
     return examDateAndTimelist.filter(obj=>obj.examDateId === id && obj.examNoonType ==="AfterNoon").length
   }
-
+const [getdate,setdate] = useState();
   return (
     <>
       <div className="content">
@@ -396,24 +428,25 @@ export default function Examtimetable() {
                       <th><center>#</center></th>
                       <th><center>Date</center></th>
                       <th><center>ForeNoon Exams
-                        <tr><td>
-                          <i class="fa-solid fa-plus fa-lg" onClick={()=>{toggle1();}}></i>
-                          <Modal isOpen={modal1} 
-                            toggle={toggle1} backdrop={false} >
-                            <ModalHeader toggle={toggle1}>Add {examDateAndTimevalue.examNoonType = "ForeNoon"} Exam</ModalHeader>
+                        <tr>
+                          <td>
+                            <i class="fa-solid fa-plus fa-lg" onClick={()=>{toggle1();}}></i>
+                            <Modal isOpen={modal1} 
+                              toggle={toggle1} backdrop={false} >
+                              <ModalHeader toggle={toggle1}>Add {examDateAndTimevalue.examNoonType = "ForeNoon"} Exam</ModalHeader>
                                 <ModalBody>
-                                  <Form onSubmit={saveExamDateAndTime}>
+                                  <Form onSubmit={(e) => saveExamDateAndTime(e)}>
                                     <Row>
                                       <Col>
                                         <FormGroup>
-                                          <Label>Exam Date</Label>
+                                          <Label>Exam Date</Label>                                      
                                           <Input
                                             type={"select"}
                                             name="examDateId"
                                             onChange={handleInputChange1}
                                             value={examDateAndTimevalue.examDateId}
                                           ><option defaultValue="--------"></option>
-                                            {examDatelist.map(ob =>(
+                                            {examDatelist.filter(val=>val.examNoonType === 'ForeNoon').map(ob =>(
                                               <option value={ob.examDateId}>{ob.date}</option>
                                             ))}
                                           </Input>
@@ -490,10 +523,10 @@ export default function Examtimetable() {
                                 </Table>
                               </ModalBody>
                             </Modal>                  
-                        </td>
-                        <td><i class="fa-solid fa-trash fa-lg" onClick={(e) => {if (window.confirm('Are You sure! Do you want to delete this exam time ?')) examDateAndTimelist.filter(ob =>(ob.examNoonType === "ForeNoon")).map(result =>(deleteExamDateAndTime(result.examDateAndTimeId))) }}></i></td>
-                      </tr></center>
-                      </th>
+                          </td>
+                          <td> <i class="fa-solid fa-trash fa-lg" onClick={(e) => {if (window.confirm('Are You sure! Do you want to delete this exam time ?')) examDateAndTimelist.filter(ob =>(ob.examNoonType === "ForeNoon")).map(res =>(deleteExamDateAndTime(res.examDateAndTimeId))) }}></i> </td>
+                        </tr>
+                      </center></th>
                       <th><center>AfterNoon Exams
                         <tr>
                           <td>
@@ -513,7 +546,7 @@ export default function Examtimetable() {
                                             onChange={handleInputChange2}
                                             value={examDateAndTimevalue1.examDateId}
                                           ><option defaultValue="--------"></option>
-                                            {examDatelist.map(ob =>(
+                                            {examDatelist.filter(val=>val.examNoonType === 'AfterNoon').map(ob =>(
                                               <option value={ob.examDateId}>{ob.date}</option>
                                              ))}
                                           </Input>
@@ -590,9 +623,9 @@ export default function Examtimetable() {
                               </ModalBody>
                             </Modal>                  
                           </td>
-                          <td><i class="fa-solid fa-trash fa-lg" onClick={(e) => {if (window.confirm('Are You sure! Do you want to delete this exam time ?')) examDateAndTimelist.filter(ob=>(ob.examNoonType === "AfterNoon")).map(result =>(deleteExamDateAndTime(result.examDateAndTimeId))) }}></i></td>
-                        </tr></center>
-                      </th>
+                          <td> <i class="fa-solid fa-trash fa-lg" onClick={(e) => {if (window.confirm('Are You sure! Do you want to delete this exam time ?')) examDateAndTimelist.filter(ob=>( ob.examNoonType === "AfterNoon")).map(res =>(deleteExamDateAndTime(res.examDateAndTimeId))) }}></i> </td>
+                        </tr>
+                      </center></th>
                       <th><center>Action</center></th>
                     </tr>
                   </thead>
@@ -603,12 +636,16 @@ export default function Examtimetable() {
                         <td>{i++}</td>
                         <td>{result.date}</td>
                         {/* { examDateAndTimelist.map(result =>( */}
+                        {result.examNoonType === 'ForeNoon' ?
                         <td><center>{getNumberofFNExams(result.examDateId)} 
                           <td> <i class="fa-solid fa-trash fa-lg" onClick={(e) => {if (window.confirm('Are You sure! Do you want to delete this exam time ?')) examDateAndTimelist.filter(ob =>(ob.examDateId === result.examDateId && ob.examNoonType === "ForeNoon")).map(res =>(deleteExamDateAndTime(res.examDateAndTimeId))) }}></i> </td></center>
-                        </td>
-                        <td><center>{getNumberofANExams(result.examDateId)}   
+                        </td>:<td></td>
+                        }
+                        {result.examNoonType === 'AfterNoon' ?
+                        <td><center>{getNumberofANExams(result.examDateId)}
                           <td> <i class="fa-solid fa-trash fa-lg" onClick={(e) => {if (window.confirm('Are You sure! Do you want to delete this exam time ?')) examDateAndTimelist.filter(ob=>(ob.examDateId === result.examDateId && ob.examNoonType === "AfterNoon")).map(res =>(deleteExamDateAndTime(res.examDateAndTimeId))) }}></i> </td></center>
-                        </td>
+                        </td>:<td></td>
+                        }
                         <td><center>                                            
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this exam detail ?')) deleteExamDate(result.examDateId) } } ></i></center>

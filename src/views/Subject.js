@@ -249,7 +249,7 @@ export default function Subject() {
                                         value={subjectvalue.department}
                                       >
                                         {departmentlist.map(result =>(
-                                          <option value={result.departmentName}>{result.departmentName}</option>
+                                          <option value={result.departmentId}>{result.departmentName}</option>
                                         ))}
                                       </Input>
                                 </FormGroup>

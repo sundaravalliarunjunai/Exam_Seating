@@ -8,6 +8,13 @@ import BuildingService from "./Building/Buildingservice";
 import UserService from "./Login/Userservice";
 // import Edit_building from "./Building/Edit_building";
 import RoomService from "./Room/Roomservice";
+import $ from "jquery";
+
+$.DataTable = require('datatables.net')
+  
+$(document).ready( function () {
+  $('#building').DataTable();
+} );
 
 export default function Building() {
 
@@ -167,9 +174,8 @@ export default function Building() {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Building Details</CardTitle>
-                <Col md="5" ><Table><tr><td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
-                  {/* <i class='nc-icon nc-zoom-split'></i> */}
-                  </td><td>
+                <Col md="5" >
+                  <Table><tr><td>
                     <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add</Button>
                     <Modal isOpen={modal}
@@ -201,7 +207,7 @@ export default function Building() {
                 </Col>
               </CardHeader>
               <CardBody>
-                <Table responsive>
+                <Table id="building" class="display" responsive>
                   <thead className="text-primary">
                     <tr>
                       <th>#</th>
