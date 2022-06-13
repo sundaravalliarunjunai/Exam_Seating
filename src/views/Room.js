@@ -169,9 +169,11 @@ export default function Room() {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Room Details</CardTitle>
-                <Col md="5" ><Table><tr><td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
-                  {/* <i class='nc-icon nc-zoom-split'></i> */}
-                  </td><td>
+                <Col md="5" ><Table><tr>
+                  {/* <td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
+                  {/* <i class='nc-icon nc-zoom-split'></i> 
+                  </td> */}
+                  <td>
                   <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add
                   </Button>
@@ -192,7 +194,7 @@ export default function Room() {
                                         // size="2"
                                         onChange={handleInputChange}
                                         value={roomvalue.buildingId}
-                                      >
+                                      ><option defaultValue="">-----</option>
                                         {buildinglist.map(result =>(
                                           <option value={result.buildingId}>{result.buildingName}</option>
                                         ))}
@@ -291,7 +293,7 @@ export default function Room() {
                                       <Col>
                                           <FormGroup>
                                           <Label>Building Name</Label>
-                                          <Input
+                                          <Input disabled
                                               name="currentbuildingName"
                                               onChange={currenthandleInputChange}
                                               value={getbuildingName(currentroom.currentbuildingId)}

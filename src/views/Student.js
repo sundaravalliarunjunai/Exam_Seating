@@ -193,9 +193,11 @@ export default function Student() {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Student Details</CardTitle>
-                <Col md="5" ><Table><tr><td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
-                  {/* <i class='nc-icon nc-zoom-split'></i> */}
-                  </td><td>
+                <Col md="5" ><Table><tr>
+                  {/* <td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
+                  {/* <i class='nc-icon nc-zoom-split'></i> 
+                  </td> */}
+                  <td>
                   <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add</Button>
                     <Modal isOpen={modal}
@@ -241,7 +243,7 @@ export default function Student() {
                                         name="dob"
                                         onChange={handleInputChange}
                                         value={studentvalue.dob}
-                                        placeholder="DD-MM-YYYY"
+                                        placeholder="YYYY-MM-DD"
                                         type="text" required
                                     />
                                     </FormGroup>
@@ -257,7 +259,7 @@ export default function Student() {
                                       // size="2"
                                       onChange={handleInputChange}
                                       value={studentvalue.courseType}>
-                                        <option value="">-----</option>
+                                        <option defaultValue="">-----</option>
                                         <option value="UG">UG</option> 
                                         <option value="PG">PG</option> 
                                     </Input>
@@ -274,7 +276,7 @@ export default function Student() {
                                         // size="2"
                                         onChange={handleInputChange}
                                         value={studentvalue.departmentId}
-                                      >
+                                      ><option defaultValue="">-----</option>
                                         {departmentlist.map(result =>(
                                           <option value={result.departmentId}>{result.departmentName}</option>
                                         ))}
@@ -292,7 +294,7 @@ export default function Student() {
                                     // size="2"
                                     onChange={handleInputChange}
                                     value={studentvalue.semester}>
-                                      <option value="">-----</option>
+                                      <option defaultValue="">-----</option>
                                       <option value="I">I</option> 
                                       <option value="II">II</option> 
                                       <option value="III">III</option> 
@@ -402,10 +404,10 @@ export default function Student() {
                                         <Col>
                                           <FormGroup>
                                             <Label>Department</Label>
-                                            <Input
+                                            <Input disabled
                                                 name="currentdepartmentId"
                                                 onChange={currenthandleInputChange}
-                                                value={currentstudent.currentdepartmentId}
+                                                value={getDepartmentName(currentstudent.currentdepartmentId)}
                                                 type="text" required
                                             />
                                           </FormGroup>

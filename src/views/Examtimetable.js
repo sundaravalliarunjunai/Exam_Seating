@@ -319,7 +319,7 @@ export default function Examtimetable() {
   function getNumberofANExams (id){
     return examDateAndTimelist.filter(obj=>obj.examDateId === id && obj.examNoonType ==="AfterNoon").length
   }
-const [getdate,setdate] = useState();
+// const [getdate,setdate] = useState();
   return (
     <>
       <div className="content">
@@ -328,9 +328,11 @@ const [getdate,setdate] = useState();
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Exam Details</CardTitle>
-                <Col md="5" ><Table><tr><td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
-                  {/* <i class='nc-icon nc-zoom-split'></i> */}
-                  </td><td>
+                <Col md="5" ><Table><tr>
+                  {/* <td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
+                  {/* <i class='nc-icon nc-zoom-split'></i> 
+                  </td> */}
+                  <td>
                   <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add
                   </Button>
@@ -349,7 +351,7 @@ const [getdate,setdate] = useState();
                                         name="date"
                                         onChange={handleInputChange}
                                         value={examDatevalue.date}
-                                        placeholder="DD-MM-YYYY"
+                                        placeholder="YYYY-MM-DD"
                                         type="text" required
                                     />
                                     </FormGroup>
@@ -363,8 +365,8 @@ const [getdate,setdate] = useState();
                                         name="foreNoonStartingTime"
                                         onChange={handleInputChange}
                                         value={examDatevalue.foreNoonStartingTime}
-                                        placeholder="hours:min AM"
-                                        type="text" required
+                                        // placeholder="hours:min"
+                                        type="time" required
                                     />
                                     </FormGroup>
                                 </Col>
@@ -377,8 +379,8 @@ const [getdate,setdate] = useState();
                                         name="foreNoonEndingTime"
                                         onChange={handleInputChange}
                                         value={examDatevalue.foreNoonEndingTime}
-                                        placeholder="hours:min AM"
-                                        type="text" required
+                                        // placeholder="hours:min"
+                                        type="time" required
                                     />
                                     </FormGroup>
                                 </Col>
@@ -391,8 +393,8 @@ const [getdate,setdate] = useState();
                                         name="afterNoonStartingTime"
                                         onChange={handleInputChange}
                                         value={examDatevalue.afterNoonStartingTime}
-                                        placeholder="hours:min PM"
-                                        type="text" required
+                                        // placeholder="hours:min"
+                                        type="time" required
                                     />
                                     </FormGroup>
                                 </Col>
@@ -405,8 +407,8 @@ const [getdate,setdate] = useState();
                                         name="afterNoonEndingTime"
                                         onChange={handleInputChange}
                                         value={examDatevalue.afterNoonEndingTime}
-                                        placeholder="hours:min PM"
-                                        type="text" required
+                                        // placeholder="hours:min"
+                                        type="time" required
                                     />
                                     </FormGroup>
                                     <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
@@ -445,7 +447,7 @@ const [getdate,setdate] = useState();
                                             name="examDateId"
                                             onChange={handleInputChange1}
                                             value={examDateAndTimevalue.examDateId}
-                                          ><option defaultValue="--------"></option>
+                                          ><option defaultValue="">-----</option>
                                             {examDatelist.filter(val=>val.examNoonType === 'ForeNoon').map(ob =>(
                                               <option value={ob.examDateId}>{ob.date}</option>
                                             ))}
@@ -477,7 +479,7 @@ const [getdate,setdate] = useState();
                                             name="subjectId"
                                             onChange={handleInputChange1}
                                             value={examDateAndTimevalue.subjectId}
-                                          ><option defaultValue="--------"></option>
+                                          ><option defaultValue="">-----</option>
                                             {subjectlist.map(result =>(
                                               // filter(obj =>Number(currentexamDateAndTime.currentdepartmentId) === Number(obj.departmentId))
                                               <option value={result.subjectId}>{result.subjectName}</option>
@@ -500,6 +502,7 @@ const [getdate,setdate] = useState();
                                 <Table responsive>
                                   <thead className="text-primary">
                                     <tr>
+                                      <th>Date</th>
                                       <th>Subject</th>
                                       <th>Action</th>
                                     </tr>
@@ -509,6 +512,11 @@ const [getdate,setdate] = useState();
                                       .filter(ob =>(ob.examNoonType === "ForeNoon"))
                                       .map( result =>(
                                         <tr>
+                                          <td>
+                                            {examDatelist.filter(val=> Number(val.examDateId) === Number(result.examDateId)).map(res1=>{
+                                              return res1.date;
+                                            })}
+                                          </td>
                                           <td>{subjectlist.filter(obj=> Number(obj.subjectId) === Number(result.subjectId)).map(res=>{
                                                 return res.subjectName;})}
                                             {/* {subjectlist.map(res =>(res.subjectId === result.subjectId))} */}
@@ -545,7 +553,7 @@ const [getdate,setdate] = useState();
                                             name="examDateId"
                                             onChange={handleInputChange2}
                                             value={examDateAndTimevalue1.examDateId}
-                                          ><option defaultValue="--------"></option>
+                                          ><option defaultValue="">-----</option>
                                             {examDatelist.filter(val=>val.examNoonType === 'AfterNoon').map(ob =>(
                                               <option value={ob.examDateId}>{ob.date}</option>
                                              ))}
@@ -577,7 +585,7 @@ const [getdate,setdate] = useState();
                                             name="subjectId"
                                             onChange={handleInputChange2}
                                             value={examDateAndTimevalue1.subjectId}
-                                          ><option defaultValue="--------"></option>
+                                          ><option defaultValue="">-----</option>
                                             {subjectlist.map(result =>(
                                               <option value={result.subjectId}>{result.subjectName}</option>
                                             ))}
@@ -599,6 +607,7 @@ const [getdate,setdate] = useState();
                                 <Table responsive>
                                   <thead className="text-primary">
                                     <tr>
+                                      <th>Date</th>
                                       <th>Subject</th>
                                       <th>Action</th>
                                     </tr>
@@ -608,6 +617,11 @@ const [getdate,setdate] = useState();
                                       .filter(ob =>(ob.examNoonType === "AfterNoon" ))
                                       .map( result1 =>(
                                         <tr>
+                                          <td>
+                                            {examDatelist.filter(obj=> Number(obj.examDateId) === Number(result1.examDateId)).map(res1=>{
+                                              return res1.date;
+                                            })}
+                                          </td>
                                           <td>{subjectlist.filter(obj=> Number(obj.subjectId) === Number(result1.subjectId)).map(res=>{
                                                 return res.subjectName;})}
                                             {/* {subjectlist.map(res =>(res.subjectId === result.subjectId))} */}
@@ -633,8 +647,8 @@ const [getdate,setdate] = useState();
                   {
                     examDatelist.map(result=>(   
                       <tr>
-                        <td>{i++}</td>
-                        <td>{result.date}</td>
+                        <td><center>{i++}</center></td>
+                        <td><center>{result.date}</center></td>
                         {/* { examDateAndTimelist.map(result =>( */}
                         {result.examNoonType === 'ForeNoon' ?
                         <td><center>{getNumberofFNExams(result.examDateId)} 

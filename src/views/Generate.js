@@ -24,6 +24,7 @@ export default function Generate() {
   const [jsonexamdate,setjsonexamdate]=React.useState([]);
   const [jsonexamdateandtime,setjsonexamdateandtime]=React.useState([]);
   const [resdata,setresponsedata]=React.useState([]);
+  const [examDatelist,setExamDatelist]=React.useState([]);
 
   useEffect(()=>{
     setjsonbuilding([]);
@@ -33,6 +34,7 @@ export default function Generate() {
     setjsonstaff([]);
     setjsonstudent([]);
     setjsonsubject([]);
+    retrieveExamDate();
     BuildingService.getAll().then(response => {
                 
       response.data.map(obj=>{
@@ -41,7 +43,7 @@ export default function Generate() {
           "buildingName":obj.buildingName
           }]);
       })
-      console.log("jsonbuilding",response.data)
+      // console.log("jsonbuilding",response.data)
     })
     RoomService.getAll().then(response => {
       response.data.map(obj=>{
@@ -52,7 +54,7 @@ export default function Generate() {
           "examSeatingCapacity":obj.seatCapacity,
           }]);
       })
-      console.log("jsonroom",response.data)
+      // console.log("jsonroom",response.data)
     })
     SubjectService.getAll().then(response=>{
       response.data.map(obj=>{
@@ -187,6 +189,23 @@ element.click();
 
   let i=1;
 
+  const retrieveExamDate =() => {
+    ExamDateService.getAll().then(response => {
+    setExamDatelist(response.data);
+      // console.log(response.data);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  const displaydata =()=> 
+    {
+      resdata.studentPlan[0].schedule.filter(val =>val.examDateId).map(res=>{
+      return res.examDateId;
+    })
+  }
+
   return (
     <>
       <div className="content">
@@ -195,18 +214,16 @@ element.click();
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Report Generation</CardTitle>
-                <Col md="5" ><Table><tr><td>
-                  <Button color="success" 
-                    onClick={()=>{algorithm();}}
-                  ><i class="nc-icon nc-cloud-download-93"></i> Run Algorithm
-                  </Button>
-                  </td></tr></Table>
-                </Col>
-                <Col md="6" ><Table><tr>
+                <Col><Table><tr>
                   <td>
                     <Button color="success" 
                       onClick={()=>{exportdata();}}
-                    ><i class="nc-icon nc-cloud-download-93"></i>Export</Button>
+                    ><i class="fa-solid fa-download"></i> Export</Button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <Button color="success" 
+                      onClick={()=>{algorithm();}}
+                    ><i class="fa-solid fa-diagram-successor"></i> Run Algorithm
+                    </Button>
                   </td>
                   </tr></Table>
                 </Col>
@@ -229,7 +246,7 @@ element.click();
                   <tbody>
                     <tr>
                       <td>{i++}</td>
-                      <td></td>
+                      <td>{displaydata}</td>
                     </tr>
                   </tbody>
                 </Table>

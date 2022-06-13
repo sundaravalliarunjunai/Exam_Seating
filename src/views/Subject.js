@@ -154,7 +154,11 @@ export default function Subject() {
   });
   };
 
-  
+  function getdepartmentName(id){
+    return departmentlist.filter(obj=> Number(obj.departmentId) === Number(id)).map(result=>{
+      return result.departmentName;
+    })
+  }
 
   let i=1;
 
@@ -178,9 +182,11 @@ export default function Subject() {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Subject Details</CardTitle>
-                <Col md="5" ><Table><tr><td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
-                  {/* <i class='nc-icon nc-zoom-split'></i> */}
-                  </td><td>
+                <Col md="5" ><Table><tr>
+                  {/* <td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
+                  {/* <i class='nc-icon nc-zoom-split'></i> 
+                  </td> */}
+                  <td>
                   <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add
                   </Button>
@@ -201,7 +207,7 @@ export default function Subject() {
                                     // size="2"
                                     onChange={handleInputChange}
                                     value={subjectvalue.courseType}>
-                                      <option value="">-----</option>
+                                      <option defaultValue="">-----</option>
                                       <option value="UG">UG</option> 
                                       <option value="PG">PG</option> 
                                   </Input>
@@ -226,7 +232,7 @@ export default function Subject() {
                                     // size="2"
                                     onChange={handleInputChange}
                                     value={subjectvalue.semester}>
-                                      <option value="">-----</option>
+                                      <option defaultValue="">-----</option>
                                       <option value="I">I</option> 
                                       <option value="II">II</option> 
                                       <option value="III">III</option> 
@@ -247,7 +253,7 @@ export default function Subject() {
                                         // size="2"
                                         onChange={handleInputChange}
                                         value={subjectvalue.department}
-                                      >
+                                      ><option defaultValue="">-----</option>
                                         {departmentlist.map(result =>(
                                           <option value={result.departmentId}>{result.departmentName}</option>
                                         ))}
@@ -312,7 +318,7 @@ export default function Subject() {
                         <td>{i++}</td>
                         <td>{result.courseType}</td>
                         <td>{result.semester}</td>
-                        <td>{result.department}</td>
+                        <td>{getdepartmentName(result.department)}</td>
                         <td>{result.courseCode}</td>
                         <td>{result.subjectName}</td>                        
                         <td>                                            
@@ -356,10 +362,10 @@ export default function Subject() {
                                     <Col>
                                         <FormGroup>
                                         <Label>Department</Label>
-                                        <Input
+                                        <Input disabled
                                             name="currentdepartment"
                                             onChange={currenthandleInputChange}
-                                            value={currentsubject.currentdepartment}
+                                            value={getdepartmentName(currentsubject.currentdepartment)}
                                             type="text" required
                                         />
                                         </FormGroup>

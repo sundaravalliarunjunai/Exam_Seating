@@ -16,6 +16,7 @@ import admin_routes from "admin_routes.js";
 import staff_routes from "staff_routes.js";
 import usertype from "../../views/Login";
 import { getUserType} from "views/Login/Common"
+import student_routes from "student_routes.js";
 
 function Header(props) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -35,8 +36,8 @@ function Header(props) {
     setDropdownOpen(!dropdownOpen);
   };
   const getBrand = () => {
-    let brandName = "Dashboard";
     if(getUserType() === 'admin'){
+      let brandName = "ADMIN"
       admin_routes.map((prop, key) => {
         if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
           brandName = prop.name;
@@ -45,6 +46,7 @@ function Header(props) {
       });
     }
     else if(getUserType() === 'staff'){
+      let brandName = "STAFF";
       staff_routes.map((prop, key) => {
         if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
           brandName = prop.name;
@@ -52,7 +54,18 @@ function Header(props) {
         return null;
       });
     }
-    return brandName;
+    else{
+      if(getUserType() === 'student'){
+        let brandName = "STUDENT";
+        student_routes.map((prop,key)=>{
+          if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
+            brandName = prop.name;
+          }
+          return null;
+        });
+      }
+    }
+    // return brandName;
   };
   const openSidebar = () => {
     document.documentElement.classList.toggle("nav-open");
@@ -108,14 +121,15 @@ function Header(props) {
               <span className="navbar-toggler-bar bar3" />
             </button>
           </div>
-          <NavbarBrand href="/">{getBrand()}</NavbarBrand>
+          {/* <NavbarBrand href="/">{getBrand()}</NavbarBrand> */}
         </div>
         <NavbarToggler onClick={toggle}>
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
         </NavbarToggler>
-        <Dropdown
+        <NavbarBrand href="/">{getBrand()}</NavbarBrand>
+        {/* <Dropdown
           isOpen={dropdownOpen}
           toggle={(e) => dropdownToggle(e)}
         >
@@ -131,7 +145,7 @@ function Header(props) {
                 <DropdownItem tag="a">Another Action</DropdownItem>
                 <DropdownItem tag="a">Something else here</DropdownItem>
               </DropdownMenu>
-        </Dropdown>
+        </Dropdown> */}
       </Container>
     </Navbar>
   );

@@ -33,7 +33,7 @@ function Sidebar(props) {
     >
       <div className="logo">
         <a
-          href="../admin/dashboard"
+          // href="../admin/dashboard"
           className="simple-text logo-normal"
         >
           Exam Hall Allotment

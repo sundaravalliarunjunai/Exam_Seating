@@ -8,13 +8,13 @@ import BuildingService from "./Building/Buildingservice";
 import UserService from "./Login/Userservice";
 // import Edit_building from "./Building/Edit_building";
 import RoomService from "./Room/Roomservice";
-import $ from "jquery";
+// import $ from "jquery";
 
-$.DataTable = require('datatables.net')
+// $.DataTable = require('datatables.net')
   
-$(document).ready( function () {
-  $('#building').DataTable();
-} );
+// $(document).ready( function () {
+//   $('#building').DataTable();
+// } );
 
 export default function Building() {
 

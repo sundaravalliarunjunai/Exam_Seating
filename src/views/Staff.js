@@ -180,9 +180,11 @@ export default function Staff() {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Staff Details</CardTitle>
-                <Col md="5" ><Table><tr><td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
-                  {/* <i class='nc-icon nc-zoom-split'></i> */}
-                  </td><td>
+                <Col md="5" ><Table><tr>
+                  {/* <td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
+                  {/* <i class='nc-icon nc-zoom-split'></i> 
+                  </td> */}
+                  <td>
                   <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add
                   </Button>
@@ -215,7 +217,7 @@ export default function Staff() {
                                           name="dob"
                                           onChange={handleInputChange}
                                           value={staffvalue.dob}
-                                          placeholder="DD-MM-YYYY"
+                                          placeholder="YYYY-MM-DD"
                                           type="text" required
                                       />
                                       </FormGroup>
@@ -230,7 +232,7 @@ export default function Staff() {
                                         name="departmentId"
                                         onChange={handleInputChange}
                                         value={staffvalue.departmentId}
-                                      >
+                                      ><option defaultValue="">-----</option>
                                         {departmentlist.map(result =>(
                                           <option value={result.departmentId}>{result.departmentName}</option>
                                         ))}
@@ -307,15 +309,15 @@ export default function Staff() {
                                         <Col>
                                           <FormGroup>
                                             <Label>Department</Label>
-                                            <Input
-                                              type={"select"}
+                                            <Input disabled
+                                              type="text"
                                               name="currentdepartmentId"
                                               onChange={currenthandleInputChange}
-                                              value={currentstaff.departmentId}
+                                              value={getDepartmentName(currentstaff.currentdepartmentId)}
                                             >
-                                              {departmentlist.map(result =>(
+                                              {/* {departmentlist.map(result =>(
                                                 <option value={result.departmentId}>{result.departmentName}</option>
-                                              ))}
+                                              ))} */}
                                             </Input>
                                           </FormGroup>
                                           <Button color="primary" onClick={updateStaff}>Update</Button>

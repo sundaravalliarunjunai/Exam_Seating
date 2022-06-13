@@ -153,9 +153,11 @@ export default function Department() {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Department Details</CardTitle>
-                <Col md="5" ><Table><tr><td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
-                  {/* <i class='nc-icon nc-zoom-split'></i> */}
-                  </td><td>
+                <Col md="5" ><Table><tr>
+                  {/* <td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
+                   <i class='nc-icon nc-zoom-split'></i> 
+                  </td> */}
+                  <td>
                     <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add</Button>
                     <Modal isOpen={modal}
