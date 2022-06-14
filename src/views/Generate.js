@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import {
-  Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button,
+  Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Button, Input,
 } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import { Link } from "react-router-dom";
@@ -13,6 +13,7 @@ import SubjectService from "./Subject/Subjectservice";
 import ExamDateService from "./Examtimetable/ExamDateService";
 import ExamDateAndTimeService from "./Examtimetable/ExamDateAndTimeService";
 import GenerateService from "./Generate/GenerateService";
+import SubjectPlanService from "./Generate/SubjectPlanService";
 
 export default function Generate() {
 
@@ -23,8 +24,20 @@ export default function Generate() {
   const [jsonstudent,setjsonstudent]=React.useState([]);
   const [jsonexamdate,setjsonexamdate]=React.useState([]);
   const [jsonexamdateandtime,setjsonexamdateandtime]=React.useState([]);
-  const [resdata,setresponsedata]=React.useState([]);
+  const [resdata,setresponsedata]=React.useState({});
   const [examDatelist,setExamDatelist]=React.useState([]);
+  const [subjectlist,setSubjectlist]=React.useState([]);
+  const [subjectPlanlist,setSubjectPlanlist]=React.useState([]);
+  const [resultavailable,setresultavailable]=React.useState(false);
+
+  const [studentvisible,setStudentVisible]=React.useState(false);
+  const [staffvisible,setStaffVisible]=React.useState(false);
+  const [roomvisible,setRoomVisible]=React.useState(false);
+  const [subjectvisible,setSubjectVisible]=React.useState(false);
+  const [show, setShow]=React.useState(false);
+  const [show1, setShow1]=React.useState(true);
+  const[submitted,setSubmitted]=React.useState(false);
+  const [subjectPlanvalue,setSubjectPlan]=React.useState([]);
 
   useEffect(()=>{
     setjsonbuilding([]);
@@ -35,6 +48,8 @@ export default function Generate() {
     setjsonstudent([]);
     setjsonsubject([]);
     retrieveExamDate();
+    retrieveSubject();
+    retrieveSubjectPlan();
     BuildingService.getAll().then(response => {
                 
       response.data.map(obj=>{
@@ -136,35 +151,38 @@ export default function Generate() {
     return stuArray;
   }
   const algorithm =(e)=>{
-        const data = {
-        
-          buildings:jsonbuilding,
-          rooms:jsonroom,
-          subjects:jsonsubject,
-          staff:jsonstaff,
-          students:jsonstudent,
-          examDateAndTimes:jsonexamdate,
-          examTimetable:jsonexamdateandtime
-        };
-
-        GenerateService.create(data)
-        
-        .then(response => {
-            if (response.status===200){
-            console.log("response",response.data)
-            setresponsedata(response.data)
-                                                            
-        }
-        else if(response.status === 500){
-            alert(response.data)
-           
-        } 
-        else if(response.status === 406){
-            alert("Unrecognized Input = " + response.data)
-            
-        }                
-    })
+    const data = {
+      buildings:jsonbuilding,
+      rooms:jsonroom,
+      subjects:jsonsubject,
+      staff:jsonstaff,
+      students:jsonstudent,
+      examDateAndTimes:jsonexamdate,
+      examTimetable:jsonexamdateandtime
     };
+    GenerateService.create(data)
+      .then(response => {
+        //setresultavailable(true);
+        setresponsedata(response.data);        
+        setresponsedata(response.data)
+        console.log("response",resdata)         
+    })
+        //.then(({ data: resdata }) => {
+          
+        // if (response.status===200){            
+        //                                                                           
+        // }
+        // else if(response.status === 500){
+        //     alert(response.data)
+           
+        // } 
+        // else if(response.status === 406){
+        //     alert("Unrecognized Input = " + response.data)
+            
+        // }                
+    setShow(true);
+    { (subjectPlanlist.length > 0)? setShow1(false):setShow1(true)}
+  };
 
   const exportdata=()=>{
     
@@ -198,12 +216,120 @@ element.click();
       console.log(e);
     });
   };
-
-  const displaydata =()=> 
-    {
-      resdata.studentPlan[0].schedule.filter(val =>val.examDateId).map(res=>{
-      return res.examDateId;
+  const retrieveSubject =() => {
+    SubjectService.getAll().then(response => {
+      setSubjectlist(response.data);
+    // console.log(response.data);
     })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const retrieveSubjectPlan =() => {
+    SubjectPlanService.getAll().then(response => {
+      setSubjectPlanlist(response.data);
+    // console.log(response.data);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  
+  const getdate=(id)=>{
+    return examDatelist.filter(obj=>( Number(obj.examDateId) === Number(id)).map(ob=>{
+      return ob.date;
+    })
+    )
+  }
+  const getsubjectName=(id)=>{
+    return subjectlist.filter(obj=>( Number(obj.subjectId) === Number(id)).map(ob=>{
+      return ob.subjectName;
+    })
+    )
+  }
+  // const getRoomName=(id)=>{
+  //   return roomlist.filter(obj=>( Number(obj.roomId) === Number(id)).map(ob=>{
+  //     return ob.roomName;
+  //   })
+  //   )
+  // }
+  const viewResult = (e) =>{
+    if(e.target.value === 'student'){
+      setStudentVisible(true);
+      setStaffVisible(false);
+      setRoomVisible(false);
+      setSubjectVisible(false);
+    }
+    else if(e.target.value === 'staff'){
+      setStudentVisible(false);
+      setStaffVisible(true);
+      setRoomVisible(false);
+      setSubjectVisible(false);
+
+    }
+    else if(e.target.value === 'room'){
+      setStudentVisible(false);
+      setStaffVisible(false);
+      setRoomVisible(true);
+      setSubjectVisible(false);
+
+    }
+    else if(e.target.value === 'subject'){
+      setStudentVisible(false);
+      setStaffVisible(false);
+      setRoomVisible(false);
+      setSubjectVisible(true);
+
+    }
+    setresultavailable(true);
+  }
+
+  const saveplan = () => {
+    resdata.subjectPlan.map(res =>{
+      var data= {
+        subjectId:res.subjectId,
+        subjectName: res.subjectName,
+        examDateAndTimeId: res.examDateAndTimeId,
+        summary: JSON.stringify(res.summary),     
+      };
+      SubjectPlanService.create(data).then(response => {
+        alert("Success");
+        setSubjectPlan({
+          subjectId: response.data.subjectId,
+          subjectName: response.data.subjectName,
+        });
+        retrieveSubjectPlan();
+        setSubmitted(true);
+        console.log(response.data);
+        // newBuilding();
+      })
+      .catch(e=>{
+        alert(e);
+        console.log(e);
+      });
+    })    
+  };
+
+  const deletePlan = (id) => {
+    SubjectPlanService.remove(id). then (
+    response => {
+        alert('Deleted Successfully...');           
+        retrieveSubjectPlan();           
+    })
+    // UserService.getAll().then((response)=>{
+    //     response.data.filter(obj=>obj.buildingId === id).map((val)=>
+    //     UserService.remove(val.userId) .then (
+    //         response => {}
+    //     )
+    //     )
+    // })   
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  const setResetValue=()=>{
+    i=1;
   }
 
   return (
@@ -220,16 +346,45 @@ element.click();
                       onClick={()=>{exportdata();}}
                     ><i class="fa-solid fa-download"></i> Export</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                    <Button color="success" 
+                    <Button color="primary" 
                       onClick={()=>{algorithm();}}
                     ><i class="fa-solid fa-diagram-successor"></i> Run Algorithm
                     </Button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                  {/* </td>
+                  {subjectPlanlist.map(ob=>{
+                  <td> */}
+                    {show1 ? 
+                      <Button color="success" 
+                        onClick={()=>{saveplan();}}
+                      ><i class="fa-solid fa-file-circle-plus"></i> Save
+                      </Button> :
+                      <Button color="danger" 
+                        onClick={()=>{deletePlan();}}
+                      ><i class="fa-solid fa-file-circle-minus"></i> Delete
+                      </Button>
+                    }
                   </td>
+                  {/* })} */}
                   </tr></Table>
                 </Col>
               </CardHeader>
               <CardBody>
-                <Table responsive>
+                {show ? 
+                  <Col md = "4">
+                    <Input 
+                      type={"select"}
+                      onChange={viewResult}
+                    >
+                      <option defaultValue="" >Select Category</option>
+                      <option value="student">Student</option>
+                      <option value="staff">Staff</option>
+                      <option value="room">Room</option>
+                      <option value="subject">Subject</option>
+                    </Input>
+                  </Col>
+                 : null}
+                { studentvisible && <Table responsive>
                   <thead className="text-primary">
                     <tr>
                       <th>#</th>
@@ -244,12 +399,117 @@ element.click();
                     </tr>
                   </thead>
                   <tbody>
+                    {/* {resultavailable && resdata.studentPlan.length} */}
+                    {resultavailable && resdata.studentPlan.map(result=>(
                     <tr>
                       <td>{i++}</td>
-                      <td>{displaydata}</td>
+                      <td>{result.studentName}</td>
+                      <td>{result.schedule.map(res=>(
+                        <li>{getdate(Number(res.examDateAndTimeId))}</li>
+                      ))}</td>                      
+                      <td>{}</td>
                     </tr>
+                     ))} 
                   </tbody>
-                </Table>
+                </Table> }
+                { staffvisible && <Table responsive>
+                  <thead className="text-primary">
+                    <tr>
+                      <th>#</th>
+                      <th>Date</th>
+                      <th>Staff Name</th>                  
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* {resultavailable && resdata.studentPlan.length} */}
+                    {resultavailable && resdata.staffPlan.map(result=>(
+                    <tr>
+                      <td>{i++}</td>
+                      <td>{result.staffName}</td>
+                    </tr>
+                     ))} 
+                  </tbody>
+                </Table> }
+                { roomvisible && 
+                resdata.roomPlan.map(res =>(
+                  <div>
+                  <p>{res.roomName}</p>                                 
+                  { res.schedule.length > 0 && <Table responsive>
+                  <thead className="text-primary">
+                    <tr>
+                      <th>#</th>
+                      <th>Date</th>
+                      <th>Subject Name</th>
+                      <th>Number of Students</th>                  
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* {resultavailable && resdata.studentPlan.length} */}
+                    {res.schedule.map(result=>(                    
+                      result.summary.map(obj=>(
+                        <tr>
+                        <td>{i++}</td>                  
+                        <td>{result.examDateAndTimeId}</td>
+                        <td>{getsubjectName(obj.subjectId)}</td>
+                        <td>{obj.numberOfStudents}</td>
+                        </tr>
+                      ))                                       
+                     ))} 
+                  </tbody>
+                </Table> }
+                 { res.schedule.length > 0 && 
+                <Table responsive>
+                  <thead className="text-primary">
+                    <tr>
+                      <th>#</th>
+                      <th>RollNo</th>
+                      <th>Subject Name</th>
+                      <th>Seat Number</th>                  
+                    </tr>
+                  </thead>
+                  <tbody>                    
+                    {res.schedule.map(result=>(                  
+                          result.students.map(obj=>(
+                            <tr>
+                              <td>{i++}</td>
+                              <td>{obj.studentId}</td>
+                              <td>{getsubjectName(obj.subjectId)}</td>
+                              <td>{obj.seatNumber}</td>
+                              </tr>
+                          ))                                                                                   
+                     ))} 
+                  </tbody>
+                </Table> }
+                </div>
+                  
+                 ))}
+
+                { subjectvisible && 
+                resdata.subjectPlan.map(res =>(
+                  <div>
+                  <p>{res.subjectName}</p>
+                  <p>{res.examDateAndTimeId}</p>               
+                <Table responsive>
+                  <thead className="text-primary">
+                    <tr>
+                      <th>#</th>
+                      <th>Room Name</th>
+                      <th>Number of Students</th>                  
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* {resultavailable && resdata.studentPlan.length} */}
+                    {res.summary.map(result=>(
+                    <tr>
+                      <td>{i++}</td>
+                      {/* <td>{getRoomName(result.roomId)}</td> */}
+                      <td>{result.numberOfStudents}</td>
+                    </tr>
+                     ))} 
+                  </tbody>
+                </Table></div>
+                  
+                 ))}
               </CardBody>
             </Card>
           </Col>
