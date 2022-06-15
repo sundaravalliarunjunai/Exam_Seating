@@ -14,6 +14,9 @@ import ExamDateService from "./Examtimetable/ExamDateService";
 import ExamDateAndTimeService from "./Examtimetable/ExamDateAndTimeService";
 import GenerateService from "./Generate/GenerateService";
 import SubjectPlanService from "./Generate/SubjectPlanService";
+import StudentPlanService from "./Generate/StudentPlanService";
+import RoomPlanService from "./Generate/RoomPlanService";
+import StaffPlanService from "./Generate/StaffPlanService";
 
 export default function Generate() {
 
@@ -28,6 +31,9 @@ export default function Generate() {
   const [examDatelist,setExamDatelist]=React.useState([]);
   const [subjectlist,setSubjectlist]=React.useState([]);
   const [subjectPlanlist,setSubjectPlanlist]=React.useState([]);
+  const [roomPlanlist,setRoomPlanlist]=React.useState([]);
+  const [staffPlanlist,setStaffPlanlist]=React.useState([]);
+  const [studentPlanlist,setStudentPlanlist]=React.useState([]);
   const [resultavailable,setresultavailable]=React.useState(false);
 
   const [studentvisible,setStudentVisible]=React.useState(false);
@@ -38,6 +44,9 @@ export default function Generate() {
   const [show1, setShow1]=React.useState(true);
   const[submitted,setSubmitted]=React.useState(false);
   const [subjectPlanvalue,setSubjectPlan]=React.useState([]);
+  const [studentPlanvalue,setStudentPlan]=React.useState([]);
+  const [staffPlanvalue,setStaffPlan]=React.useState([]);
+  const [roomPlanvalue,setRoomPlan]=React.useState([]);
 
   useEffect(()=>{
     setjsonbuilding([]);
@@ -49,7 +58,9 @@ export default function Generate() {
     setjsonsubject([]);
     retrieveExamDate();
     retrieveSubject();
+    retrieveStudentPlan();
     retrieveSubjectPlan();
+    retrieveRoomPlan();
     BuildingService.getAll().then(response => {
                 
       response.data.map(obj=>{
@@ -234,7 +245,33 @@ element.click();
       console.log(e);
     });
   };
-  
+  const retrieveStudentPlan =() => {
+    StudentPlanService.getAll().then(response => {
+      setStudentPlanlist(response.data);
+    // console.log(response.data);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const retrieveStaffPlan =() => {
+    StaffPlanService.getAll().then(response => {
+      setStaffPlanlist(response.data);
+    // console.log(response.data);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const retrieveRoomPlan =() => {
+    RoomPlanService.getAll().then(response => {
+      setRoomPlanlist(response.data);
+    // console.log(response.data);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
   const getdate=(id)=>{
     return examDatelist.filter(obj=>( Number(obj.examDateId) === Number(id)).map(ob=>{
       return ob.date;
@@ -285,18 +322,64 @@ element.click();
   }
 
   const saveplan = () => {
-    resdata.subjectPlan.map(res =>{
+    resdata.studentPlan.map(res =>{
       var data= {
-        subjectId:res.subjectId,
-        subjectName: res.subjectName,
-        examDateAndTimeId: res.examDateAndTimeId,
-        summary: JSON.stringify(res.summary),     
+        studentId:res.studentId,
+        studentName: res.studentName,        
+        schedule: JSON.stringify(res.schedule),     
       };
-      SubjectPlanService.create(data).then(response => {
-        alert("Success");
-        setSubjectPlan({
-          subjectId: response.data.subjectId,
-          subjectName: response.data.subjectName,
+      StudentPlanService.create(data).then(response => {
+        // alert("Success");
+        setStudentPlan({
+          studentId: response.data.studentId,
+          studentName: response.data.studentName,
+          schedule: response.data.schedule,
+        });
+        retrieveStudentPlan();
+        setSubmitted(true);
+        console.log(response.data);
+        // newBuilding();
+      })
+      .catch(e=>{
+        alert(e);
+        console.log(e);
+      });
+    })
+    resdata.staffPlan.map(res =>{
+      var data= {
+        staffId:res.staffId,
+        staffName: res.staffName,        
+        schedule: JSON.stringify(res.schedule),     
+      };
+      StaffPlanService.create(data).then(response => {
+        // alert("Success");
+        setStaffPlan({
+          staffId: response.data.staffId,
+          staffName: response.data.staffName,
+          schedule: response.data.schedule,
+        });
+        retrieveStaffPlan();
+        setSubmitted(true);
+        console.log(response.data);
+        // newBuilding();
+      })
+      .catch(e=>{
+        alert(e);
+        console.log(e);
+      });
+    }) 
+    resdata.roomPlan.map(res =>{
+      var data= {
+        roomId:res.roomId,
+        roomName: res.roomName,        
+        schedule: JSON.stringify(res.schedule),     
+      };
+      RoomPlanService.create(data).then(response => {
+        // alert("Success");
+        setRoomPlan({
+          roomId: response.data.roomId,
+          roomName: response.data.roomName,
+          schedule: response.data.schedule,
         });
         retrieveSubjectPlan();
         setSubmitted(true);
@@ -307,14 +390,44 @@ element.click();
         alert(e);
         console.log(e);
       });
-    })    
+    }) 
+    resdata.subjectPlan.map(res =>{
+      var data= {
+        subjectId:res.subjectId,
+        subjectName: res.subjectName,
+        examDateAndTimeId: res.examDateAndTimeId,
+        summary: JSON.stringify(res.summary),     
+      };
+      SubjectPlanService.create(data).then(response => {
+        // alert("Success");
+        setSubjectPlan({
+          subjectId: response.data.subjectId,
+          subjectName: response.data.subjectName,
+          examDateAndTimeId: response.data.examDateAndTimeId,
+          summary:response.data.summary,
+        });
+        retrieveSubjectPlan();
+        setSubmitted(true);
+        console.log(response.data);
+        // newBuilding();
+      })
+      .catch(e=>{
+        alert(e);
+        console.log(e);
+      });
+    })
+    alert("Success");   
+    // if((studentPlanlist.length > 0) && (staffPlanlist.length > 0) && (roomPlanlist.length > 0) && (subjectPlanlist.length > 0))
+    // {
+    //   alert("Success");
+    // } 
   };
 
-  const deletePlan = (id) => {
-    SubjectPlanService.remove(id). then (
+  const deletePlan = () => {
+    StaffPlanService.deleteall(). then (
     response => {
         alert('Deleted Successfully...');           
-        retrieveSubjectPlan();           
+        retrieveStaffPlan();           
     })
     // UserService.getAll().then((response)=>{
     //     response.data.filter(obj=>obj.buildingId === id).map((val)=>
