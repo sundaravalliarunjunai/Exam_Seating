@@ -131,7 +131,7 @@ export default function Examtimetable() {
         examNoonType:examDateAndTimevalue.examNoonType,
         subjectId:examDateAndTimevalue.subjectId,
     };
-    alert(data);
+    // alert(data);
     console.log("data",data);
       ExamDateAndTimeService.create(data).then(response => {
         alert("Success");
@@ -261,6 +261,7 @@ export default function Examtimetable() {
       console.log(e);
     });
   };
+  
 
   const deleteExamDateAndTime = (id) => {
     // alert(id);

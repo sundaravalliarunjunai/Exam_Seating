@@ -40,6 +40,12 @@ export default function Generate() {
   const [staffvisible,setStaffVisible]=React.useState(false);
   const [roomvisible,setRoomVisible]=React.useState(false);
   const [subjectvisible,setSubjectVisible]=React.useState(false);
+
+  const [savestudentvisible,setSaveStudentVisible]=React.useState(false);
+  const [savestaffvisible,setSaveStaffVisible]=React.useState(false);
+  const [saveroomvisible,setSaveRoomVisible]=React.useState(false);
+  const [savesubjectvisible,setSaveSubjectVisible]=React.useState(false);
+
   const [show, setShow]=React.useState(false);
   const [show1, setShow1]=React.useState(true);
   const[submitted,setSubmitted]=React.useState(false);
@@ -47,6 +53,10 @@ export default function Generate() {
   const [studentPlanvalue,setStudentPlan]=React.useState([]);
   const [staffPlanvalue,setStaffPlan]=React.useState([]);
   const [roomPlanvalue,setRoomPlan]=React.useState([]);
+  const [studentlist,setStudentlist]=React.useState([]);
+  const [roomlist,setRoomlist]=React.useState([]);
+  const [stafflist,setStafflist]=React.useState([]);
+  const [buildinglist,setBuildinglist]=React.useState([]);
 
   useEffect(()=>{
     setjsonbuilding([]);
@@ -58,9 +68,14 @@ export default function Generate() {
     setjsonsubject([]);
     retrieveExamDate();
     retrieveSubject();
+    retrieveStaff();
+    retrieveRoom();
+    retrieveBuilding();
     retrieveStudentPlan();
-    retrieveSubjectPlan();
+    retrieveSubjectPlan();  
+    retrieveStaffPlan();
     retrieveRoomPlan();
+    retrieveStudent();
     BuildingService.getAll().then(response => {
                 
       response.data.map(obj=>{
@@ -162,6 +177,8 @@ export default function Generate() {
     return stuArray;
   }
   const algorithm =(e)=>{
+    retrieveSubject();
+
     const data = {
       buildings:jsonbuilding,
       rooms:jsonroom,
@@ -230,7 +247,40 @@ element.click();
   const retrieveSubject =() => {
     SubjectService.getAll().then(response => {
       setSubjectlist(response.data);
-    // console.log(response.data);
+     console.log("subject",subjectlist.length);
+     console.log("subject",subjectlist);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const retrieveRoom =() => {
+    RoomService.getAll().then(response => {
+      setRoomlist(response.data);     
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const retrieveBuilding =() => {
+    BuildingService.getAll().then(response => {
+      setBuildinglist(response.data);     
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const retrieveStaff =() => {
+    StaffService.getAll().then(response => {
+      setStafflist(response.data);     
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  const retrieveStudent =() => {
+    StudentService.getAll().then(response => {
+      setStudentlist(response.data);     
     })
     .catch(e => {
       console.log(e);
@@ -278,48 +328,144 @@ element.click();
     })
     )
   }
-  const getsubjectName=(id)=>{
-    return subjectlist.filter(obj=>( Number(obj.subjectId) === Number(id)).map(ob=>{
-      return ob.subjectName;
-    })
-    )
+  let getsubjectName=(id)=>{
+    // return subjectlist.filter(obj=>( Number(obj.subjectId) === Number(id)).map(ob=>{
+    //   return ob.subjectName;
+    // })
+    return Object.keys(subjectlist).filter(val=> subjectlist[val].subjectId === id).map(product => {
+      return subjectlist[product].subjectName
+     })
   }
-  // const getRoomName=(id)=>{
-  //   return roomlist.filter(obj=>( Number(obj.roomId) === Number(id)).map(ob=>{
-  //     return ob.roomName;
-  //   })
-  //   )
-  // }
+let getexamdate=(id)=>{  
+  return Object.keys(examDatelist).filter(val=> examDatelist[val].examDateId === id).map(product => {
+    return examDatelist[product].date
+  })
+}
+let getroomname=(id)=>{  
+  return Object.keys(roomlist).filter(val=> roomlist[val].roomId === id).map(product => {
+    return roomlist[product].roomName
+  })
+}
+let getbuildingId=(id)=>{  
+  return Object.keys(roomlist).filter(val=> roomlist[val].roomId === id).map(product => {
+    return getbuildingName( roomlist[product].buildingId)
+  })
+}
+let getbuildingName=(id)=>{  
+  return Object.keys(buildinglist).filter(val=> buildinglist[val].buildingId === id).map(product => {
+    return buildinglist[product].buildingName
+  })
+}
+function printplan(){
+  // deptname=getdeptname(resdeptid);
+  // getname(getdeptname(resdeptid));
+  
+  var divContents = document.getElementById("printdiv").innerHTML;        
+  var a = window.open('', '', 'height=500, width=500');
+  a.document.write('<html>');
+  a.document.write('<body > <center><h1>Report</h1></center><br>');
+  // a.document.write('<h3>Campusplanner </h3><h4>powered by RootNode</h4><hr>');
+  // a.document.write('<h2>' + deptname + '</h2></center>');
+  a.document.write(divContents);
+  a.document.write('</body></html>');
+  a.document.close();
+  a.print();
+}
+let getstuname=(id)=>{  
+  return Object.keys(studentlist).filter(val=> studentlist[val].studentId === id).map(product => {
+    return studentlist[product].studentName
+  })
+}
+let getstaffname=(id)=>{  
+  return Object.keys(stafflist).filter(val=> stafflist[val].staffId === id).map(product => {
+    return stafflist[product].staffName
+  })
+}
+let getstuid=(id)=>{  
+  return Object.keys(studentlist).filter(val=> studentlist[val].studentId === id).map(product => {
+    return studentlist[product].rollNo;
+  })
+}
+let getnoontime=(id)=>{
+  // console.log("Id",id);  
+  return Object.keys(examDatelist).filter(ob=> examDatelist[ob].examDateId === id).map(product => {
+    if (examDatelist[product].examNoonType === "ForeNoon"){
+      var fns=examDatelist[product].foreNoonStartingTime ;
+      var fne=examDatelist[product].foreNoonEndingTime;
+      return `${fns} - ${fne}`;
+    }
+    if (examDatelist[product].examNoonType === "AfterNoon") {
+      var ans=examDatelist[product].afterNoonStartingTime ;
+      var ane=examDatelist[product].afterNoonEndingTime;
+      return `${ans} - ${ane}`;
+    }   
+  })
+}
+  
   const viewResult = (e) =>{
+    // alert(e.target.value)
+    if(studentPlanlist.length === 0){      
+      if(e.target.value === 'student'){
+        setStudentVisible(true);
+        setStaffVisible(false);
+        setRoomVisible(false);
+        setSubjectVisible(false);
+      }
+      else if(e.target.value === 'staff'){
+        setStudentVisible(false);
+        setStaffVisible(true);
+        setRoomVisible(false);
+        setSubjectVisible(false);
+  
+      }
+      else if(e.target.value === 'room'){
+        setStudentVisible(false);
+        setStaffVisible(false);
+        setRoomVisible(true);
+        setSubjectVisible(false);
+  
+      }
+      else if(e.target.value === 'subject'){
+        setStudentVisible(false);
+        setStaffVisible(false);
+        setRoomVisible(false);
+        setSubjectVisible(true);
+  
+      }
+      setresultavailable(true);
+    }
+      
+  else{     
     if(e.target.value === 'student'){
-      setStudentVisible(true);
-      setStaffVisible(false);
-      setRoomVisible(false);
-      setSubjectVisible(false);
+      setSaveStudentVisible(true);
+      setSaveStaffVisible(false);
+      setSaveRoomVisible(false);
+      setSaveSubjectVisible(false);
     }
     else if(e.target.value === 'staff'){
-      setStudentVisible(false);
-      setStaffVisible(true);
-      setRoomVisible(false);
-      setSubjectVisible(false);
+      setSaveStudentVisible(false);
+      setSaveStaffVisible(true);
+      setSaveRoomVisible(false);
+      setSaveSubjectVisible(false);
 
     }
     else if(e.target.value === 'room'){
-      setStudentVisible(false);
-      setStaffVisible(false);
-      setRoomVisible(true);
-      setSubjectVisible(false);
+      setSaveStudentVisible(false);
+      setSaveStaffVisible(false);
+      setSaveRoomVisible(true);
+      setSaveSubjectVisible(false);
 
     }
     else if(e.target.value === 'subject'){
-      setStudentVisible(false);
-      setStaffVisible(false);
-      setRoomVisible(false);
-      setSubjectVisible(true);
+      setSaveStudentVisible(false);
+      setSaveStaffVisible(false);
+      setSaveRoomVisible(false);
+      setSaveSubjectVisible(true);
 
     }
     setresultavailable(true);
   }
+}
 
   const saveplan = () => {
     resdata.studentPlan.map(res =>{
@@ -453,8 +599,10 @@ element.click();
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Report Generation</CardTitle>
-                <Col><Table><tr>
-                  <td>
+                <Col><Table ><tr>
+                  
+                    {studentPlanlist.length === 0 ? 
+                    <td>
                     <Button color="success" 
                       onClick={()=>{exportdata();}}
                     ><i class="fa-solid fa-download"></i> Export</Button>
@@ -462,45 +610,49 @@ element.click();
                     <Button color="primary" 
                       onClick={()=>{algorithm();}}
                     ><i class="fa-solid fa-diagram-successor"></i> Run Algorithm
-                    </Button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                  {/* </td>
-                  {subjectPlanlist.map(ob=>{
-                  <td> */}
-                    {show1 ? 
-                      <Button color="success" 
+                    </Button> 
+                    <Button color="success" 
                         onClick={()=>{saveplan();}}
                       ><i class="fa-solid fa-file-circle-plus"></i> Save
-                      </Button> :
+                      </Button> 
+                    </td>  :
+                    <td>                      
                       <Button color="danger" 
                         onClick={()=>{deletePlan();}}
                       ><i class="fa-solid fa-file-circle-minus"></i> Delete
-                      </Button>
-                    }
-                  </td>
+                      </Button>  
+                    </td>
+                    }    
+             
+                 
                   {/* })} */}
                   </tr></Table>
                 </Col>
               </CardHeader>
               <CardBody>
-                {show ? 
-                  <Col md = "4">
+                 
+                  <Col md = "6"><Table><tr>                                      
+                    <td>
                     <Input 
                       type={"select"}
-                      onChange={viewResult}
+                      onChange={(e) => viewResult(e)}
                     >
                       <option defaultValue="" >Select Category</option>
                       <option value="student">Student</option>
                       <option value="staff">Staff</option>
                       <option value="room">Room</option>
                       <option value="subject">Subject</option>
-                    </Input>
-                  </Col>
-                 : null}
-                { studentvisible && <Table responsive>
+                    </Input>                                        
+                    </td></tr><tr><td>
+                      <Button color="primary" 
+                        onClick={()=>{printplan();}}
+                      ><i class="fa-solid fa-print"></i> Print
+                      </Button></td></tr></Table></Col>
+                 
+                {/* { studentvisible && <Table responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th>#</th>
+                      
                       <th>Date</th>
                       <th>Student Name</th>
                       <th>Roll No</th>
@@ -512,100 +664,268 @@ element.click();
                     </tr>
                   </thead>
                   <tbody>
-                    {/* {resultavailable && resdata.studentPlan.length} */}
+                    {/* {resultavailable && resdata.studentPlan.length}
                     {resultavailable && resdata.studentPlan.map(result=>(
-                    <tr>
-                      <td>{i++}</td>
+                    <tr>                      
                       <td>{result.studentName}</td>
                       <td>{result.schedule.map(res=>(
-                        <li>{getdate(Number(res.examDateAndTimeId))}</li>
+                        <li>{getexamdate((res.examDateAndTimeId))}</li>
                       ))}</td>                      
                       <td>{}</td>
                     </tr>
                      ))} 
                   </tbody>
-                </Table> }
-                { staffvisible && <Table responsive>
-                  <thead className="text-primary">
-                    <tr>
-                      <th>#</th>
-                      <th>Date</th>
-                      <th>Staff Name</th>                  
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {/* {resultavailable && resdata.studentPlan.length} */}
-                    {resultavailable && resdata.staffPlan.map(result=>(
-                    <tr>
-                      <td>{i++}</td>
-                      <td>{result.staffName}</td>
-                    </tr>
-                     ))} 
-                  </tbody>
-                </Table> }
+                </Table> } */}
+                <div id="printdiv">
+                { studentvisible &&               
+                resdata.studentPlan.map(res=>(                 
+                  res.schedule.length > 0 &&
+                  <div>
+                    <heading><b>STUDENT NAME :</b> {res.studentName}</heading><br></br>
+                    <Table bordered  responsive>
+                      <thead className="text-primary">
+                        <tr>
+                          
+                          <th>Date</th>
+                          <th>Exam Time</th>
+                          <th>Subject Name</th>
+                          <th>Block Name</th>
+                          <th>Room Name</th>  
+                          <th>Seat Number</th>                                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* {resultavailable && resdata.studentPlan.length} */}
+                        {res.schedule.map(result=>(
+                        <tr>
+                          
+                          <td>{getexamdate(result.examDateAndTimeId)}</td>
+                          <td>{getnoontime(result.examDateAndTimeId)}</td>
+                          <td>{getsubjectName(result.subjectId)}</td>
+                          <td>{getbuildingId(result.roomId)}</td>
+                          <td>{getroomname(result.roomId)}</td>
+                          <td>{result.seatNumber}</td>
+                        </tr>
+                        ))} 
+                      </tbody>
+                    </Table>
+                    <br></br><br></br><br></br><hr></hr></div> )) 
+                }
+                {
+                  savestudentvisible && studentPlanlist.map(res=>(                 
+                  res.schedule.length > 0 &&  
+                  <div>                
+                    <heading><b>STUDENT NAME :</b> {res.studentName}</heading><br></br>
+                    <Table bordered  responsive>
+                      <thead className="text-primary">
+                        <tr>
+                          
+                          <th>Date</th>
+                          <th>Exam Time</th>
+                          <th>Subject Name</th>
+                          <th>Block Name</th>
+                          <th>Room Name</th>  
+                          <th>Seat Number</th>                                          
+                        </tr>
+                      </thead>
+                      <tbody>                       
+                        {JSON.parse(res.schedule).map(result=>(
+                        <tr>
+                          
+                          <td>{getexamdate(result.examDateAndTimeId)}</td>
+                          <td>{getnoontime(result.examDateAndTimeId)}</td>
+                          <td>{getsubjectName(result.subjectId)}</td>
+                          <td>{getbuildingId(result.roomId)}</td>
+                          <td>{getroomname(result.roomId)}</td>
+                          <td>{result.seatNumber}</td>
+                        </tr>
+                        ))} 
+                      </tbody>
+                    </Table>
+                    <br></br><br></br><br></br><hr></hr>
+                </div>                                
+                )) 
+                }
+              
+                { staffvisible && 
+                resdata.staffPlan.map(res=>(                 
+                  res.schedule.length > 0 &&
+                  <div>
+                    <heading><b>STAFF NAME :</b> {res.staffName}</heading>
+                    <Table striped bordered hover responsive>
+                      <thead className="text-primary">
+                        <tr>
+                          
+                          <th>Date</th>
+                          <th>Room Id</th>  
+                          <th>Exam Time</th>                
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* {resultavailable && resdata.studentPlan.length} */}
+                        {res.schedule.map(result=>(
+                        <tr>
+                          
+                          <td>{getexamdate(result.examDateAndTimeId)}</td>
+                          <td>{getroomname(result.roomId)}</td>
+                          <td>{getnoontime(result.examDateAndTimeId)}</td>
+                        </tr>
+                        ))} 
+                      </tbody>
+                    </Table>
+                </div>                                
+                ))}
+                {
+                savestaffvisible && staffPlanlist.map(res=>(                 
+                  res.schedule.length > 0 &&
+                  <div>
+                    <heading><b>STAFF NAME :</b> {res.staffName}</heading>
+                    <Table striped bordered hover responsive>
+                      <thead className="text-primary">
+                        <tr>
+                          
+                          <th>Date</th>
+                          <th>Room Id</th>  
+                          <th>Exam Time</th>                
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* {resultavailable && resdata.studentPlan.length} */}
+                        {JSON.parse(res.schedule).map(result=>(
+                        <tr>
+                          
+                          <td>{getexamdate(result.examDateAndTimeId)}</td>
+                          <td>{getroomname(result.roomId)}</td>
+                          <td>{getnoontime(result.examDateAndTimeId)}</td>
+                        </tr>
+                        ))} 
+                      </tbody>
+                    </Table>
+                </div>                                
+                ))
+                }
                 { roomvisible && 
                 resdata.roomPlan.map(res =>(
-                  <div>
-                  <p>{res.roomName}</p>                                 
-                  { res.schedule.length > 0 && <Table responsive>
+                                                   
+                  res.schedule.length > 0 && 
+                    <div>
+                  <heading><b>ROOM NAME :</b> {res.roomName}</heading>
+                  {res.schedule.map(result=>( 
+                    <div>                  
+                  <heading><b>DATE :</b> {getexamdate(result.examDateAndTimeId)}</heading>
+                  <div><heading><b>TIME :</b> {getnoontime(result.examDateAndTimeId)}</heading></div>
+                  <div><heading><b>STAFF NAME :</b> {getstaffname(result.staffId)}</heading></div>
+                  <Table striped bordered hover responsive>
+                    <thead className="text-primary">
+                      <tr>
+                                                                        
+                        <th>Subject Name</th>
+                        <th>Number of Students</th>                
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* {resultavailable && resdata.studentPlan.length} */}                                       
+                        {result.summary.map(obj=>(
+                          <tr>
+                                                                      
+                          <td>{getsubjectName(obj.subjectId)}</td> 
+                          <td>{obj.numberOfStudents}</td>                       
+                          </tr>
+                        ))}                                                             
+                    </tbody>
+                  </Table>
+                  <Table striped bordered hover responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th>#</th>
-                      <th>Date</th>
-                      <th>Subject Name</th>
-                      <th>Number of Students</th>                  
+                                            
+                      <th>Seat No</th>
+                      <th>Roll No </th>
+                      <th>Student Name</th>  
+                      <th>Subject Name</th>                
                     </tr>
                   </thead>
                   <tbody>
-                    {/* {resultavailable && resdata.studentPlan.length} */}
-                    {res.schedule.map(result=>(                    
-                      result.summary.map(obj=>(
+                    {/* {resultavailable && resdata.studentPlan.length} */}                                       
+                      {result.students.map(obj=>(
                         <tr>
-                        <td>{i++}</td>                  
-                        <td>{result.examDateAndTimeId}</td>
-                        <td>{getsubjectName(obj.subjectId)}</td>
-                        <td>{obj.numberOfStudents}</td>
+                                          
+                        <td>{obj.seatNumber}</td>
+                        <td>{getstuid(obj.studentId)}</td>
+                        <td>{getstuname(obj.studentId)}</td>
+                        <td>{getsubjectName(obj.subjectId)}</td>                        
                         </tr>
-                      ))                                       
-                     ))} 
+                      ))}                                                             
                   </tbody>
-                </Table> }
-                 { res.schedule.length > 0 && 
-                <Table responsive>
-                  <thead className="text-primary">
-                    <tr>
-                      <th>#</th>
-                      <th>RollNo</th>
-                      <th>Subject Name</th>
-                      <th>Seat Number</th>                  
-                    </tr>
-                  </thead>
-                  <tbody>                    
-                    {res.schedule.map(result=>(                  
-                          result.students.map(obj=>(
-                            <tr>
-                              <td>{i++}</td>
-                              <td>{obj.studentId}</td>
-                              <td>{getsubjectName(obj.subjectId)}</td>
-                              <td>{obj.seatNumber}</td>
-                              </tr>
-                          ))                                                                                   
-                     ))} 
-                  </tbody>
-                </Table> }
+                </Table></div> ))}                              
                 </div>
                   
                  ))}
+                 {saveroomvisible && 
+                   roomPlanlist.map(res =>(
+                                                   
+                    res.schedule.length > 0 && 
+                      <div>
+                    <heading><b>ROOM NAME :</b> {res.roomName}</heading>
+                    {JSON.parse(res.schedule).map(result=>( 
+                      <div>                  
+                    <heading><b>DATE :</b> {getexamdate(result.examDateAndTimeId)}</heading>
+                    <div><heading><b>TIME :</b> {getnoontime(result.examDateAndTimeId)}</heading></div>
+                    <div><heading><b>STAFF NAME :</b> {getstaffname(result.staffId)}</heading></div>
+                    <Table striped bordered hover responsive>
+                      <thead className="text-primary">
+                        <tr>
+                                                                          
+                          <th>Subject Name</th>
+                          <th>Number of Students</th>                
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* {resultavailable && resdata.studentPlan.length} */}                                       
+                          {result.summary.map(obj=>(
+                            <tr>
+                                                                        
+                            <td>{getsubjectName(obj.subjectId)}</td> 
+                            <td>{obj.numberOfStudents}</td>                       
+                            </tr>
+                          ))}                                                             
+                      </tbody>
+                    </Table>
+                    <Table striped bordered hover responsive>
+                    <thead className="text-primary">
+                      <tr>
+                                              
+                        <th>Seat No</th>
+                        <th>Roll No </th>
+                        <th>Student Name</th>  
+                        <th>Subject Name</th>                
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* {resultavailable && resdata.studentPlan.length} */}                                       
+                        {result.students.map(obj=>(
+                          <tr>
+                                            
+                          <td>{obj.seatNumber}</td>
+                          <td>{getstuid(obj.studentId)}</td>
+                          <td>{getstuname(obj.studentId)}</td>
+                          <td>{getsubjectName(obj.subjectId)}</td>                        
+                          </tr>
+                        ))}                                                             
+                    </tbody></Table></div> ))}</div>
+                    
+                   )) 
+                 }
 
                 { subjectvisible && 
                 resdata.subjectPlan.map(res =>(
                   <div>
-                  <p>{res.subjectName}</p>
-                  <p>{res.examDateAndTimeId}</p>               
-                <Table responsive>
+                  <heading><b>SUBJECT NAME : </b>{res.subjectName}</heading>
+                  <div><heading><b>DATE : </b>{getexamdate(res.examDateAndTimeId)}</heading></div>               
+                  <div><heading><b>Time : </b>{getnoontime(res.examDateAndTimeId)}</heading></div>
+                <Table striped bordered hover responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th>#</th>
+                      
                       <th>Room Name</th>
                       <th>Number of Students</th>                  
                     </tr>
@@ -614,15 +934,42 @@ element.click();
                     {/* {resultavailable && resdata.studentPlan.length} */}
                     {res.summary.map(result=>(
                     <tr>
-                      <td>{i++}</td>
-                      {/* <td>{getRoomName(result.roomId)}</td> */}
+                      
+                      <td>{getroomname(result.roomId)}</td>
                       <td>{result.numberOfStudents}</td>
                     </tr>
                      ))} 
                   </tbody>
-                </Table></div>
-                  
+                </Table></div>                  
                  ))}
+                 {savesubjectvisible && 
+                  subjectPlanlist.map(res =>(
+                    <div>
+                    <heading><b>SUBJECT NAME : </b>{res.subjectName}</heading>
+                    <div><heading><b>DATE : </b>{getexamdate(res.examDateAndTimeId)}</heading></div>               
+                    <div><heading><b>Time : </b>{getnoontime(res.examDateAndTimeId)}</heading></div>
+                  <Table striped bordered hover responsive>
+                    <thead className="text-primary">
+                      <tr>
+                        
+                        <th>Room Name</th>
+                        <th>Number of Students</th>                  
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* {resultavailable && resdata.studentPlan.length} */}
+                      {JSON.parse(res.summary).map(result=>(
+                      <tr>
+                        
+                        <td>{getroomname(result.roomId)}</td>
+                        <td>{result.numberOfStudents}</td>
+                      </tr>
+                       ))} 
+                    </tbody>
+                  </Table></div>                  
+                   ))
+                 }
+                 </div>
               </CardBody>
             </Card>
           </Col>

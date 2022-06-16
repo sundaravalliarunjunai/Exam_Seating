@@ -11,17 +11,17 @@ export const getUserId = () =>{
     else return null;
 }
 
-// export const getStaffId = () =>{
-//     const staffId = sessionStorage.getItem("staffId");
-//     if(staffId) return JSON.parse(staffId);
-//     else return null;
-// }
+export const getStaffId = () =>{
+    const staffId = sessionStorage.getItem("staffId");
+    if(staffId) return JSON.parse(staffId);
+    else return null;
+}
 
-// export const getStudentId = () =>{
-//     const studentId = sessionStorage.getItem("studentId");
-//     if(studentId) return JSON.parse(studentId);
-//     else return null;
-// }
+export const getStudentId = () =>{
+    const studentId = sessionStorage.getItem("studentId");
+    if(studentId) return JSON.parse(studentId);
+    else return null;
+}
 
 
 export const getUserType = () =>{

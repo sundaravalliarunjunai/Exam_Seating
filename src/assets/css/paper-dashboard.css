@@ -1470,6 +1470,14 @@ h5, .h5 {
   line-height: 1.4em;
   margin-bottom: 15px; }
 
+heading, .heading{
+  font-size: 14px;
+  font-weight: 700;
+  padding-bottom: 0;
+  text-transform: uppercase;
+  border: 0;
+}
+
 h6, .h6 {
   font-size: 1em;
   font-weight: 700;

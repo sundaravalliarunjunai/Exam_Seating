@@ -30,7 +30,16 @@ export default function Student() {
     currentsemester:"",
   };
 
+  const userState = {
+    userId : null,
+    userName : "",
+    userType : "",
+    password : "",
+    studentId : null,
+  }
+
   const [studentvalue,setStudent]=useState(studentState);
+  const [userlogin,setUserlogin]=useState(userState);
   const[submitted,setSubmitted]=useState(false);
   const [studentlist,setStudentlist]=useState([]);
   const [currentstudent,setcurrentStudent]=useState(currentstudentState);
@@ -72,6 +81,20 @@ export default function Student() {
           departmentId:response.data.departmentId,
           semester:response.data.semester,
         });
+        var data= {
+          userName:studentvalue.rollNo,
+          userType:"student",
+          password:studentvalue.dob,
+          studentId:response.data.studentId,
+        };
+        UserService.create(data).then(res =>{
+          setUserlogin({
+            userName:res.data.userName,
+            userType:res.data.userType,
+            password:res.data.dob,
+            studentId:res.data.studentId,
+          })
+        })
         setSubmitted(true);
                 console.log(response.data);
                 retrieveStudent();

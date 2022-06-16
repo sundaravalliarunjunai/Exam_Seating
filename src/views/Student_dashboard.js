@@ -6,6 +6,7 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import {getStudentId} from './Login/Common.js';
 
 function Student_dashboard() {
   return (
