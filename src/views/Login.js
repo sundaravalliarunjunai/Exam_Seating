@@ -24,8 +24,8 @@ const Login = (props) => {
         userName: "",
         userType:"",
         password:"",
-        // staffId:"",
-        // studentId:"",
+        staffId:"",
+        studentId:"",
 };
 const history = useHistory();
 const [uservalue,setUser]=useState(userState);
@@ -40,10 +40,6 @@ const handleInputChange = event => {
         e.preventDefault();
         const options = {
             headers: {"content-type": "application/json"}
-            // headers: {
-            //   "Access-Control-Allow-Origin": "http://localhost:8000/api/v1",
-            //   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
-            // }
         }
         if(uservalue.userName.length === 0){
            setMessage("Username is required");
@@ -62,7 +58,6 @@ const handleInputChange = event => {
                     let studentId=response.data.studentId;
                     setUserSession(userName,userId,userType,staffId,studentId);
         
-                    console.log("response >>>",response);                    
                     if(response.data.length !== 0 && response.status === 200 ){
                       if(userType === 'admin'){
                         history.push("/admin/dashboard");

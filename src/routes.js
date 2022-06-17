@@ -79,7 +79,7 @@ if(usertype === "admin"){
     },
     {
       path: "/login",
-      name: "Login",
+      name: "Logout",
       icon: "nc-icon nc-circle-10",
       component: Login,
       layout: "",

@@ -4,7 +4,7 @@ import { Form, Input, Label, Row, Col, FormGroup, Button } from "reactstrap";
 import BuildingService from "./Buildingservice";
 import UserService from "views/Login/Userservice";
 
-export default function Add() {
+export default function Edit_building() {
 
     const [getName, setName] = useState(false);
     const handleNameChange = () => {
@@ -135,21 +135,20 @@ export default function Add() {
     return (
         <>
             <div className="content">
-                <title>Add Building</title>
-                <Form onSubmit={saveBuilding}>
+                <title>Edit Building</title>
+                <Form >
                     <Row>
                         <Col>
                             <FormGroup>
                             <Label>Building Name</Label>
                             <Input
-                                name="buildingName"
-                                onChange={handleInputChange}
-                                value={buildingvalue.buildingName}
-                                placeholder="Building Name"
+                                name="currentbuildingName"
+                                onChange={currenthandleInputChange}
+                                value={currentbuilding.currentbuildingName}
                                 type="text" required
                             />
                             </FormGroup>
-                            <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
+                            <Button color="primary" onClick={updateBuilding}>Update</Button>
                         </Col>
                     </Row>
                 </Form>

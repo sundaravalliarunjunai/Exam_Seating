@@ -1,100 +1,100 @@
 import React,{useEffect,useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Input, Label, Row, Col, FormGroup, Button } from "reactstrap";
-import BuildingService from "./Buildingservice";
+import RoomService from "./Roomservice";
 import UserService from "views/Login/Userservice";
 
-export default function Add() {
+export default function Edit_room() {
 
     const [getName, setName] = useState(false);
     const handleNameChange = () => {
       setName(!getName);
     }
   
-    const buildingState = {
-      buildingId:null,
-      buildingName: "",
+    const roomState = {
+      roomId:null,
+      roomName: "",
     };
   
-    const currentbuildingState = {
-      currentbuildingId:null,
-      currentbuildingName: "",
+    const currentroomState = {
+      currentroomId:null,
+      currentroomName: "",
     };
   
-    const [buildingvalue,setBuilding]=useState(buildingState);
+    const [roomvalue,setRoom]=useState(roomState);
     const[submitted,setSubmitted]=useState(false);
-    const [buildinglist,setBuildinglist]=useState([]);
-    const [currentbuilding,setcurrentBuilding]=useState(currentbuildingState);
+    const [roomlist,setRoomlist]=useState([]);
+    const [currentroom,setcurrentRoom]=useState(currentroomState);
   
     useEffect(() => {
-      retrieveBuilding();
+      retrieveRoom();
     }, []);
   
     const handleInputChange=event => {
       const{name,value}=event.target;
-      setBuilding({...buildingvalue,[name]:value});
+      setRoom({...roomvalue,[name]:value});
     };
     const currenthandleInputChange=event => {
       const{name,value}=event.target;
-      setcurrentBuilding({...currentbuilding,[name]:value});
+      setcurrentRoom({...currentroom,[name]:value});
     };
-    const saveBuilding = (e) => {
+    const saveRoom = (e) => {
       e.preventDefault();
       var data= {
-          buildingId: buildingvalue.buildingId,
-          buildingName: buildingvalue.buildingName,     
+          roomId: roomvalue.roomId,
+          roomName: roomvalue.roomName,     
       };
       //alert(data);
-        BuildingService.create(data).then(response => {
+        RoomService.create(data).then(response => {
           alert("Success");
-          setBuilding({
-            buildingId: response.data.buildingId,
-            buildingName: response.data.buildingName,
+          setRoom({
+            roomId: response.data.roomId,
+            roomName: response.data.roomName,
           });
           setSubmitted(true);
                   console.log(response.data);
-                  retrieveBuilding();
-                  newBuilding();
+                  retrieveRoom();
+                  newRoom();
         })
         .catch(e=>{
           alert(e);
           console.log(e);
         });
     };
-    const newBuilding = () => {
-      setBuilding(buildingState);
+    const newRoom = () => {
+      setRoom(roomState);
       setSubmitted(false);
     };
-    const retrieveBuilding =() => {
-        BuildingService.getAll().then(response => {
-        setBuildinglist(response.data);
+    const retrieveRoom =() => {
+        RoomService.getAll().then(response => {
+        setRoomlist(response.data);
         // console.log(response.data);
     })
         .catch(e => {
         console.log(e);
     });
     };
-    const updateBuilding = (e) => {
+    const updateRoom = (e) => {
         e.preventDefault();
         var data= {
-            buildingName: currentbuilding.currentbuildingName,
+            roomName: currentroom.currentroomName,
         };
             //alert(data);
-            BuildingService.update(currentbuilding.currentbuildingId,data).
+            RoomService.update(currentroom.currentroomId,data).
             then(response => {
             console.log(response.data);
             alert("Success");
-            retrieveBuilding();            
+            retrieveRoom();            
         })
             .catch(e => {
             console.log(e);
         });
     };
-    const getBuilding = (id) => {
-            BuildingService.get(id).then(response => {
-            setcurrentBuilding({
-            currentbuildingId:response.data.buildingId,
-            currentbuildingName:response.data.buildingName,
+    const getRoom = (id) => {
+            RoomService.get(id).then(response => {
+            setcurrentRoom({
+            currentroomId:response.data.roomId,
+            currentroomName:response.data.roomName,
         });
         console.log(response.data);
         })
@@ -103,14 +103,14 @@ export default function Add() {
     });
   
     };
-    const deleteBuilding = (id) => {
-        BuildingService.remove(id). then (
+    const deleteRoom = (id) => {
+        RoomService.remove(id). then (
         response => {
             alert('Deleted Successfully...');           
-        retrieveBuilding();           
+        retrieveRoom();           
     })
     UserService.getAll().then((response)=>{
-        response.data.filter(obj=>obj.buildingId === id).map((val)=>
+        response.data.filter(obj=>obj.roomId === id).map((val)=>
         UserService.remove(val.userId) .then (
             response => {}
         )
@@ -123,7 +123,7 @@ export default function Add() {
   
     
     const handlebuttonChange = () => {
-      setBuilding(!getBuilding);
+      setRoom(!getRoom);
     }
 
     // Modal open state
@@ -135,21 +135,20 @@ export default function Add() {
     return (
         <>
             <div className="content">
-                <title>Add Building</title>
-                <Form onSubmit={saveBuilding}>
+                <title>Edit Room</title>
+                <Form >
                     <Row>
                         <Col>
                             <FormGroup>
-                            <Label>Building Name</Label>
+                            <Label>Room Name</Label>
                             <Input
-                                name="buildingName"
-                                onChange={handleInputChange}
-                                value={buildingvalue.buildingName}
-                                placeholder="Building Name"
+                                name="currentroomName"
+                                onChange={currenthandleInputChange}
+                                value={currentroom.currentroomName}
                                 type="text" required
                             />
                             </FormGroup>
-                            <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
+                            <Button color="primary" onClick={updateRoom}>Update</Button>
                         </Col>
                     </Row>
                 </Form>

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 // react plugin used to create charts
 import { Line } from "react-chartjs-2";
 // reactstrap components
@@ -14,11 +14,50 @@ import {
 // core components
 import {
   dashboard24HoursPerformanceChart
-  // dashboardEmailStatisticsChart,
-  // dashboardNASDAQChart,
 } from "variables/charts.js";
+import StaffService from "./Staff/Staffservice";
+import StudentService from "./Student/Studentservice";
+
 
 function Dashboard() {
+
+  const [stafflist,setStafflist]=useState([]);
+  const[studentlist,setStudentlist]=useState([]);
+
+  useEffect(() => {
+    retrieveStaff();
+    retrieveStudent();
+  }, []);
+
+  const retrieveStaff =() => {
+    //alert("Retrive building List...")
+    StaffService.getAll().then(response => {
+      setStafflist(response.data);
+       // console.log(response.data);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+  
+  const retrieveStudent =() => {
+    //alert("Retrive building List...")
+    StudentService.getAll().then(response => {
+      setStudentlist(response.data);
+       // console.log(response.data);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  };
+
+  function getNumberofStaff (){
+    return stafflist.filter(obj=>obj.staffId).length
+  }
+
+  function getNumberofStudent (){
+    return studentlist.filter(obj=>obj.studentId).length
+  }
 
   return (
     <>
@@ -36,7 +75,9 @@ function Dashboard() {
                   <Col md="8" xs="7">
                     <div className="numbers">
                       <p className="card-category">Number of Staffs</p>
-                      <CardTitle tag="p">100</CardTitle>
+                      <CardTitle tag="p">
+                        {getNumberofStaff()}
+                      </CardTitle>
                       <p />
                     </div>
                   </Col>
@@ -56,7 +97,9 @@ function Dashboard() {
                   <Col md="8" xs="7">
                     <div className="numbers">
                       <p className="card-category">Number Of Students</p>
-                      <CardTitle tag="p">400</CardTitle>
+                      <CardTitle tag="p">
+                        {getNumberofStudent()}
+                      </CardTitle>
                       <p />
                     </div>
                   </Col>
@@ -85,7 +128,7 @@ function Dashboard() {
             </Card>
           </Col>
         </Row>
-        <div></div>
+        {/* <div></div>
         <Row>
           <Col md="12">
             <Card>
@@ -103,7 +146,7 @@ function Dashboard() {
               </CardBody>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
       </div>
     </>
   );

@@ -1,5 +1,4 @@
 import Dashboard from "views/Dashboard.js";
-import Student_dashboard from "views/Student_dashboard";
 import Staff from "views/Staff.js";
 import Room from "views/Room.js";
 import Login from "views/Login.js";
@@ -8,13 +7,7 @@ import Student from "views/Student.js";
 import Examtimetable from "views/Examtimetable";
 import Building from "views/Building";
 import Generate from "views/Generate";
-import Hall_Allotment from "views/Hall_Allotment";
-import Staff_dashboard from "views/Staff_dashboard";
-import Staff_Hall_Allotment from "views/Staff_Hall_Allotment";
-//import {getUserType} from '../src/views/Login/Common';
-import { getUser } from "sample/common";
-
-
+import Department from "views/Department";
 
   var admin_routes = [
     {
@@ -36,6 +29,13 @@ import { getUser } from "sample/common";
       name: "Room",
       icon: "nc-icon nc-shop",
       component: Room,
+      layout: "/admin",
+    },
+    {
+      path: "/department",
+      name: "Department",
+      icon: "fa-solid fa-hotel",
+      component: Department,
       layout: "/admin",
     },
     {
@@ -75,7 +75,7 @@ import { getUser } from "sample/common";
     },
     {
       path: "/login",
-      name: "Login",
+      name: "Logout",
       icon: "nc-icon nc-circle-10",
       component: Login,
       layout: "",

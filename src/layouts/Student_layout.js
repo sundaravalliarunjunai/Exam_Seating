@@ -8,7 +8,7 @@ import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 //import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
-import routes from "routes.js";
+import student_routes from "student_routes.js";
 
 var ps;
 
@@ -44,14 +44,14 @@ function Dashboard(props) {
       
       <Sidebar
         {...props}
-        routes={routes}
+        routes={student_routes}
         bgColor={backgroundColor}
         activeColor={activeColor}
       />
       <div className="main-panel" ref={mainPanel}>
         <DemoNavbar {...props} />
         <Switch>
-          {routes.map((prop, key) => {
+          {student_routes.map((prop, key) => {
             return (
               <Route
                 path={prop.layout + prop.path}

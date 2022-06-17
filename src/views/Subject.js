@@ -1,16 +1,178 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, ModalBody, ModalHeader, ModalFooter, Modal } from "reactstrap";
-import Addsubject from "./Building/Addsubject";
-
+import { Label, Form, FormGroup, Card, CardHeader, CardBody, Table, Button, Input, CardTitle, Row, Col, ModalBody, ModalHeader, Modal } from "reactstrap";
+import DepartmentService from "./Department/DepartmentService";
+import UserService from "./Login/Userservice";
+import SubjectService from "./Subject/Subjectservice";
 
 export default function Subject() {
 
-   // Modal open state
-   const [modal, setModal] = React.useState(false);
+  const subjectState = {
+    subjectId:null,
+    courseCode:"",
+    courseType:"",
+    semester:"",
+    department:"",
+    subjectName: "",
+  };
+
+  const currentsubjectState = {
+    currentsubjectId:null,
+    currentcourseCode:"",
+    currentcourseType:"",
+    currentsemester:"",
+    currentdepartment:"",
+    currentsubjectName: "",
+  };
+
+  const [subjectvalue,setSubject]=useState(subjectState);
+  const[submitted,setSubmitted]=useState(false);
+  const [subjectlist,setSubjectlist]=useState([]);
+  const [currentsubject,setcurrentSubject]=useState(currentsubjectState);
+  const [departmentlist,setDepartmentlist]=useState([]);
+
+  useEffect(() => {
+    retrieveSubject();
+    retrieveDepartment();
+  }, []);
+
+  const handleInputChange=event => {
+    const{name,value}=event.target;
+    setSubject({...subjectvalue,[name]:value});
+  };
+  const currenthandleInputChange=event => {
+    const{name,value}=event.target;
+    setcurrentSubject({...currentsubject,[name]:value});
+  };
+  const saveSubject = (e) => {
+    e.preventDefault();
+    var data= {
+        subjectId:subjectvalue.subjectId,
+        courseCode:subjectvalue.courseCode,
+        courseType:subjectvalue.courseType,
+        semester:subjectvalue.semester,
+        department:subjectvalue.department,
+        subjectName: subjectvalue.subjectName,     
+    };
+    // alert(data);
+      SubjectService.create(data).then(response => {
+        alert("Success");
+        setSubject({
+          subjectId: response.data.subjectId,
+          courseCode: response.data.courseCode,
+          courseType: response.data.courseType,
+          semester: response.data.semester,
+          department: response.data.department,
+          subjectName: response.data.subjectName,
+        });
+        setSubmitted(true);
+                console.log(response.data);
+                retrieveSubject();
+                newSubject();
+      })
+      .catch(e=>{
+        alert(e);
+        console.log(e);
+      });
+  };
+  const newSubject = () => {
+    setSubject(subjectState);
+    setSubmitted(false);
+  };
+  const retrieveSubject =() => {
+      SubjectService.getAll().then(response => {
+      setSubjectlist(response.data);
+      // console.log(response.data);
+  })
+      .catch(e => {
+      console.log(e);
+  });
+  };
+  const retrieveDepartment =() => {
+    DepartmentService.getAll().then(response => {
+    setDepartmentlist(response.data);
+    // console.log(response.data);
+  })
+    .catch(e => {
+    console.log(e);
+    });
+  };
+  const updateSubject = (e) => {
+      e.preventDefault();
+      var data= {
+          subjectId: currentsubject.currentsubjectId,
+          courseCode: currentsubject.currentcourseCode,
+          courseType: currentsubject.currentcourseType,
+          semester: currentsubject.currentsemester,
+          department: currentsubject.currentdepartment,
+          subjectName: currentsubject.currentsubjectName,
+      };
+          // alert(data);
+          SubjectService.update(currentsubject.currentsubjectId,data).
+          then(response => {
+          console.log(response.data);
+          toggle1();
+          alert("Success");
+          retrieveSubject();            
+      })
+          .catch(e => {
+          console.log(e);
+      });
+  };
+  const getSubject = (id) => {
+          SubjectService.get(id).then(response => {
+          setcurrentSubject({
+          currentsubjectId:response.data.subjectId,
+          currentcourseCode:response.data.courseCode,
+          currentcourseType:response.data.courseType,
+          currentsemester:response.data.semester,
+          currentdepartment:response.data.department,
+          currentsubjectName:response.data.subjectName,
+      });
+      // console.log(response.data);
+      })
+      .catch(e => {
+          console.log(e);
+  });
+
+  };
+  const deleteSubject = (id) => {
+      SubjectService.remove(id). then (
+      response => {
+          alert('Deleted Successfully...');           
+      retrieveSubject();           
+  })
+  UserService.getAll().then((response)=>{
+      response.data.filter(obj=>obj.subjectId === id).map((val)=>
+      UserService.remove(val.userId) .then (
+          response => {}
+      )
+      )
+  })   
+      .catch(e => {
+      console.log(e);
+  });
+  };
+
+  function getdepartmentName(id){
+    return departmentlist.filter(obj=> Number(obj.departmentId) === Number(id)).map(result=>{
+      return result.departmentName;
+    })
+  }
+
+  let i=1;
+
+    // Modal open state
+  const [modal, setModal] = React.useState(false);
   
-   // Toggle for Modal
+    // Toggle for Modal
    const toggle = () => setModal(!modal);
+
+  // Modal open state
+  const [modal1, setModal1] = React.useState(false);
+  
+  // Toggle for Modal
+  const toggle1 = () => setModal1(!modal1);
 
   return (
     <>
@@ -20,80 +182,232 @@ export default function Subject() {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Subject Details</CardTitle>
-                <Col md="5" ><Table><tr><td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
-                  {/* <i class='nc-icon nc-zoom-split'></i> */}
-                  </td><td>
+                <Col md="5" ><Table><tr>
+                  {/* <td><Input type='search' placeholder="Search.." className="px2 py1" aria-label="search" ></Input>
+                  {/* <i class='nc-icon nc-zoom-split'></i> 
+                  </td> */}
+                  <td>
                   <Button color="success"
                         onClick={toggle}><i class="nc-icon nc-simple-add"></i> Add
                   </Button>
                   <Modal isOpen={modal}
-                        toggle={toggle}
-                        modalTransition={{ timeout: 2000 }}>
+                        toggle={toggle} fade={false} >
+                        {/* modalTransition={{ timeout: 2000 }} */}
                         <ModalHeader
                         toggle={toggle}>Add Subject</ModalHeader>
                         <ModalBody>
-                            <Addsubject />
+                          <Form onSubmit={saveSubject}>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Course Type</Label>
+                                  <Input
+                                    type={"select"}
+                                    name="courseType"
+                                    // size="2"
+                                    onChange={handleInputChange}
+                                    value={subjectvalue.courseType}>
+                                      <option defaultValue="">-----</option>
+                                      <option value="UG">UG</option> 
+                                      <option value="PG">PG</option> 
+                                  </Input>
+                                  
+                                  {/* <Input
+                                    name="courseType"
+                                    onChange={handleInputChange}
+                                    value={subjectvalue.courseType}
+                                    placeholder="Course Type"
+                                    type="text" required
+                                  /> */}
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Semester</Label>
+                                  <Input
+                                    type={"select"}
+                                    name="semester"
+                                    // size="2"
+                                    onChange={handleInputChange}
+                                    value={subjectvalue.semester}>
+                                      <option defaultValue="">-----</option>
+                                      <option value="I">I</option> 
+                                      <option value="II">II</option> 
+                                      <option value="III">III</option> 
+                                      <option value="IV">IV</option> 
+                                      <option value="V">V</option>
+                                      <option value="VI">VI</option>  
+                                  </Input>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Department</Label>
+                                    <Input
+                                        type={"select"}
+                                        name="department"
+                                        // size="2"
+                                        onChange={handleInputChange}
+                                        value={subjectvalue.department}
+                                      ><option defaultValue="">-----</option>
+                                        {departmentlist.map(result =>(
+                                          <option value={result.departmentId}>{result.departmentName}</option>
+                                        ))}
+                                      </Input>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Course Code</Label>
+                                    <Input
+                                        type= "text" required
+                                        name="courseCode"
+                                        onChange={handleInputChange}
+                                        value={subjectvalue.courseCode}
+                                    />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <FormGroup>
+                                  <Label>Subject Name</Label>
+                                  <Input
+                                    name="subjectName"
+                                    onChange={handleInputChange}
+                                    value={subjectvalue.subjectName}
+                                    placeholder="Subject Name"
+                                    type="text" required
+                                  />
+                                </FormGroup>
+                                <Button color="primary" type="submit" value="Submit" onClick={toggle}>Submit</Button>
+                              </Col>
+                            </Row>
+                          </Form>
                         </ModalBody>
-                        <ModalFooter>
-                            <Button color="primary" onClick={toggle}>Save</Button>
-                        </ModalFooter>
                     </Modal>
                   </td></tr></Table>
                 </Col>
               </CardHeader>
               <CardBody>
-                {/* <Button href="/Building/Add" onClick={()=>history.push("/add")} >
+                {/* <Button href="/Subject/Add" onClick={()=>history.push("/add")} >
                   Add <i class="nc-icon nc-simple-add"></i>
                 </Button>  */}
                 <Table responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th>S.No</th>
+                      <th>#</th>
                       <th>Course Type</th>
-                      <th>Course</th>
                       <th>Semester</th>
-                      <th>Subject Code</th>
+                      <th>Department</th>
+                      <th>Course Code</th>
                       <th>Subject Name</th>
-                      <th className="text-right">Action</th>
+                      <th >Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>UG</td>
-                      <td>BCA</td>
-                      <td >I</td>
-                      <td>20UCAC11</td>
-                      <td>Programming in C</td>
-                        <td className="text-left" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
+                    {
+                    subjectlist.map(result=>(   
+                      <tr>
+                        <td>{i++}</td>
+                        <td>{result.courseType}</td>
+                        <td>{result.semester}</td>
+                        <td>{getdepartmentName(result.department)}</td>
+                        <td>{result.courseCode}</td>
+                        <td>{result.subjectName}</td>                        
+                        <td>                                            
+                          <i class="fa-solid fa-pen fa-lg" onClick={() => { toggle1(); getSubject(result.subjectId);}} ></i>
+                          {/* <Button color="primary"
+                          onClick={(()=>{toggle1();getSubject(result.subjectId);})}>Edit</Button> */}
+                          <Modal isOpen={modal1}
+                              toggle={toggle1} backdrop={false} >
+                              {/* modalTransition={{ timeout: 2000 }} */}
+                              <ModalHeader
+                              toggle={toggle1}>Edit Subject</ModalHeader>
+                              <ModalBody>
+                              <Form >
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Course Type</Label>
+                                        <Input
+                                            name="currentcourseType"
+                                            onChange={currenthandleInputChange}
+                                            value={currentsubject.currentcourseType}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Semester</Label>
+                                        <Input
+                                            name="currentsemester"
+                                            onChange={currenthandleInputChange}
+                                            value={currentsubject.currentsemester}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Department</Label>
+                                        <Input disabled
+                                            name="currentdepartment"
+                                            onChange={currenthandleInputChange}
+                                            value={getdepartmentName(currentsubject.currentdepartment)}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Course Code</Label>
+                                        <Input
+                                            name="currentcourseCode"
+                                            onChange={currenthandleInputChange}
+                                            value={currentsubject.currentcourseCode}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <FormGroup>
+                                        <Label>Subject Name</Label>
+                                        <Input
+                                            name="currentsubjectName"
+                                            onChange={currenthandleInputChange}
+                                            value={currentsubject.currentsubjectName}
+                                            type="text" required
+                                        />
+                                        </FormGroup>
+                                        <Button color="primary" onClick={updateSubject}>Update</Button>
+                                    </Col>
+                                </Row>
+                              </Form>
+                              </ModalBody>
+                          </Modal>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <i class="fa-solid fa-trash fa-lg" onClick={(e) => { if (window.confirm('Are you sure! Do you want to delete this subject details?')) deleteSubject(result.subjectId) } } ></i>
                         </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>PG</td>
-                      <td>MCA</td>
-                      <td>II</td>
-                      <td>20PCAC12</td>
-                      <td>Programming in Python</td>
-                        <td className="text-left" >
-                        <button class="btn btn-primary" 
-                          //onclick="GetDetails('.$purchaseid.')"
-                          >Edit</button>
-                        </td>
-                        <td>
-				                  <button class="btn btn-danger" 
-                          //</td>onclick="DeleteUser('.$purchaseid.')"
-                          >Delete
-                        </button></td>
-                    </tr>
+                      </tr>
+                      )
+                    )
+                  }
                   </tbody>
                 </Table>
               </CardBody>
