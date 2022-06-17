@@ -193,7 +193,8 @@ export default function Generate() {
         //setresultavailable(true);
         setresponsedata(response.data);        
         setresponsedata(response.data)
-        console.log("response",resdata)         
+        console.log("response",resdata)  
+        setresultavailable(true);       
     })
         //.then(({ data: resdata }) => {
           
@@ -247,8 +248,8 @@ element.click();
   const retrieveSubject =() => {
     SubjectService.getAll().then(response => {
       setSubjectlist(response.data);
-     console.log("subject",subjectlist.length);
-     console.log("subject",subjectlist);
+    //  console.log("subject",subjectlist.length);
+    //  console.log("subject",subjectlist);
     })
     .catch(e => {
       console.log(e);
@@ -290,6 +291,7 @@ element.click();
     SubjectPlanService.getAll().then(response => {
       setSubjectPlanlist(response.data);
     // console.log(response.data);
+    response.data.length > 0 && setresultavailable(true);
     })
     .catch(e => {
       console.log(e);
@@ -299,6 +301,7 @@ element.click();
     StudentPlanService.getAll().then(response => {
       setStudentPlanlist(response.data);
     // console.log(response.data);
+    response.data.length > 0 && setresultavailable(true);
     })
     .catch(e => {
       console.log(e);
@@ -308,6 +311,7 @@ element.click();
     StaffPlanService.getAll().then(response => {
       setStaffPlanlist(response.data);
     // console.log(response.data);
+    response.data.length > 0 && setresultavailable(true);
     })
     .catch(e => {
       console.log(e);
@@ -317,6 +321,7 @@ element.click();
     RoomPlanService.getAll().then(response => {
       setRoomPlanlist(response.data);
     // console.log(response.data);
+    response.data.length > 0 && setresultavailable(true);
     })
     .catch(e => {
       console.log(e);
@@ -363,7 +368,7 @@ function printplan(){
   var divContents = document.getElementById("printdiv").innerHTML;        
   var a = window.open('', '', 'height=500, width=500');
   a.document.write('<html>');
-  a.document.write('<body > <center><h1>Report</h1></center><br>');
+  a.document.write('<body > <center><h1>Exam Seating Report</h1></center><br>');
   // a.document.write('<h3>Campusplanner </h3><h4>powered by RootNode</h4><hr>');
   // a.document.write('<h2>' + deptname + '</h2></center>');
   a.document.write(divContents);
@@ -563,6 +568,7 @@ let getnoontime=(id)=>{
       });
     })
     alert("Success");   
+    window.location.reload();
     // if((studentPlanlist.length > 0) && (staffPlanlist.length > 0) && (roomPlanlist.length > 0) && (subjectPlanlist.length > 0))
     // {
     //   alert("Success");
@@ -570,21 +576,32 @@ let getnoontime=(id)=>{
   };
 
   const deletePlan = () => {
-    StaffPlanService.deleteall(). then (
-    response => {
-        alert('Deleted Successfully...');           
-        retrieveStaffPlan();           
+   studentPlanlist.map(val=>{
+    StudentPlanService.remove(val.studentPlanId).then(res=>{
+      //
     })
-    // UserService.getAll().then((response)=>{
-    //     response.data.filter(obj=>obj.buildingId === id).map((val)=>
-    //     UserService.remove(val.userId) .then (
-    //         response => {}
-    //     )
-    //     )
-    // })   
-    .catch(e => {
-      console.log(e);
-    });
+   })
+   staffPlanlist.map(val=>{
+    StaffPlanService.remove(val.staffPlanId).then(res=>{
+      //
+    })
+   })
+   roomPlanlist.map(val=>{
+    RoomPlanService.remove(val.roomPlanId).then(res=>{
+      //
+    })
+   })
+   subjectPlanlist.map(val=>{
+    SubjectPlanService.remove(val.subjectPlanId).then(res=>{
+      //
+    })
+   })
+   alert("Deleted All..")
+   setresultavailable(false);
+   retrieveStudentPlan();
+   retrieveSubjectPlan();
+   retrieveStaffPlan();
+   retrieveRoomPlan();
   };
 
   const setResetValue=()=>{
@@ -610,11 +627,12 @@ let getnoontime=(id)=>{
                     <Button color="primary" 
                       onClick={()=>{algorithm();}}
                     ><i class="fa-solid fa-diagram-successor"></i> Run Algorithm
-                    </Button> 
-                    <Button color="success" 
+                    </Button>
+                    &nbsp;&nbsp;&nbsp;&nbsp; 
+                    { resultavailable && <Button color="success" 
                         onClick={()=>{saveplan();}}
                       ><i class="fa-solid fa-file-circle-plus"></i> Save
-                      </Button> 
+                      </Button> }
                     </td>  :
                     <td>                      
                       <Button color="danger" 
@@ -622,15 +640,12 @@ let getnoontime=(id)=>{
                       ><i class="fa-solid fa-file-circle-minus"></i> Delete
                       </Button>  
                     </td>
-                    }    
-             
-                 
-                  {/* })} */}
+                    }                 
                   </tr></Table>
                 </Col>
               </CardHeader>
               <CardBody>
-                 
+                 {resultavailable && 
                   <Col md = "6"><Table><tr>                                      
                     <td>
                     <Input 
@@ -647,35 +662,8 @@ let getnoontime=(id)=>{
                       <Button color="primary" 
                         onClick={()=>{printplan();}}
                       ><i class="fa-solid fa-print"></i> Print
-                      </Button></td></tr></Table></Col>
-                 
-                {/* { studentvisible && <Table responsive>
-                  <thead className="text-primary">
-                    <tr>
-                      
-                      <th>Date</th>
-                      <th>Student Name</th>
-                      <th>Roll No</th>
-                      <th>Subject Name</th>
-                      <th>Exam Time</th>
-                      <th>Block Name</th>
-                      <th>Hall No</th>
-                      <th>Seat No</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {/* {resultavailable && resdata.studentPlan.length}
-                    {resultavailable && resdata.studentPlan.map(result=>(
-                    <tr>                      
-                      <td>{result.studentName}</td>
-                      <td>{result.schedule.map(res=>(
-                        <li>{getexamdate((res.examDateAndTimeId))}</li>
-                      ))}</td>                      
-                      <td>{}</td>
-                    </tr>
-                     ))} 
-                  </tbody>
-                </Table> } */}
+                      </Button></td></tr></Table></Col>    }     
+                                     
                 <div id="printdiv">
                 { studentvisible &&               
                 resdata.studentPlan.map(res=>(                 
@@ -752,7 +740,7 @@ let getnoontime=(id)=>{
                   res.schedule.length > 0 &&
                   <div>
                     <heading><b>STAFF NAME :</b> {res.staffName}</heading>
-                    <Table striped bordered hover responsive>
+                    <Table bordered responsive>
                       <thead className="text-primary">
                         <tr>
                           
@@ -772,7 +760,7 @@ let getnoontime=(id)=>{
                         </tr>
                         ))} 
                       </tbody>
-                    </Table>
+                    </Table><br></br><br></br><br></br><hr></hr>
                 </div>                                
                 ))}
                 {
@@ -780,7 +768,7 @@ let getnoontime=(id)=>{
                   res.schedule.length > 0 &&
                   <div>
                     <heading><b>STAFF NAME :</b> {res.staffName}</heading>
-                    <Table striped bordered hover responsive>
+                    <Table bordered responsive>
                       <thead className="text-primary">
                         <tr>
                           
@@ -800,7 +788,7 @@ let getnoontime=(id)=>{
                         </tr>
                         ))} 
                       </tbody>
-                    </Table>
+                    </Table><br></br><br></br><br></br><hr></hr>
                 </div>                                
                 ))
                 }
@@ -815,7 +803,7 @@ let getnoontime=(id)=>{
                   <heading><b>DATE :</b> {getexamdate(result.examDateAndTimeId)}</heading>
                   <div><heading><b>TIME :</b> {getnoontime(result.examDateAndTimeId)}</heading></div>
                   <div><heading><b>STAFF NAME :</b> {getstaffname(result.staffId)}</heading></div>
-                  <Table striped bordered hover responsive>
+                  <Table bordered responsive>
                     <thead className="text-primary">
                       <tr>
                                                                         
@@ -825,7 +813,7 @@ let getnoontime=(id)=>{
                     </thead>
                     <tbody>
                       {/* {resultavailable && resdata.studentPlan.length} */}                                       
-                        {result.summary.map(obj=>(
+                        {(result.summary).map(obj=>(
                           <tr>
                                                                       
                           <td>{getsubjectName(obj.subjectId)}</td> 
@@ -833,8 +821,8 @@ let getnoontime=(id)=>{
                           </tr>
                         ))}                                                             
                     </tbody>
-                  </Table>
-                  <Table striped bordered hover responsive>
+                  </Table><br></br><br></br><br></br><hr></hr>
+                  <Table bordered responsive>
                   <thead className="text-primary">
                     <tr>
                                             
@@ -856,14 +844,15 @@ let getnoontime=(id)=>{
                         </tr>
                       ))}                                                             
                   </tbody>
-                </Table></div> ))}                              
+                </Table><br></br><br></br><br></br><hr></hr>
+                </div> ))}                              
                 </div>
                   
                  ))}
                  {saveroomvisible && 
                    roomPlanlist.map(res =>(
                                                    
-                    res.schedule.length > 0 && 
+                    JSON.parse(res.schedule).length > 0 && 
                       <div>
                     <heading><b>ROOM NAME :</b> {res.roomName}</heading>
                     {JSON.parse(res.schedule).map(result=>( 
@@ -871,7 +860,7 @@ let getnoontime=(id)=>{
                     <heading><b>DATE :</b> {getexamdate(result.examDateAndTimeId)}</heading>
                     <div><heading><b>TIME :</b> {getnoontime(result.examDateAndTimeId)}</heading></div>
                     <div><heading><b>STAFF NAME :</b> {getstaffname(result.staffId)}</heading></div>
-                    <Table striped bordered hover responsive>
+                    <Table bordered responsive>
                       <thead className="text-primary">
                         <tr>
                                                                           
@@ -889,8 +878,8 @@ let getnoontime=(id)=>{
                             </tr>
                           ))}                                                             
                       </tbody>
-                    </Table>
-                    <Table striped bordered hover responsive>
+                    </Table><br></br><br></br><br></br><hr></hr>
+                    <Table bordered responsive>
                     <thead className="text-primary">
                       <tr>
                                               
@@ -911,7 +900,7 @@ let getnoontime=(id)=>{
                           <td>{getsubjectName(obj.subjectId)}</td>                        
                           </tr>
                         ))}                                                             
-                    </tbody></Table></div> ))}</div>
+                    </tbody></Table><br></br><br></br><br></br><hr></hr></div> ))}</div>
                     
                    )) 
                  }
@@ -922,7 +911,7 @@ let getnoontime=(id)=>{
                   <heading><b>SUBJECT NAME : </b>{res.subjectName}</heading>
                   <div><heading><b>DATE : </b>{getexamdate(res.examDateAndTimeId)}</heading></div>               
                   <div><heading><b>Time : </b>{getnoontime(res.examDateAndTimeId)}</heading></div>
-                <Table striped bordered hover responsive>
+                <Table bordered responsive>
                   <thead className="text-primary">
                     <tr>
                       
@@ -940,7 +929,7 @@ let getnoontime=(id)=>{
                     </tr>
                      ))} 
                   </tbody>
-                </Table></div>                  
+                </Table><br></br><br></br><br></br><hr></hr></div>                  
                  ))}
                  {savesubjectvisible && 
                   subjectPlanlist.map(res =>(
@@ -948,7 +937,7 @@ let getnoontime=(id)=>{
                     <heading><b>SUBJECT NAME : </b>{res.subjectName}</heading>
                     <div><heading><b>DATE : </b>{getexamdate(res.examDateAndTimeId)}</heading></div>               
                     <div><heading><b>Time : </b>{getnoontime(res.examDateAndTimeId)}</heading></div>
-                  <Table striped bordered hover responsive>
+                  <Table bordered responsive>
                     <thead className="text-primary">
                       <tr>
                         
@@ -966,7 +955,7 @@ let getnoontime=(id)=>{
                       </tr>
                        ))} 
                     </tbody>
-                  </Table></div>                  
+                  </Table><br></br><br></br><br></br><hr></hr></div>                  
                    ))
                  }
                  </div>

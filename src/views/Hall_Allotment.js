@@ -9,6 +9,7 @@ import BuildingService from "./Building/Buildingservice.js";
 import RoomService from "./Room/Roomservice.js";
 import SubjectService from "./Subject/Subjectservice.js";
 import ExamDateService from "./Examtimetable/ExamDateService.js";
+import { Redirect } from "react-router";
 
 export default function Hall_Allotment() {
 
@@ -25,8 +26,8 @@ export default function Hall_Allotment() {
     retrieveRoom();
     retrieveExamDate();
     retrieveSubject();
-    setStudentId(getStudentId);
-  })
+    setStudentId(getStudentId());
+  },[]);
 
   const retrieveStudentPlan =() => {
     StudentPlanService.getAll().then(response => {
@@ -58,8 +59,8 @@ export default function Hall_Allotment() {
   const retrieveSubject =() => {
     SubjectService.getAll().then(response => {
       setSubjectlist(response.data);
-     console.log("subject",subjectlist.length);
-     console.log("subject",subjectlist);
+    //  console.log("subject",subjectlist.length);
+    //  console.log("subject",subjectlist);
     })
     .catch(e => {
       console.log(e);
@@ -117,6 +118,10 @@ export default function Hall_Allotment() {
     })
   }
 
+  if(studentId === "" ){
+    return <Redirect to ="/login"></Redirect>
+  }
+
   return (
     <>
       <div className="content">
@@ -130,11 +135,11 @@ export default function Hall_Allotment() {
                 {/* <Button href="/Building/Add" onClick={()=>history.push("/add")} >
                   Add <i class="nc-icon nc-simple-add"></i>
                 </Button>  */}
-                <p>{getStudentId()}</p>
+                {/* <p>{getStudentId()}</p> */}                
                 {studentPlanlist.filter(obj=> obj.studentId === studentId).map(res=>(                 
                   res.schedule.length > 0 &&  
                   <div>                
-                    <heading><b>STUDENT NAME :</b> {res.studentName}</heading><br></br>
+                    <heading><b>STUDENT NAME :</b> {res.studentName}</heading><br></br>                    
                     <Table bordered  responsive>
                       <thead className="text-primary">
                         <tr>

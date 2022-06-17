@@ -25,7 +25,16 @@ export default function Staff() {
     currentdob: "",
   };
 
+  const userState = {
+    userId : null,
+    userName : "",
+    userType : "",
+    password : "",
+    staffId : null,
+  }
+
   const [staffvalue,setStaff]=useState(staffState);
+  const [userlogin,setUserlogin]=useState(userState);
   const[submitted,setSubmitted]=useState(false);
   const [stafflist,setStafflist]=useState([]);
   const [currentstaff,setcurrentStaff]=useState(currentstaffState);
@@ -63,6 +72,20 @@ export default function Staff() {
           dob:staffvalue.dob,
           departmentName:staffvalue.departmentName,
         });
+        var data= {
+          userName:staffvalue.staffName,
+          userType:"staff",
+          password:staffvalue.dob,
+          staffId:response.data.staffId,
+        };
+        UserService.create(data).then(res =>{
+          setUserlogin({
+            userName:res.data.userName,
+            userType:res.data.userType,
+            password:res.data.dob,
+            staffId:res.data.staffId,
+          })
+        })
         setSubmitted(true);
                 console.log(response.data);
                 retrieveStaff();
