@@ -12,11 +12,11 @@ import Hall_Allotment from "views/Hall_Allotment";
 import Staff_dashboard from "views/Staff_dashboard";
 import Staff_Hall_Allotment from "views/Staff_Hall_Allotment";
 import {getUserType} from '../src/views/Login/Common';
-import { getUser } from "sample/common";
+// import { getUser } from "sample/common";
 let usertype=getUserType();
 //alert(getUserType())
 
- let uusertype='admin';
+//  let uusertype='admin';
 
 if(usertype === "admin"){
   console.log("userType>>",usertype);

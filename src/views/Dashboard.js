@@ -1,23 +1,17 @@
 import React,{useState,useEffect} from "react";
-// react plugin used to create charts
-import { Line } from "react-chartjs-2";
-// reactstrap components
+import { Redirect } from "react-router-dom";
 import {
   Card,
-  CardHeader,
   CardBody,
-  // CardFooter,
   CardTitle,
   Row,
   Col,
 } from "reactstrap";
-// core components
-import {
-  dashboard24HoursPerformanceChart
-} from "variables/charts.js";
 import StaffService from "./Staff/Staffservice";
 import StudentService from "./Student/Studentservice";
+import {removeUserSession, getUserType} from '../views/Login/Common.js';
 
+const usertype=getUserType();
 
 function Dashboard() {
 
@@ -29,8 +23,7 @@ function Dashboard() {
     retrieveStudent();
   }, []);
 
-  const retrieveStaff =() => {
-    //alert("Retrive building List...")
+  const retrieveStaff =() => {    
     StaffService.getAll().then(response => {
       setStafflist(response.data);
        // console.log(response.data);
@@ -40,8 +33,7 @@ function Dashboard() {
     });
   };
   
-  const retrieveStudent =() => {
-    //alert("Retrive building List...")
+  const retrieveStudent =() => {    
     StudentService.getAll().then(response => {
       setStudentlist(response.data);
        // console.log(response.data);
@@ -59,6 +51,9 @@ function Dashboard() {
     return studentlist.filter(obj=>obj.studentId).length
   }
 
+  if(usertype === 'student' || usertype === 'staff' || usertype === ''){
+    return <Redirect to="/login" />
+  }
   return (
     <>
       <div className="content">
@@ -128,25 +123,6 @@ function Dashboard() {
             </Card>
           </Col>
         </Row>
-        {/* <div></div>
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h5">Exam Appearing Students</CardTitle>
-                <p className="card-category">Percentage</p>
-              </CardHeader>
-              <CardBody>
-                <Line
-                  data={dashboard24HoursPerformanceChart.data}
-                  options={dashboard24HoursPerformanceChart.options}
-                  width={400}
-                  height={100}
-                />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row> */}
       </div>
     </>
   );

@@ -48,7 +48,7 @@ export default function Generate() {
 
   const [show, setShow]=React.useState(false);
   const [show1, setShow1]=React.useState(true);
-  const[submitted,setSubmitted]=React.useState(false);
+  const [submitted,setSubmitted]=React.useState(false);
   const [subjectPlanvalue,setSubjectPlan]=React.useState([]);
   const [studentPlanvalue,setStudentPlan]=React.useState([]);
   const [staffPlanvalue,setStaffPlan]=React.useState([]);
